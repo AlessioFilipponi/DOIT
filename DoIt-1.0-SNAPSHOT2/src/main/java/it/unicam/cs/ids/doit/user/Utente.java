@@ -19,6 +19,7 @@ public class Utente implements Named, Observer {
 
 	private Set<Subject> notifiche; //deve essere un set
 	private Ruolo ruolo;
+	private String email;
 	/**
 	 * Crea un utente
 	 * @param nome nome
@@ -139,10 +140,23 @@ public class Utente implements Named, Observer {
 	}
 	
 	public boolean insertEmail(String email) {
+		setEmail(email);
 		return true;
 	} 
 	
 	public Curriculum getCurriculum() {
 		return ruolo.getCurriculum();
+	}
+	
+	public int getRuolo() {
+		return ruolo.getRuolo();
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 }

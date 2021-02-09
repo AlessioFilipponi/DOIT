@@ -1,5 +1,6 @@
 package it.unicam.cs.ids.doit.view;
 
+import java.sql.SQLException;
 import java.util.*;
 
 import it.unicam.cs.ids.doit.cataloghi.Bacheca;
@@ -11,6 +12,7 @@ import it.unicam.cs.ids.doit.ui.UserCommunicator;
 import it.unicam.cs.ids.doit.user.Esperto;
 import it.unicam.cs.ids.doit.user.Progettista;
 import it.unicam.cs.ids.doit.user.Utente;
+import it.unicam.cs.ids.doit.utilities.DBManager;
 import it.unicam.cs.ids.doit.utilities.SystemUtilities;
 
 public class IProponenteProgetto  implements UserInterface{
@@ -37,6 +39,12 @@ public class IProponenteProgetto  implements UserInterface{
 		if(!UserCommunicator.select("Vuoi pubblicare il progetto?"))//Do la possibilità all'utente di pubblicare il progetto
 			return;//Se non lo vuole pubblicare do' tutto quello che è stato appena fatto in pasto al garbage collector
 		Bacheca.getInstance().getCatalogoProgetti().add(p); //Se invece lo vuole pubblicare aggiungo il progetto al catalogo
+		try {
+			DBManager.getInstance().insertProgetto(p);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if(UserCommunicator.select("Vuoi invitare progettisti?")) //Dopo la pubblicazione do all'utente la possibilità di invitare progettisti
 			invitaProgettista(p);
 	}

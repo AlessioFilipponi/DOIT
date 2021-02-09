@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,7 +50,7 @@ public class DBManager {
 	}
 	
 	public List<Progetto> listaProgetti() throws SQLException{
-		String sql = "SELECT ID, Creatore, Selezionatore, Specifiche, Stato, Titolo, MAXPartecipanti  FROM Progetti";
+		String sql = "SELECT ID, Creatore, Selezionatore, Specifiche, Stato, Titolo, MAXPartecipanti, data  FROM Progetti";
 		
 		PreparedStatement ps = getConnection().prepareStatement(sql);
 		
@@ -71,6 +72,7 @@ public class DBManager {
 			}
 			c.setNumPartecipanti(rs.getInt(7));
 			c.setCompetenzeProgettisti(getCompetenzeProgetto(c));
+			c.setData(rs.getDate(8));
 			progetti.add(c);
 		}
 		
@@ -113,12 +115,14 @@ public class DBManager {
 	}
 
 	public void insertUtente(Utente u, String password) throws SQLException {
-		String sql = "INSERT INTO Utenti(username, nome, password) VALUES(?, ?, ?)";
+		String sql = "INSERT INTO Utenti(username, nome, password, ruolo, email) VALUES(?, ?, ?, ?, ?)";
 		
 		PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		ps.setString(1, u.getUsername());
 		ps.setString(2, u.getName());
 		ps.setInt(3, password.hashCode());
+		ps.setInt(4, u.getRuolo());
+		ps.setString(5, u.getEmail());
 		
 		ps.executeUpdate();
 		
@@ -154,4 +158,64 @@ public class DBManager {
 		return e;
 		
 	}
+	public List<Utente> getListaUtenti() throws SQLException{
+		String sql = "SELECT Username, Nome, Ruolo, email, password FROM Utenti";
+        PreparedStatement ps = getConnection().prepareStatement(sql);
+		
+		ResultSet rs = ps.executeQuery();
+		List<Utente> utenti = new ArrayList<Utente>();
+		while(rs.next()) { 
+			Utente u = new Utente(rs.getString(1));
+			switch(rs.getInt(3)) {
+			case 0: u.setRuolo(new Progettista(u));break;
+			case 1: u.setRuolo(new Esperto(u)); break;
+			case 2: u.setRuolo(new Ente(u));break;
+			}
+			u.insertName(rs.getString(2));
+			u.insertEmail(rs.getString(4));
+			SystemUtilities.getInstance().getPassword().put(u.getUsername(), rs.getInt(5));
+			SystemUtilities.getInstance().getUtenti().put(u.getUsername(), u);
+//			u.getCompetenze().addAll(getCompetenze(u));
+			utenti.add(u);
+		}
+		
+		return utenti;
+	}
+	
+	public void insertProgetto(Progetto p) throws SQLException {
+		String sql = "INSERT INTO Progetti (ID, Creatore, Selezionatore, "
+				+ "Specifiche, Stato, Titolo, MAXPartecipanti, data) VALUES(?,?,?,?,?,?,?,?)";
+		PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		ps.setInt(1, p.getId());
+		ps.setString(2, p.getProponente().getUsername());
+		ps.setString(3, p.getSelezionatore().getUsername());
+		ps.setString(4, p.getSpecifiche());
+		switch(p.getStato()) {
+		case PENDING: ps.setInt(5, 0); break;
+		case PUBBLICATO: ps.setInt(5, 1); break;
+		case ARCHIVIATO: ps.setInt(5, 2); break;
+		case IN_VALUTAZIONE: ps.setInt(5, 3); break;
+		}
+		ps.setString(6, p.getTitolo());
+		ps.setInt(7, p.getNumPartecipanti());
+//	 	ps.setDate(8, p.getData());
+		ps.executeUpdate();
+		
+		ResultSet rs = ps.getGeneratedKeys();
+		rs.next();
+	}
+	public Set<String> getCompetenze() throws SQLException{
+		String sql = "SELECT Categoria FROM Competenze ";
+		Set<String> competenze = new HashSet<String>();
+		PreparedStatement ps = getConnection().prepareStatement(sql);
+
+		ResultSet rs = ps.executeQuery();
+		while(rs.next()) {
+			competenze.add(rs.getString(1));
+		}
+		
+		return competenze;
+	}
+	
+	
 }

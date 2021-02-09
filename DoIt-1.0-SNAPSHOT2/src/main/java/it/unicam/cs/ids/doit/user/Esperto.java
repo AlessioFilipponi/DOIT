@@ -68,4 +68,11 @@ public class Esperto extends Ruolo implements Named{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+
+	@Override
+	public int getRuolo() {
+		return 1;
+	}
 }

@@ -1,5 +1,7 @@
 package it.unicam.cs.ids.doit.user;
 
+
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -79,5 +81,11 @@ public class Ente extends Ruolo{
 		     curriculum.getProgetti().addAll(utente.getCurriculum().getProgetti());
 		}
 		return curriculum;
+	}
+
+
+	@Override
+	public int getRuolo() {
+		return 2;
 	}
 }

@@ -28,16 +28,16 @@ public class DoIt {
 //		}
 		
 		//popolo il sistema
-		Utente u1 = new Utente("pippo");
-		SystemUtilities.getInstance().getPassword().put("pippo", "pass".hashCode());
-		SystemUtilities.getInstance().getUtenti().put("pippo", u1);
-		u1.setRuolo(new Progettista(u1));
-		u1.insertName("Pippo Pippo");
-		Utente u2 = new Utente("pluto");
-		SystemUtilities.getInstance().getPassword().put("pluto", "pass".hashCode());
-		SystemUtilities.getInstance().getUtenti().put("pluto", u2);
-		u2.setRuolo(new Ente(u2));
-		u2.insertName("Università di Pluto");
+//		Utente u1 = new Utente("pippo");
+//		SystemUtilities.getInstance().getPassword().put("pippo", "pass".hashCode());
+//		SystemUtilities.getInstance().getUtenti().put("pippo", u1);
+//		u1.setRuolo(new Progettista(u1));
+//		u1.insertName("Pippo Pippo");
+//		Utente u2 = new Utente("pluto");
+//		SystemUtilities.getInstance().getPassword().put("pluto", "pass".hashCode());
+//		SystemUtilities.getInstance().getUtenti().put("pluto", u2);
+//		u2.setRuolo(new Ente(u2));
+//		u2.insertName("Università di Pluto");
 //		u1.setRuolo(new Progettista(u1));
 //		Utente u2 = new Utente("Tiziano","Rossi");
 //		u2.setRuolo(new Progettista(u2));
@@ -89,6 +89,12 @@ public class DoIt {
 //		// TODO Auto-generated catch block
 //		e.printStackTrace();
 //	}
+       try {
+		Bacheca.getInstance().getCatalogoProgetti().addAll(DBManager.getInstance().listaProgetti());
+		Bacheca.getInstance().getCatalogoUtenti().addAll(DBManager.getInstance().getListaUtenti());
+	} catch (SQLException e) {
+		e.getMessage();
+	}
 		InteractionManager.start();
 	}
 //Prova commit Linux

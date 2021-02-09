@@ -1,5 +1,6 @@
 package it.unicam.cs.ids.doit.utilities;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +18,12 @@ public class SystemUtilities {
 	
 	public void insertUtente(String username, String u) {
 		password.put(username, u.hashCode());
+		try {
+			DBManager.getInstance().insertUtente(getUtente(username), u);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public Utente getUtente(String username) {
@@ -29,11 +36,17 @@ public class SystemUtilities {
 	private SystemUtilities(){
 		utenti = new HashMap<String, Utente>();
 		password = new HashMap<String, Integer>();
-		competenze = new HashSet<String>();
-		competenze.add("Ingegnere");
-		competenze.add("Informatico");
-		competenze.add("Architetto");
-		competenze.add("Sarta");
+		try {
+			competenze = DBManager.getInstance().getCompetenze();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//				new HashSet<String>();
+//		competenze.add("Ingegnere");
+//		competenze.add("Informatico");
+//		competenze.add("Architetto");
+//		competenze.add("Sarta");
 		
 	}
 	

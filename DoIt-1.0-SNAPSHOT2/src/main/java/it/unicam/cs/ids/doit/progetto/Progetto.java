@@ -13,7 +13,7 @@ import it.unicam.cs.ids.doit.user.Utente;
 public class Progetto implements Named {
 
 	private String creatorID;
-	private long ID;
+	private int ID;
 	private StatiProgetto stato;
 	private String specifiche;
 	private String titolo;
@@ -24,6 +24,7 @@ public class Progetto implements Named {
 	private Set<Partecipazione> partecipazioni;
 	private Collection<Valutazione> valutazioni;
 	private Utente proponente;
+	private Utente selezionatore;
 
 	/**
 	 * Crea un nuovo it.unicam.cs.DOIT.progetto.Progetto
@@ -35,7 +36,7 @@ public class Progetto implements Named {
 		 */
 		this.IDSelezionatore = creatorID;
 		this.creatorID=creatorID;
-		ID = (long)(Math.random()*1000000+Math.random()*100000+Math.random()*10000+(Math.random()*1000+Math.random()*100+Math.random()*10)); //genera un id Random
+		ID = (int)(Math.random()*1000000+Math.random()*100000+Math.random()*10000+(Math.random()*1000+Math.random()*100+Math.random()*10)); //genera un id Random
 		stato=StatiProgetto.PENDING;//Il progetto viene messo in stato di pending
 		numPartecipanti = -1;
 		//Vengono inizializzate le liste
@@ -49,6 +50,7 @@ public class Progetto implements Named {
 	public Progetto(Utente proponente) {
 		this(proponente.getID());
 		this.proponente = proponente;
+		this.selezionatore = proponente;
 	}
 	public Collection<Valutazione> getValutazioni() {
 		return valutazioni;
@@ -247,7 +249,7 @@ public class Progetto implements Named {
 	}
 
 	public void setSelezionatore(Utente utente) {
-		// TODO Auto-generated method stub
+		selezionatore = utente;
 		
 	}
 
@@ -256,7 +258,23 @@ public class Progetto implements Named {
 		
 	}
 
-	public long getId() {
+	public int getId() {
 		return ID;
 	}
+
+	public void setData(java.sql.Date date) {
+		this.data = date;
+		
+	}
+
+	public Utente getSelezionatore() {
+		return selezionatore;
+	}
+
+	public java.sql.Date getData() {
+		// TODO Auto-generated method stub
+		return (java.sql.Date) data;
+	}
+	
+	
 }

@@ -79,6 +79,12 @@ public class Progettista extends Ruolo implements Named{
 	}
 
 
+	@Override
+	public int getRuolo() {
+		return 0;
+	}
+
+
 
 
 

@@ -27,6 +27,7 @@ public abstract class Ruolo {
 	}
 	protected abstract void setName(String nome);
 	protected abstract String getName();
+	public abstract int getRuolo();
 
 
 }
