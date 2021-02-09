@@ -1,5 +1,6 @@
 package it.unicam.cs.ids.doit.view;
 
+import java.sql.SQLException;
 import java.util.Collection;
 
 import it.unicam.cs.ids.doit.cataloghi.Bacheca;
@@ -14,6 +15,7 @@ import it.unicam.cs.ids.doit.ui.UserCommunicator;
 
 import it.unicam.cs.ids.doit.user.Ruolo;
 import it.unicam.cs.ids.doit.user.Utente;
+import it.unicam.cs.ids.doit.utilities.DBManager;
 
 /**
  * Questo è il core del sistema di interfacciamento tra l'utente generico e DOIT
@@ -26,12 +28,21 @@ Utente utente;
 	}
 
 
-	public void visualizzaProgetti()
-	{  if (Bacheca.getInstance().getCatalogoProgetti().isEmpty()) UserCommunicator.print("Non ci sono progetti");
-	else {Progetto p = selezionaProgetto(Bacheca.getInstance().getCatalogoProgetti());//Chiedo all'utente di selezionare un progetto tra tutti quelli presenti nel sistema
+	public void visualizzaProgetti() {
+//	{  if (Bacheca.getInstance().getCatalogoProgetti().isEmpty()) UserCommunicator.print("Non ci sono progetti");
+//	else {
+//		Progetto p = selezionaProgetto(Bacheca.getInstance().getCatalogoProgetti());//Chiedo all'utente di selezionare un progetto tra tutti quelli presenti nel sistema
+		Progetto p = null;
+		try {
+			p = selezionaProgetto(DBManager.getInstance().listaProgetti());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		if(p==null) //Se non ne ha selezionato nessuno o il progetto selezionato non esiste
 			return; //Annullo la procedura
-		visualizzaDettagliProgetto(p); }//Altrimenti visualizzo i dettagli del progetto
+		visualizzaDettagliProgetto(p); 
+//		}//Altrimenti visualizzo i dettagli del progetto
 	}
 
 	private void valutaPartecipazioni(Progetto proj){

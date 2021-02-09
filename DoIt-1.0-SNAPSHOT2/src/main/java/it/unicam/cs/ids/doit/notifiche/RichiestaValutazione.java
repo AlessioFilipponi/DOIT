@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import it.unicam.cs.ids.doit.progetto.Progetto;
+import it.unicam.cs.ids.doit.progetto.StatiProgetto;
 import it.unicam.cs.ids.doit.user.Utente;
 
 public class RichiestaValutazione implements  Subject{
@@ -15,6 +16,7 @@ public class RichiestaValutazione implements  Subject{
     public RichiestaValutazione(Utente esperto, Progetto progetto) {
         this.destinatari = new HashSet<>();
         this.progetto = progetto;
+        progetto.setStato(StatiProgetto.IN_VALUTAZIONE);
         attach(esperto);
         attach(progetto.getProponente());
         esperto.addNotifica(this);
@@ -49,10 +51,12 @@ public class RichiestaValutazione implements  Subject{
 
     public void conferma() {
         setStato(statiRichiesta.CONFERMATA);
+    	progetto.setStato(StatiProgetto.PENDING);
     }
 
     public void rifiuta(String motivazione){
         setStato(statiRichiesta.RIFIUTATA);
+    	progetto.setStato(StatiProgetto.ARCHIVIATO);
         this.motivazione = motivazione;
     }
 

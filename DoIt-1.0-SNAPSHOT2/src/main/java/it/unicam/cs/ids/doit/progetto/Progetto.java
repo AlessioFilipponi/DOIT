@@ -245,4 +245,18 @@ public class Progetto implements Named {
 		this.competenzeNecessarie = competenze;
 		
 	}
+
+	public void setSelezionatore(Utente utente) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setId(int int1) {
+		ID = int1;
+		
+	}
+
+	public long getId() {
+		return ID;
+	}
 }

@@ -1,4 +1,5 @@
 package it.unicam.cs.ids.doit.cataloghi;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +10,7 @@ import it.unicam.cs.ids.doit.user.Esperto;
 import it.unicam.cs.ids.doit.user.Progettista;
 
 import it.unicam.cs.ids.doit.user.Utente;
+import it.unicam.cs.ids.doit.utilities.DBManager;
 
 public class Bacheca {
 	private static Catalogo<Utente> catalogoUtenti;
@@ -20,6 +22,12 @@ public class Bacheca {
 	
 	private Bacheca() {
 		Bacheca.catalogoProgetti = new Catalogo<Progetto>();
+//		try {
+//			catalogoProgetti.addAll(DBManager.getInstance().listaProgetti());
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		Bacheca.catalogoUtenti = new Catalogo<Utente>();
 		Bacheca.catalogoEsperti = new Catalogo<Esperto>();
 		Bacheca.catalogoProgettisti = new Catalogo<Progettista>();

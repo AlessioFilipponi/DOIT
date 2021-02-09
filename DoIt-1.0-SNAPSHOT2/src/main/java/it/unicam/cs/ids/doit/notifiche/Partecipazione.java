@@ -72,7 +72,7 @@ public class Partecipazione implements Subject{
 		{
 			setStato(StatiRichieste.CONFERMATO);//Modifica lo stato della partecipazione in "CONFERMATO"
 			if(progetto.getPartecipanti().size()>=progetto.getNumPartecipanti()) { //Poi controlla tutte le partecipazioni confermate nel progetto
-				progetto.setStato(StatiProgetto.CONFERMATO);/*Se ce ne sono tante quante i posti disponibili, il progetto passa nello stato "CONFERMATO"
+				progetto.setStato(StatiProgetto.PUBBLICATO);/*Se ce ne sono tante quante i posti disponibili, il progetto passa nello stato "CONFERMATO"
 				e da questo momento sarà impossibile rihiedere una partecipazione o inviare proposte*/
 				progettista.getCurriculum().getProgetti().add(progetto);
 			}

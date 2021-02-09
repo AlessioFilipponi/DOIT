@@ -5,5 +5,8 @@ package it.unicam.cs.ids.doit.progetto;
  */
 public enum StatiProgetto {
 	PENDING,
-	CONFERMATO
+	PUBBLICATO,
+	IN_VALUTAZIONE,
+	ARCHIVIATO
+	
 }

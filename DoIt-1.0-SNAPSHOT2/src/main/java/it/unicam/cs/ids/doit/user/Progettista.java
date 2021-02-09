@@ -55,7 +55,12 @@ public class Progettista extends Ruolo implements Named{
 
 	@Override
 	protected void setName(String nome) {
-		String[] n = nome.split(" ");
+		String[] n = null;
+		try {n = nome.split(" ");}
+		catch (Exception e) {
+			this.nome = n[0];
+			return;
+		}
 		this.nome = n[0];
 		this.cognome = n[1];
 		
