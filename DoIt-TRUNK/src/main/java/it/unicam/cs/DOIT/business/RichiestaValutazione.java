@@ -13,14 +13,15 @@ public class RichiestaValutazione implements  Subject{
     public RichiestaValutazione(Utente esperto, Progetto progetto) {
         this.destinatari = new HashSet<>();
         this.progetto = progetto;
+        esperto.getNotifiche().add(this);
         attach(esperto);
         attach(progetto.getProponente());
-        setStato(statiRichiesta.IN_VALUTAZIONE);
+        stato = statiRichiesta.IN_VALUTAZIONE;
         
     }
    private void setStato(statiRichiesta inValutazione) {
 		stato = inValutazione;
-		notifyObservers();
+		reply();
 		
 	}
 public  enum statiRichiesta  { RIFIUTATA, CONFERMATA, IN_VALUTAZIONE}
@@ -37,8 +38,8 @@ public  enum statiRichiesta  { RIFIUTATA, CONFERMATA, IN_VALUTAZIONE}
 
     @Override
     public void reply() {
-        //TODO NON HO CAPITO COME DEVE FUNZIONARE
-    	//si può togliere
+    	progetto.getProponente().addNotifica(this);
+    	notifyObservers();
     }
 
     @Override
@@ -62,7 +63,6 @@ public  enum statiRichiesta  { RIFIUTATA, CONFERMATA, IN_VALUTAZIONE}
 	@Override
 	public void notifyObservers() {
 		for (Observer observer : destinatari) {
-			observer.addNotifica(this);
 			observer.update();
 		}
 		

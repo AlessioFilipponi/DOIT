@@ -1,5 +1,6 @@
 package it.unicam.cs.ids.doit.progetto;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -17,7 +18,7 @@ public class Progetto implements Named {
 	private String specifiche;
 	private String titolo;
 	private int numPartecipanti;
-	private Calendar data;
+	private Date data;
 	private Collection<String> competenzeNecessarie;
 	private String IDSelezionatore;
 	private Set<Partecipazione> partecipazioni;
@@ -36,13 +37,13 @@ public class Progetto implements Named {
 		this.creatorID=creatorID;
 		ID = (long)(Math.random()*1000000+Math.random()*100000+Math.random()*10000+(Math.random()*1000+Math.random()*100+Math.random()*10)); //genera un id Random
 		stato=StatiProgetto.PENDING;//Il progetto viene messo in stato di pending
+		numPartecipanti = -1;
 		//Vengono inizializzate le liste
 		partecipazioni=new HashSet<>();
 		competenzeNecessarie=new HashSet<>();
 		valutazioni=new HashSet<>();
 		partecipazioni=new HashSet<>();
-		data=new GregorianCalendar();
-		data.setTime(new Date());
+		this.data= new Date();
 	}
 
 	public Progetto(Utente proponente) {
@@ -86,8 +87,8 @@ public class Progetto implements Named {
 //				creatore=u.getNome();
 		creatore = proponente.getName();
 		//Costruisco la stringa da ritornare mediante una serie di append allo stringbuilder
-		return	s.append(toUpperCase(getTitolo())).append("\n\n")
-//				.append("Pulbicazione: "+new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(data)).append("\n")
+		return	s.append(titolo.toUpperCase()).append("\n\n")
+				.append("Pubblicazione: " + DateFormat.getDateInstance().format(data)).append("\n")
 				.append(specifiche).append("\n")
 				.append("Partecipanti: ").append(getPartecipanti().size()).append("/").append(getNumPartecipanti()).append("\n")
 				.append("Creato da: ").append(creatore).append("\n")
@@ -126,7 +127,7 @@ public class Progetto implements Named {
 	 * @param titolo
 	 */
 	public void setTitolo(String titolo) {
-		this.titolo = toUpperCase(titolo);
+		this.titolo = titolo.toUpperCase();
 	}
 
 	/**
@@ -193,7 +194,7 @@ public class Progetto implements Named {
 		Collection<String> names=new HashSet<>();
 		for (Partecipazione p : partecipazioni)
 			if(p.getStato()== StatiRichieste.NON_CONFERMATO)
-				names.add(p.getProgettista().getID()+"> "+p.getProgettista().getNome() + " " +p.getProgettista().getCognome());
+				names.add(p.getProgettista().getID()+"> "+p.getProgettista().getUsername() + " " +p.getProgettista().getName());
 		return names;
 	}
 
@@ -215,20 +216,6 @@ public class Progetto implements Named {
 			if(p.getStato()== StatiRichieste.CONFERMATO)
 				users.add(p.getProgettista());
 		return users;
-	}
-	/**
-	 * Trasforma una stringa in caratteri maiuscoli
-	 * @param s stringa
-	 * @return stringa con caratteri maiuscoli
-	 */
-	private String toUpperCase (String s){
-		StringBuilder b = new StringBuilder();
-		for(int i=0;i<s.length();i++)
-			if(s.charAt(i)>='a'&&s.charAt(i)<='z')
-				b.append((char)(((s.charAt(i)-(int)'a')+(int)'A')));
-			else
-				b.append(s.charAt(i));
-		return b.toString();
 	}
 
 	@Override
@@ -252,5 +239,10 @@ public class Progetto implements Named {
 			v += val.getVoto();
 		}
 		return v/valutazioni.size();
+	}
+
+	public void setCompetenzeProgettisti(Set<String> competenze) {
+		this.competenzeNecessarie = competenze;
+		
 	}
 }

@@ -14,10 +14,11 @@ public class Partecipazione implements Subject {
 	 * @param progettista il progettista
 	 * @param progetto il progetto
 	 */
-	public Partecipazione(Utente progettista, Progetto progetto) {
+	public Partecipazione(Utente progettista, Progetto progetto, Utente proponente) {
 		this.progettista=progettista;
 		this.progetto=progetto;
-		setStato(StatiPartecipazione.NON_CONFERMATO);
+		stato = StatiPartecipazione.NON_CONFERMATO;
+		progettista.addNotifica(this);
 		attach(progettista);
 		attach(progetto.getProponente());
 		notifyObservers();
@@ -125,7 +126,6 @@ public class Partecipazione implements Subject {
 	public void notifyObservers() {
 		for (Observer observer : destinatari) {
 			observer.update();
-			observer.addNotifica(this);
 		}
 		
 	}

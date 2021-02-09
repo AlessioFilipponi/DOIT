@@ -26,7 +26,7 @@ public class Partecipazione implements Subject{
 		progetto.getPartecipazioni().add(this);
 		attach(progettista);
 		attach(progetto.getProponente());
-		stato =StatiRichieste.NON_CONFERMATO;
+		setStato(StatiRichieste.NON_CONFERMATO);
 	}
 
 	/**

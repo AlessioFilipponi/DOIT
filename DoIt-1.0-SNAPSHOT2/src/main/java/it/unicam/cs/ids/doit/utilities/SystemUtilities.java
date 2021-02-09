@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import it.unicam.cs.ids.doit.user.Utente;
 
@@ -12,7 +13,7 @@ public class SystemUtilities {
 	private Map<String,Utente> utenti;
 	private Map<String,Integer> password;
 	private static SystemUtilities instance;
-	private Collection<String> competenze;
+	private Set<String> competenze;
 	
 	public void insertUtente(String username, String u) {
 		password.put(username, u.hashCode());

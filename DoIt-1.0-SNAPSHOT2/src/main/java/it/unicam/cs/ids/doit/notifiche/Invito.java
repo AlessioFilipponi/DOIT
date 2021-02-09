@@ -44,7 +44,7 @@ public class Invito implements Subject
 
     @Override
     public String getName() {
-        return null;
+        return "Invito a: " + ente.getName();
     }
 
     public Utente getEnte() {
@@ -56,6 +56,7 @@ public class Invito implements Subject
         {
             stato= StatiRichieste.CONFERMATO;
             ente.getNotifiche().add(this);
+            progettista.getNotifiche().remove(this);
             notifyObservers();
             ((Ente)(ente.getRole())).addCollaboratore(progettista);
         }
@@ -64,6 +65,7 @@ public class Invito implements Subject
     public void rifiuta(){
         if(stato== StatiRichieste.NON_CONFERMATO)
         {
+        	progettista.getNotifiche().remove(this);
             stato= StatiRichieste.RIFIUTATO;
             ente.getNotifiche().add(this);
         }

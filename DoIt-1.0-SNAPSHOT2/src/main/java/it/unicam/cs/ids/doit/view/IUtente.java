@@ -49,7 +49,7 @@ Utente utente;
 				
 				if(proj.getStato()== StatiProgetto.PENDING)//Se il progetto è in stato di PENDING
 				{
-					UserCommunicator.print(p.getProgettista().getNome()+" "+p.getProgettista().getCognome());//Stampo nome e cognome del progettista a cui è riferita
+					UserCommunicator.print(p.getProgettista().getName());//Stampo nome e cognome del progettista a cui è riferita
 					if(UserCommunicator.select("Accettare questa richiesta di partecipazione?")) //Chiedo all'utente se vuole accettare o rifiutare la partecipazione
 						p.accetta();
 					else

@@ -9,7 +9,7 @@ import it.unicam.cs.ids.doit.notifiche.Partecipazione;
 
 public class Ente extends Ruolo{
     private String descrizione;
-    private List<Utente> collaboratori;
+    private Set<Utente> collaboratori;
     private Set<Partecipazione> partecipazioni;
     private String name;
     private Curriculum curriculum;
@@ -17,6 +17,7 @@ public class Ente extends Ruolo{
     public Ente(Utente u) {
     	super(u);
     	this.partecipazioni = new HashSet<Partecipazione>();
+    	this.collaboratori = new HashSet<Utente>();
     	this.curriculum = new Curriculum(u);
     
     }

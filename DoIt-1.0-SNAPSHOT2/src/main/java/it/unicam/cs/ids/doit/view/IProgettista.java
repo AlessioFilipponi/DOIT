@@ -40,7 +40,7 @@ public class IProgettista  implements UserInterface{
 	}
 
 	public void valutaInvitoAdEnte(Invito i){
-		UserCommunicator.print(i.getEnte().getNome());
+		UserCommunicator.print(i.getEnte().getName());
 		UserCommunicator.print(((Ente)(i.getEnte().getRole())).getDescrizione());
 		if(UserCommunicator.select("Vuoi accettare questo invito?"))
 			i.accetta();

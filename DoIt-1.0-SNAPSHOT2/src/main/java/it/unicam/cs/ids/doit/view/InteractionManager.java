@@ -1,5 +1,7 @@
 package it.unicam.cs.ids.doit.view;
 
+import java.sql.SQLException;
+
 import javax.security.auth.login.LoginContext;
 
 import it.unicam.cs.ids.doit.cataloghi.Bacheca;
@@ -7,6 +9,7 @@ import it.unicam.cs.ids.doit.ui.UserCommunicator;
 import it.unicam.cs.ids.doit.user.Ente;
 import it.unicam.cs.ids.doit.user.Progettista;
 import it.unicam.cs.ids.doit.user.Utente;
+import it.unicam.cs.ids.doit.utilities.DBManager;
 import it.unicam.cs.ids.doit.utilities.SystemUtilities;
 
 public class InteractionManager {
@@ -61,9 +64,10 @@ public class InteractionManager {
 				"3) Valuta proposte di partecipazione\n" +
 				"4) Invita Collaboratore\n" +
 				"5) Richiedi Valutazione di una Proposta Progetto\n"+
-				"6) Visualizza Notifiche\n"+
-				"7) Esci");
+				"6) Visualizza Notifiche\n"+ 
+				"7) Esci\n");
 //				"5) Logout");
+			if (user.getStato()) UserCommunicator.print("Notifiche(" + user.getNotifiche().size()+")");
 			try{selezione = UserCommunicator.insertInteger("La tua scelta");}
 			catch (Exception e) {
 				UserCommunicator.print("Puoi solo inserire un numero da 1 a 6");
@@ -148,6 +152,13 @@ public class InteractionManager {
 		if (u==null) SystemUtilities.getInstance().getPassword().remove(ut);
 //		UserCommunicator.insertString("Il tuo ID è: "+ut.getID()+" Premere [INVIO] per continuare... ");
 //		start();
+		else
+			try {
+				DBManager.getInstance().insertUtente(u, pass);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.getMessage();
+			}
 		return u;
 	}
 
@@ -167,6 +178,7 @@ public class InteractionManager {
 		case 1: {SystemUtilities.getInstance().getUtenti().put(ut, u);
 		Bacheca.getInstance().getCatalogoUtenti().add(u);
 		u.getRole().addToCatalogo();
+		
 		break;}
 		case 0: u = null;
 		
