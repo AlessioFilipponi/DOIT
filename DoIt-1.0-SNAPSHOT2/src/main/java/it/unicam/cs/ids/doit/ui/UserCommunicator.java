@@ -6,6 +6,8 @@ import java.util.*;
  * Questa classe si occupa della comunicazione tra il programma e l'utente
  */
 public class UserCommunicator {
+	public static String ERROR_INT_MESSAGE = "Puoi solo inserire un numero";
+	public static String EXIT_MESSAGE = "Inserire -1 per terminare l'inserimento";
     /**
      * Stampa un meszaggio per l'utente
      * @param message
@@ -57,8 +59,13 @@ public class UserCommunicator {
     public static boolean select(String message)
     {
         int selezione=10;
-        while (selezione!=0&&selezione!=1)
-            selezione=UserCommunicator.insertInteger(message+"\n[1] Sì     [0] No\n La tua scelta");
+        while (selezione!=0&&selezione!=1) {
+        	try {
+            selezione=UserCommunicator.insertInteger(message+"\n[1] Sì     [0] No\n La tua scelta");}
+        	catch (Exception e) {
+				UserCommunicator.print(ERROR_INT_MESSAGE);
+			}
+        }
         if(selezione==0)
             return false;
         return true;
@@ -91,7 +98,10 @@ public class UserCommunicator {
         int Int=0;
         UserCommunicator.print("\n**"+message+"**\nInserire [-1] per terminare l'inserimento.");
         do{
-            Int=UserCommunicator.insertInteger(promptRepeat);
+            try{Int=UserCommunicator.insertInteger(promptRepeat);}
+            catch (Exception e) {
+				UserCommunicator.print(ERROR_INT_MESSAGE);
+			}
             if(Int!=-1)
                 Ints.add(Int);
         }while (Int>-1);
@@ -109,8 +119,11 @@ public class UserCommunicator {
             i++;
         }
         T rtrnv=null;
-        while(rtrnv==null)
-            rtrnv=els.get(insertInteger(message));
+        while(rtrnv==null) {
+            try {rtrnv=els.get(insertInteger(message));}
+            catch (Exception e) {
+				UserCommunicator.print(ERROR_INT_MESSAGE);
+			}}
         return rtrnv;
     }
 
@@ -125,15 +138,18 @@ public class UserCommunicator {
         }
         Collection<T> rtrnv=new HashSet<>();
         int insert=0;
-        UserCommunicator.print("Inserire -1 per terminare l'inserimento");
+        UserCommunicator.print(EXIT_MESSAGE);
         while(insert>-1)
         {
-            insert= UserCommunicator.insertInteger(message);
+            try{insert= UserCommunicator.insertInteger(message);}
+            catch (Exception e) {
+				UserCommunicator.print(ERROR_INT_MESSAGE);
+			}
             if (insert!=-1 || insert>i) rtrnv.add(els.get(insert));
         }
         return rtrnv;
     }
-    public static <String> Collection<String>selectMultipleElements(Collection<String> elements, String message){
+    public static <String> Set<String>selectMultipleElementsS(Collection<String> elements, String message){
         Map<Integer,String> els=new HashMap<>();
         int i=0;
         for(String el:elements)
@@ -142,14 +158,21 @@ public class UserCommunicator {
             print(i+") "+ el);
             i++;
         }
-        Collection<String> rtrnv=new HashSet<>();
+        Set<String> rtrnv=new HashSet<>();
         int insert=0;
-        UserCommunicator.print("Inserire -1 per terminare l'inserimento");
-        while(insert>-1)
-        {
+        UserCommunicator.print(EXIT_MESSAGE);
+        while(insert>-1)  {   
+        	try {
+        
             insert= UserCommunicator.insertInteger((java.lang.String) message);
+        	}catch (Exception e) {
+				UserCommunicator.print(ERROR_INT_MESSAGE);
+			}
             if (insert!=-1 || insert>i) rtrnv.add(els.get(insert));
         }
         return rtrnv;
     }
+
+
+	
 }

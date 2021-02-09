@@ -25,7 +25,7 @@ public class IProgettista  implements UserInterface{
 		{
 			Partecipazione part = new Partecipazione(getUtente(),p); //Creo una nuova partecipazione correlata all'utente e al progetto
 			p.getPartecipazioni().add(part); //La aggiungo al progetto
-			getUtente().getPartecipazioni().add(part); //E all'utente
+			
 			UserCommunicator.print("Richiesta di partecipazione inviata"); //Poi notifico l'utente
 		}
 	}
@@ -40,7 +40,7 @@ public class IProgettista  implements UserInterface{
 	}
 
 	public void valutaInvitoAdEnte(Invito i){
-		UserCommunicator.print(i.getEnte().getName());
+		UserCommunicator.print(i.getEnte().getUsername());
 		UserCommunicator.print(((Ente)(i.getEnte().getRole())).getDescrizione());
 		if(UserCommunicator.select("Vuoi accettare questo invito?"))
 			i.accetta();

@@ -11,7 +11,7 @@ import it.unicam.cs.ids.doit.notifiche.Subject;
 import it.unicam.cs.ids.doit.progetto.Progetto;
 import it.unicam.cs.ids.doit.progetto.StatiProgetto;
 import it.unicam.cs.ids.doit.ui.UserCommunicator;
-import it.unicam.cs.ids.doit.user.Ruoli;
+
 import it.unicam.cs.ids.doit.user.Ruolo;
 import it.unicam.cs.ids.doit.user.Utente;
 
@@ -49,7 +49,7 @@ Utente utente;
 				
 				if(proj.getStato()== StatiProgetto.PENDING)//Se il progetto è in stato di PENDING
 				{
-					UserCommunicator.print(p.getProgettista().getName());//Stampo nome e cognome del progettista a cui è riferita
+					UserCommunicator.print(p.getProgettista().getUsername()+" "+p.getProgettista().getName());//Stampo nome e cognome del progettista a cui è riferita
 					if(UserCommunicator.select("Accettare questa richiesta di partecipazione?")) //Chiedo all'utente se vuole accettare o rifiutare la partecipazione
 						p.accetta();
 					else
@@ -85,7 +85,7 @@ Utente utente;
 			if(UserCommunicator.select("Vuoi partecipare al progetto?")) //Se le ha gli do la possibilità di partecipare al progetto
 			{//Nel caso in cui volesse partecipare
 				Partecipazione part = new Partecipazione(getUtente(),p); //Creo una partecipazione tra l'utente e il progetto
-				getUtente().getPartecipazioni().add(part); //la aggiungo all'utente
+//				getUtente().getPartecipazioni().add(part); //la aggiungo all'utente
 				p.getPartecipazioni().add(part); //e la aggiungo al progetto
 			}
 		

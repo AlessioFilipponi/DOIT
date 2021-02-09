@@ -1,6 +1,7 @@
 package it.unicam.cs.ids.doit.user;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import it.unicam.cs.ids.doit.cataloghi.Bacheca;
@@ -10,25 +11,24 @@ import it.unicam.cs.ids.doit.notifiche.Subject;
 import it.unicam.cs.ids.doit.progetto.Progetto;
 import it.unicam.cs.ids.doit.progetto.Valutazione;
 import it.unicam.cs.ids.doit.ui.Named;
-import it.unicam.cs.ids.doit.ui.UserCommunicator;
 public class Utente implements Named, Observer {
 
 	private String username;
-	private String email;
+
 	private String ID;
-    private boolean stato;
+
 	private Set<Subject> notifiche; //deve essere un set
 	private Ruolo ruolo;
 	/**
 	 * Crea un utente
-	 * @param username nome
+	 * @param nome nome
 	 * @param cognome cognome
 	 */
-	public Utente(String username) {
+	public Utente(String nome) {
 		/*
-		Imposta l'username
+		Imposta nome e cognome
 		 */
-		this.username = username;
+		this.username = nome;
 		
 		/*
 		Inizializza automaticamente tutti i campi
@@ -36,9 +36,8 @@ public class Utente implements Named, Observer {
 		ID=(int)(Math.random()*10000+Math.random()*1000+Math.random()*100+Math.random()*10)+"";
 
 		this.notifiche = new HashSet<Subject>();
-//		Bacheca.getInstance().getCatalogoUtenti().add(this);
-		//aggiunge il ruolo di default: Progettista 
-		this.ruolo = new Progettista(this);
+		Bacheca.getInstance().getCatalogoUtenti().add(this);
+//		this.ruolo = new Progettista(this);
 
 	}
 
@@ -47,11 +46,14 @@ public class Utente implements Named, Observer {
 	}
 	/**
 	 * Restituisce l'username dell'utente
-	 * @return username
+	 * @return nome
 	 */
 	public String getUsername() {
 		return username;
 	}
+
+
+
 
 	/**
 	 * Restituisce l'ID
@@ -66,8 +68,8 @@ public class Utente implements Named, Observer {
 	 * Restituisce la lista delle partecipazioni di questo utente ad altri progetti
 	 * @return partecipazioni
 	 */
-	public Set<Partecipazione> getPartecipazioni() {
-		return getRole().getListaPartecipazioni();
+	public List<Progetto> getPartecipazioni() {
+		return getRole().getPartecipazioni();
 	}
 
 	/**
@@ -77,12 +79,10 @@ public class Utente implements Named, Observer {
 	public Set<String> getCompetenze() {
 		return getRole().getcompetenze();
 	}
- 
-    /**
-     * Imposta il ruolo dell'utente
-     * @param il nuovo ruolo
-     * 
-     */
+
+
+
+
 	public void setRuolo(Ruolo r) {
 		this.ruolo = r;
 	}
@@ -94,13 +94,11 @@ public class Utente implements Named, Observer {
 		return ruolo;
 	}
 
-    /**
-     * @return il nome dell'utente
-     * 
-     */
+
+
 	@Override
 	public String getName() {
-		return ruolo.getNome();
+		return ruolo.getName();
 	}
 
 
@@ -113,12 +111,13 @@ public class Utente implements Named, Observer {
 		return this.notifiche;
 	}
 
-	/**
+	/*
 	 * metodo che viene chiamato dalla notify delle varie subject
-	 */
+	 * */
 	@Override
 	public void update() {
-		stato = true;
+		System.out.println("Nuova notifica");
+		//qui il metodo dovrebbe chiamare un sistem.out ma della classe che interagisce con l'utente
 
 	}
 
@@ -145,9 +144,5 @@ public class Utente implements Named, Observer {
 	
 	public Curriculum getCurriculum() {
 		return ruolo.getCurriculum();
-	}
-
-	public boolean getStato() {
-		return stato;
 	}
 }

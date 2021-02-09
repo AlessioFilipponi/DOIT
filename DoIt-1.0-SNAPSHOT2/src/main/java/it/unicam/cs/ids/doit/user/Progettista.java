@@ -1,38 +1,37 @@
 package it.unicam.cs.ids.doit.user;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import it.unicam.cs.ids.doit.cataloghi.Bacheca;
 import it.unicam.cs.ids.doit.notifiche.Partecipazione;
+import it.unicam.cs.ids.doit.progetto.Progetto;
+import it.unicam.cs.ids.doit.ui.Named;
 
-public class Progettista extends Ruolo{
-    private Set<String> competenze;
-    private Set<Partecipazione> partecipazioni;
+public class Progettista extends Ruolo implements Named{
+  
+   
 	private String nome;
+	private String cognome;
 	private Curriculum curriculum;
      
     public Progettista(Utente u) {
     	super(u);
-    	this.competenze = new HashSet<>();
-    	this.partecipazioni = new HashSet<>();
+    
     	this.curriculum = new Curriculum(u);
-//    	addToCatalogo();
+    	addToCatalogo();
     }
-    //va tolto
 
-    public Ruoli getRole() {
-        return Ruoli.PROGETTISTA;
-    }
 
     @Override
     public Set<String> getcompetenze() {
-        return competenze;
+        return curriculum.getCompetenze();
     }
 
     @Override
-    public Set<Partecipazione> getPartecipazioni() {
-        return partecipazioni;
+    public List<Progetto> getPartecipazioni() {
+        return Bacheca.getInstance().getCatalogoProgetti().search(p-> p.getCandidati().contains(super.getUtente()));
     }
 
     @Override
@@ -46,11 +45,7 @@ public class Progettista extends Ruolo{
 		
 	}
 
-	@Override
-	public Set<Partecipazione> getListaPartecipazioni() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	@Override
 	public boolean isEnte() {
@@ -60,14 +55,16 @@ public class Progettista extends Ruolo{
 
 	@Override
 	protected void setName(String nome) {
-		this.nome = nome;
+		String[] n = nome.split(" ");
+		this.nome = n[0];
+		this.cognome = n[1];
 		
 	}
 
 	@Override
-	protected String getNome() {
+	public String getName() {
 		// TODO Auto-generated method stub
-		return nome;
+		return nome + " " + cognome;
 	}
 
 	@Override
@@ -75,4 +72,9 @@ public class Progettista extends Ruolo{
 		// TODO Auto-generated method stub
 		return curriculum;
 	}
+
+
+
+
+
 }

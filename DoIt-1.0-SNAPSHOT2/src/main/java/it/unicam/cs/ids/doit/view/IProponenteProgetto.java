@@ -9,7 +9,9 @@ import it.unicam.cs.ids.doit.progetto.Progetto;
 import it.unicam.cs.ids.doit.progetto.StatiProgetto;
 import it.unicam.cs.ids.doit.ui.UserCommunicator;
 import it.unicam.cs.ids.doit.user.Esperto;
+import it.unicam.cs.ids.doit.user.Progettista;
 import it.unicam.cs.ids.doit.user.Utente;
+import it.unicam.cs.ids.doit.utilities.SystemUtilities;
 
 public class IProponenteProgetto  implements UserInterface{
 
@@ -24,10 +26,14 @@ public class IProponenteProgetto  implements UserInterface{
 		 */
 		p.setTitolo(UserCommunicator.insertString("Inserire Titolo"));
 		p.setSpecifiche(UserCommunicator.insertString("Inserire Specifiche"));
-		p.setNumPartecipanti(UserCommunicator.insertInteger("Inserire Numero Partecipanti"));
-		String competenze = UserCommunicator.insertString("Inserire le competenze necessarie (separate da una virgola (\",\")");
-		if(!competenze.equals(""))
-			p.setCompetenzeProgettisti(competenze);
+		do{try{p.setNumPartecipanti(UserCommunicator.insertInteger("Inserire Numero Partecipanti"));}
+		catch (Exception e) {
+			UserCommunicator.print(UserCommunicator.ERROR_INT_MESSAGE);
+		}}while(p.getNumPartecipanti()<0);
+		Set<String> competenze = UserCommunicator.selectMultipleElementsS(SystemUtilities.getInstance().getCompetenze(), "Seleziona le competenze");
+//		if(!competenze.equals(""))
+//			p.setCompetenzeProgettisti(competenze);
+		p.setCompetenzeProgettisti(competenze);
 		if(!UserCommunicator.select("Vuoi pubblicare il progetto?"))//Do la possibilità all'utente di pubblicare il progetto
 			return;//Se non lo vuole pubblicare do' tutto quello che è stato appena fatto in pasto al garbage collector
 		Bacheca.getInstance().getCatalogoProgetti().add(p); //Se invece lo vuole pubblicare aggiungo il progetto al catalogo
@@ -43,27 +49,30 @@ public class IProponenteProgetto  implements UserInterface{
 	public void invitaProgettista(Progetto progetto) {
 		if(progetto.getStato()!= StatiProgetto.PENDING)
 			return; //Se il progetto non è in stato di Pending annullo l'operazione
-		if(Bacheca.getInstance().getCatalogoUtenti().isEmpty()) //Controllo che ci siano utenti nel sistema
+		Collection<Utente> c = Bacheca.getInstance().getCatalogoUtenti();
+		c.remove(getUtente());
+		if(c.isEmpty()) //Controllo che ci siano utenti nel sistema
 		{
 			UserCommunicator.print("Non esistono ancora progettisti in DOIT!"); //informo l'utente nel caso essi non esistano
-			return;
+			
 		}
-		else{Collection<Utente> progettisti= new HashSet<>(); //Lista dei progettisti competenti
-		for(Utente u:Bacheca.getInstance().getCatalogoUtenti()) //Per ogni progettista che ha tra le competenze tutte quelle richieste nel progetto
-			if(u.getCompetenze().containsAll(progetto.getCompetenzeNecessarie()))
-				progettisti.add(u); //Aggiungo il progettista alla lista dei competenti
+		else{Collection<Progettista> progettisti= Bacheca.getInstance().getProgettistiCompetenti(progetto.getCompetenzeNecessarie()); //Lista dei progettisti competenti
+//		for(Utente u:Bacheca.getInstance().getCatalogoUtenti()) //Per ogni progettista che ha tra le competenze tutte quelle richieste nel progetto
+//			if(u.getCompetenze().containsAll(progetto.getCompetenzeNecessarie()))
+//				progettisti.add(u); //Aggiungo il progettista alla lista dei competenti
 		int progeressivo=1;
 		if(progettisti.isEmpty())
 			UserCommunicator.print("Non ci sono progettisti competenti!");
-		Collection<Utente> progs= UserCommunicator.selectMultipleElements(progettisti,"Aggiungi progettista n°");
-		for(Utente p:progs)//Per ognuno dei selezionati
+		else {
+		Collection<Progettista> progs= UserCommunicator.selectMultipleElements(progettisti,"Aggiungi progettista n°");
+		for(Progettista p:progs)//Per ognuno dei selezionati
 		{
-			Partecipazione part= new Partecipazione(p,progetto); //Creo una partecipazione tra il progetto e il progettista
+			Partecipazione part= new Partecipazione(p.getUtente(),progetto); //Creo una partecipazione tra il progetto e il progettista
 			progetto.getPartecipazioni().add(part);//Aggiungo la partecipazione al progetto
-			p.getPartecipazioni().add(part);//Aggiungo la partecipazione al progettista
-			p.getNotifiche().add(part);
+//			p.getPartecipazioni().add(part);//Aggiungo la partecipazione al progettista
+			p.getUtente().getNotifiche().add(part);
 		}
-		UserCommunicator.print("Partecipazioni inviate");}
+		UserCommunicator.print("Partecipazioni inviate");}}
 	}
 
 

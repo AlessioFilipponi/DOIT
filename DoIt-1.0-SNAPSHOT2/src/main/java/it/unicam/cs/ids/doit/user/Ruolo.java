@@ -3,7 +3,9 @@ package it.unicam.cs.ids.doit.user;
 import java.util.List;
 import java.util.Set;
 
+import it.unicam.cs.ids.doit.cataloghi.Bacheca;
 import it.unicam.cs.ids.doit.notifiche.Partecipazione;
+import it.unicam.cs.ids.doit.progetto.Progetto;
 
 public abstract class Ruolo {
 	private Utente utente;
@@ -12,18 +14,19 @@ public abstract class Ruolo {
 		this.utente = u;
 	}
 	abstract public Set<String> getcompetenze();
-	abstract public Set<Partecipazione> getPartecipazioni();
+	public List<Progetto> getPartecipazioni(){
+		return Bacheca.getInstance().getCatalogoProgetti().search(p->p.getCandidati().contains(getUtente()));
+	}
 	abstract public boolean isExpert();
 	abstract public void addToCatalogo();
-	abstract public Set<Partecipazione> getListaPartecipazioni();
 	abstract public boolean isEnte();
 	abstract public Curriculum getCurriculum();
 	
-	Utente getUtente() {
+	public Utente getUtente() {
 		return utente;
 	}
 	protected abstract void setName(String nome);
-	protected abstract String getNome();
+	protected abstract String getName();
 
 
 }

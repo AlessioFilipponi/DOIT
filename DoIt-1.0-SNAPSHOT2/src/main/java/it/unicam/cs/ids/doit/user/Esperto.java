@@ -19,20 +19,13 @@ public class Esperto extends Ruolo implements Named{
         this.partecipazioni = new HashSet<>();
     }
 
-    //VA TOLTO
-    public Ruoli getRole() {
-        return Ruoli.ESPERTO;
-    }
+
 
     @Override
     public Set<String> getcompetenze() {
         return competenze;
     }
 
-    @Override
-    public Set<Partecipazione> getPartecipazioni() {
-        return partecipazioni;
-    }
 
     @Override
     public boolean isExpert() {
@@ -55,11 +48,6 @@ public class Esperto extends Ruolo implements Named{
 		
 	}
 
-	@Override
-	public Set<Partecipazione> getListaPartecipazioni() {
-		// TODO Auto-generated method stub
-		return partecipazioni;
-	}
 
 	@Override
 	public boolean isEnte() {
@@ -73,11 +61,7 @@ public class Esperto extends Ruolo implements Named{
 		
 	}
 
-	@Override
-	protected String getNome() {
-		// TODO Auto-generated method stub
-		return nome;
-	}
+
 
 	@Override
 	public Curriculum getCurriculum() {

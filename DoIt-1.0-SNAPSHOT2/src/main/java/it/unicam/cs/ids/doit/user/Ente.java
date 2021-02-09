@@ -6,25 +6,20 @@ import java.util.Set;
 
 import it.unicam.cs.ids.doit.cataloghi.Bacheca;
 import it.unicam.cs.ids.doit.notifiche.Partecipazione;
+import it.unicam.cs.ids.doit.progetto.Progetto;
 
 public class Ente extends Ruolo{
     private String descrizione;
-    private Set<Utente> collaboratori;
-    private Set<Partecipazione> partecipazioni;
+    private List<Utente> collaboratori;
     private String name;
     private Curriculum curriculum;
  
     public Ente(Utente u) {
     	super(u);
-    	this.partecipazioni = new HashSet<Partecipazione>();
-    	this.collaboratori = new HashSet<Utente>();
     	this.curriculum = new Curriculum(u);
     
     }
-    
-    public Ruoli getRole() {
-        return Ruoli.ENTE;
-    }
+   
 
     public Set<String> getcompetenze() {
         Set<String> competenze=new HashSet<>();
@@ -33,10 +28,7 @@ public class Ente extends Ruolo{
         return competenze;
     }
 
-    @Override
-    public Set<Partecipazione> getPartecipazioni() {
-        return partecipazioni;
-    }
+  
 
     @Override
     public boolean isExpert() {
@@ -61,10 +53,7 @@ public class Ente extends Ruolo{
 		
 	}
 
-	@Override
-	public Set<Partecipazione> getListaPartecipazioni() {
-		return partecipazioni;
-	}
+
 
 	@Override
 	public boolean isEnte() {
@@ -79,7 +68,7 @@ public class Ente extends Ruolo{
 	}
 
 	@Override
-	protected String getNome() {
+	protected String getName() {
 		// TODO Auto-generated method stub
 		return name;
 	}

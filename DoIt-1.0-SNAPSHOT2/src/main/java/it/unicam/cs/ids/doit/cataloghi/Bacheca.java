@@ -7,7 +7,7 @@ import it.unicam.cs.ids.doit.progetto.Progetto;
 import it.unicam.cs.ids.doit.user.Ente;
 import it.unicam.cs.ids.doit.user.Esperto;
 import it.unicam.cs.ids.doit.user.Progettista;
-import it.unicam.cs.ids.doit.user.Ruoli;
+
 import it.unicam.cs.ids.doit.user.Utente;
 
 public class Bacheca {
