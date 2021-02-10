@@ -19,7 +19,7 @@ public class Progetto implements Named {
 	private String titolo;
 	private int numPartecipanti;
 	private Date data;
-	private Collection<String> competenzeNecessarie;
+	private Set<String> competenzeNecessarie;
 	private String IDSelezionatore;
 	private Set<Partecipazione> partecipazioni;
 	private Collection<Valutazione> valutazioni;
@@ -104,7 +104,7 @@ public class Progetto implements Named {
 	 * Restituisce le competenze necessarie
 	 * @return competenze
 	 */
-	public Collection<String> getCompetenzeNecessarie() {
+	public Set<String> getCompetenzeNecessarie() {
 		return competenzeNecessarie;
 	}
 
@@ -129,7 +129,7 @@ public class Progetto implements Named {
 	 * @param titolo
 	 */
 	public void setTitolo(String titolo) {
-		this.titolo = titolo.toUpperCase();
+		this.titolo = titolo;
 	}
 
 	/**
@@ -152,9 +152,9 @@ public class Progetto implements Named {
 	 * Imposta le competenze necessarie per partecipare al progetto
 	 * @param competenze competenze necessarie
 	 */
-	public void setCompetenzeProgettisti(String competenze) {
-		this.competenzeNecessarie=new ArrayList<>(Arrays.asList(competenze.split(",")));
-	}
+//	public void setCompetenzeProgettisti(String competenze) {
+//		this.competenzeNecessarie=new ArrayList<>(Arrays.asList(competenze.split(",")));
+//	}
 
 	/**
 	 * Imposta lo stato
@@ -195,7 +195,7 @@ public class Progetto implements Named {
 	public Collection getCandidati() {
 		Collection<String> names=new HashSet<>();
 		for (Partecipazione p : partecipazioni)
-			if(p.getStato()== StatiRichieste.NON_CONFERMATO)
+			if(p.getStato()== StatiRichieste.IN_VALUTAZIONE)
 				names.add(p.getProgettista().getID()+"> "+p.getProgettista().getUsername() + " " +p.getProgettista().getName());
 		return names;
 	}
@@ -257,6 +257,30 @@ public class Progetto implements Named {
 		ID = int1;
 		
 	}
+	
+	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ID;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Progetto other = (Progetto) obj;
+		if (ID != other.ID)
+			return false;
+		return true;
+	}
 
 	public int getId() {
 		return ID;
@@ -271,9 +295,9 @@ public class Progetto implements Named {
 		return selezionatore;
 	}
 
-	public java.sql.Date getData() {
+	public Date getData() {
 		// TODO Auto-generated method stub
-		return (java.sql.Date) data;
+		return data;
 	}
 	
 	

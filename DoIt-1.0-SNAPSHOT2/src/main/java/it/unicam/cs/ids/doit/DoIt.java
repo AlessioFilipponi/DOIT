@@ -2,6 +2,7 @@ package it.unicam.cs.ids.doit;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 
 import it.unicam.cs.ids.doit.cataloghi.Bacheca;
 
@@ -74,11 +75,11 @@ public class DoIt {
 //		Partecipazione par = new Partecipazione(u2, p);
 //		Partecipazione par1 = new Partecipazione(u3, p);
 //		Partecipazione par2 = new Partecipazione(u4, p);
-       try {
-		DBManager.getInstance().getConnection();
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();}
+//       try {
+//		DBManager.getInstance().getConnection();
+//	} catch (SQLException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();}
 //	}
 //       try {
 //		List<Progetto> l = DBManager.getInstance().listaProgetti();
@@ -89,11 +90,16 @@ public class DoIt {
 //		// TODO Auto-generated catch block
 //		e.printStackTrace();
 //	}
-       try {
-		Bacheca.getInstance().getCatalogoProgetti().addAll(DBManager.getInstance().listaProgetti());
-		Bacheca.getInstance().getCatalogoUtenti().addAll(DBManager.getInstance().getListaUtenti());
-	} catch (SQLException e) {
-		e.getMessage();
+		Set<String> c =SystemUtilities.getInstance().getCompetenze();
+		for (String string : c) {
+			System.out.println(string.toString() + " " +SystemUtilities.getInstance().getMapCompetenze().get(string));
+//		}
+//       try {
+//		Bacheca.getInstance().getCatalogoProgetti().addAll(DBManager.getInstance().listaProgetti());
+//		Bacheca.getInstance().getCatalogoUtenti().addAll(DBManager.getInstance().getListaUtenti());
+//		
+//	} catch (SQLException e) {
+//		e.getMessage();
 	}
 		InteractionManager.start();
 	}

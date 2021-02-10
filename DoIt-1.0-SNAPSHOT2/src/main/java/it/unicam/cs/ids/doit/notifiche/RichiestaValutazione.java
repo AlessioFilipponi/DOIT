@@ -4,31 +4,28 @@ import java.util.HashSet;
 import java.util.Set;
 
 import it.unicam.cs.ids.doit.progetto.Progetto;
-import it.unicam.cs.ids.doit.progetto.StatiProgetto;
 import it.unicam.cs.ids.doit.user.Utente;
 
 public class RichiestaValutazione implements  Subject{
     private String motivazione;
     private Set<Observer> destinatari;
     private Progetto progetto;
-    private statiRichiesta stato;
+    private StatiRichieste stato;
 
     public RichiestaValutazione(Utente esperto, Progetto progetto) {
         this.destinatari = new HashSet<>();
         this.progetto = progetto;
-        progetto.setStato(StatiProgetto.IN_VALUTAZIONE);
         attach(esperto);
         attach(progetto.getProponente());
         esperto.addNotifica(this);
-        stato= statiRichiesta.IN_VALUTAZIONE;
+        stato= StatiRichieste.IN_VALUTAZIONE;
 
     }
-    private void setStato(statiRichiesta inValutazione) {
+    private void setStato(StatiRichieste inValutazione) {
         stato = inValutazione;
         notifyObservers();
 
     }
-    public  enum statiRichiesta  { RIFIUTATA, CONFERMATA, IN_VALUTAZIONE}
 
     @Override
     public void attach(Observer o) {
@@ -50,13 +47,11 @@ public class RichiestaValutazione implements  Subject{
     }
 
     public void conferma() {
-        setStato(statiRichiesta.CONFERMATA);
-    	progetto.setStato(StatiProgetto.PENDING);
+        setStato(StatiRichieste.CONFERMATO);
     }
 
     public void rifiuta(String motivazione){
-        setStato(statiRichiesta.RIFIUTATA);
-    	progetto.setStato(StatiProgetto.ARCHIVIATO);
+        setStato(StatiRichieste.RIFIUTATO);
         this.motivazione = motivazione;
     }
 

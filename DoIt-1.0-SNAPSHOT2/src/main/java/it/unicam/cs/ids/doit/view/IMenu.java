@@ -6,8 +6,15 @@ import it.unicam.cs.ids.doit.user.Esperto;
 import it.unicam.cs.ids.doit.user.Progettista;
 import it.unicam.cs.ids.doit.user.Ruolo;
 import it.unicam.cs.ids.doit.user.Utente;
-
+/**
+ * IMenu è la classe che gestisce i menu che visualizza l'utente in base al suo ruolo,
+ * e se è stato effettuato o meno il login
+ * */
 public class IMenu {
+	/**
+	 * Menu visualizzato dal Guest, permette 
+	 * @return user quando viene effettuato il login
+	 */
 	public static Utente menu() {
 		int selezione = -1;
 		boolean flag = true;
@@ -36,6 +43,10 @@ public class IMenu {
 			return user;
 		
 	}
+	/* Menu dell'ente
+	 * 
+	 * 
+	 */
 	public static boolean myMenu(Ente user, boolean flag) {
 		int selezione = -1;
 		do{UserCommunicator.print(
@@ -68,6 +79,9 @@ public class IMenu {
 		return flag;
 		
 	}
+	/*
+	 * Menu del progettista 
+	 */
 	public static boolean myMenu(Progettista user, boolean flag) {
 		int selezione = -1;
 		do{UserCommunicator.print(
@@ -98,6 +112,10 @@ public class IMenu {
 		}
 		return flag;
 	}
+	
+	/*
+	 * Metodo che in base al ruolo invoca il rispettivo menu 
+	 */
 	public static boolean myMenu(Ruolo r, boolean flag) {
 		if (r.isEnte()) return myMenu((Ente)r, flag);
 		else

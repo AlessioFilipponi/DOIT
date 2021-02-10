@@ -16,7 +16,7 @@ public class Invito implements Subject
     public Invito(Utente ente,Utente progettista) {
         this.destinatari = new HashSet<Observer>();
         this.ente=ente;
-        stato= StatiRichieste.NON_CONFERMATO;
+        stato= StatiRichieste.IN_VALUTAZIONE;
         this.progettista=progettista;
         attach(progettista);
         attach(ente);
@@ -44,7 +44,7 @@ public class Invito implements Subject
 
     @Override
     public String getName() {
-        return "Invito a: " + ente.getName();
+        return null;
     }
 
     public Utente getEnte() {
@@ -52,20 +52,18 @@ public class Invito implements Subject
     }
 
     public void accetta(){
-        if(stato== StatiRichieste.NON_CONFERMATO)
+        if(stato== StatiRichieste.IN_VALUTAZIONE)
         {
             stato= StatiRichieste.CONFERMATO;
             ente.getNotifiche().add(this);
-            progettista.getNotifiche().remove(this);
             notifyObservers();
             ((Ente)(ente.getRole())).addCollaboratore(progettista);
         }
 
     }
     public void rifiuta(){
-        if(stato== StatiRichieste.NON_CONFERMATO)
+        if(stato== StatiRichieste.IN_VALUTAZIONE)
         {
-        	progettista.getNotifiche().remove(this);
             stato= StatiRichieste.RIFIUTATO;
             ente.getNotifiche().add(this);
         }

@@ -115,7 +115,7 @@ public class IProponenteProgetto  implements UserInterface{
 			{
 				case 1:p.setTitolo(UserCommunicator.insertString("Inserire nuovo titolo"));break;
 				case 2:p.setSpecifiche(UserCommunicator.insertString("Inserire nuove specifiche"));break;
-				case 3:p.setCompetenzeProgettisti(UserCommunicator.insertString("Inserire le nuove competenze separate da una virgola (,)"));break;
+				case 3:p.setCompetenzeProgettisti(UserCommunicator.selectMultipleElementsS(SystemUtilities.getInstance().getCompetenze(), "Scegli le competenze necessarie"));break;
 				case 0:break;
 				default:UserCommunicator.print("Scelta non valida!");
 			}

@@ -35,7 +35,7 @@ public class Esperto extends Ruolo implements Named{
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return utente.getName();
+		return nome;
 	}
 	
 	public Utente getUtente() {

@@ -20,20 +20,21 @@ public class Partecipazione implements Subject{
 	 * @param progetto il progetto
 	 */
 	public Partecipazione(Utente progettista, Progetto progetto) {
+		if (progetto.getStato() != StatiProgetto.PENDING) throw new IllegalArgumentException("Non puoi partecipare a questo progetto");
 		this.progettista=progettista;
 		this.progetto=progetto;
 		destinatari = new HashSet<Observer>();
 		progetto.getPartecipazioni().add(this);
 		attach(progettista);
 		attach(progetto.getProponente());
-		setStato(StatiRichieste.NON_CONFERMATO);
+//		setStato(StatiRichieste.IN_VALUTAZIONE);
 	}
 
 	/**
 	 * imposta lo stato alla partecipazione
 	 * @param stato il nuovo stato
 	 */
-	private void setStato(StatiRichieste stato) {
+	public void setStato(StatiRichieste stato) {
 		this.stato = stato;
 		notifyObservers();
 	}
@@ -68,7 +69,7 @@ public class Partecipazione implements Subject{
 	 */
 	public void accetta(){
 		//Sia questo accetta che il "rifiuta" si possono eseguire solo quando la partecipazione si trova nello stato "NON CONFERMATO"
-		if(stato== StatiRichieste.NON_CONFERMATO&&getStato()== StatiRichieste.NON_CONFERMATO)
+		if(stato== StatiRichieste.IN_VALUTAZIONE&&getStato()== StatiRichieste.IN_VALUTAZIONE)
 		{
 			setStato(StatiRichieste.CONFERMATO);//Modifica lo stato della partecipazione in "CONFERMATO"
 			if(progetto.getPartecipanti().size()>=progetto.getNumPartecipanti()) { //Poi controlla tutte le partecipazioni confermate nel progetto
@@ -86,7 +87,7 @@ public class Partecipazione implements Subject{
 	 * rifiuta
 	 */
 	public void rifiuta() {
-		if(stato== StatiRichieste.NON_CONFERMATO)//stessa condizione iniziale di sopra
+		if(stato== StatiRichieste.IN_VALUTAZIONE)//stessa condizione iniziale di sopra
 			setStato(StatiRichieste.RIFIUTATO); //Imposta lo stato della partecipazione a rifiutato
 		else
 			throw new IllegalStateException("Impossibile modificare la scelta!");

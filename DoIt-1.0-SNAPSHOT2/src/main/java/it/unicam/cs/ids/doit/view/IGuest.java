@@ -122,7 +122,11 @@ public class IGuest {
 		Utente u = new Utente(ut);
 		u.setRuolo(new Progettista(u));
 		u.insertName(UserCommunicator.insertString("Inserisci Nome e Cognome"));
-		u.insertEmail(UserCommunicator.insertString("Inserisci Email"));
+		String email;
+		do{
+			email = UserCommunicator.insertString("Inserisci Email");
+			if (emailValidator(email)) u.insertEmail(email);
+		}while(!emailValidator(email));
 		u.getCurriculum().getCompetenze().addAll(UserCommunicator.selectMultipleElementsS(SystemUtilities.getInstance().getCompetenze(), "Seleziona Competenze"));
 		u.getCurriculum().setDescrizione(UserCommunicator.insertString("Inserisci una descrizione delle tue esperienze lavorative"));
 		int c =-1;

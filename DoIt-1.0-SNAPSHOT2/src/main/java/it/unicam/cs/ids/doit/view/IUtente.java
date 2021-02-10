@@ -9,6 +9,7 @@ import it.unicam.cs.ids.doit.notifiche.Partecipazione;
 import it.unicam.cs.ids.doit.notifiche.RichiestaValutazione;
 import it.unicam.cs.ids.doit.notifiche.StatiRichieste;
 import it.unicam.cs.ids.doit.notifiche.Subject;
+import it.unicam.cs.ids.doit.progetto.FacadeProgetto;
 import it.unicam.cs.ids.doit.progetto.Progetto;
 import it.unicam.cs.ids.doit.progetto.StatiProgetto;
 import it.unicam.cs.ids.doit.ui.UserCommunicator;
@@ -29,20 +30,22 @@ Utente utente;
 
 
 	public void visualizzaProgetti() {
-//	{  if (Bacheca.getInstance().getCatalogoProgetti().isEmpty()) UserCommunicator.print("Non ci sono progetti");
-//	else {
-//		Progetto p = selezionaProgetto(Bacheca.getInstance().getCatalogoProgetti());//Chiedo all'utente di selezionare un progetto tra tutti quelli presenti nel sistema
-		Progetto p = null;
-		try {
-			p = selezionaProgetto(DBManager.getInstance().listaProgetti());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+	  
+		if (Bacheca.getInstance().getCatalogoProgetti().isEmpty()) UserCommunicator.print("Non ci sono progetti");
+	
+	else {
+		Progetto p = selezionaProgetto(Bacheca.getInstance().getCatalogoProgetti());//Chiedo all'utente di selezionare un progetto tra tutti quelli presenti nel sistema
+//		Progetto p = null;
+//		try {
+//			p = selezionaProgetto(DBManager.getInstance().listaProgetti());
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} 
 		if(p==null) //Se non ne ha selezionato nessuno o il progetto selezionato non esiste
 			return; //Annullo la procedura
 		visualizzaDettagliProgetto(p); 
-//		}//Altrimenti visualizzo i dettagli del progetto
+		}//Altrimenti visualizzo i dettagli del progetto
 	}
 
 	private void valutaPartecipazioni(Progetto proj){
@@ -55,10 +58,10 @@ Utente utente;
 		}
 		//Se non lo è
 		for(Partecipazione p:proj.getPartecipazioni()) //Scorro le partecipazioni una per una
-			if(p.getStato()== StatiRichieste.NON_CONFERMATO) //Se la partecipazione si trova nello stato "Non Confermato"
+			if(p.getStato()== StatiRichieste.IN_VALUTAZIONE) //Se la partecipazione si trova nello stato "Non Confermato"
 			{
 				
-				if(proj.getStato()== StatiProgetto.PENDING)//Se il progetto è in stato di PENDING
+				if(proj.getStato() == StatiProgetto.PENDING)//Se il progetto è in stato di PENDING
 				{
 					UserCommunicator.print(p.getProgettista().getUsername()+" "+p.getProgettista().getName());//Stampo nome e cognome del progettista a cui è riferita
 					if(UserCommunicator.select("Accettare questa richiesta di partecipazione?")) //Chiedo all'utente se vuole accettare o rifiutare la partecipazione
@@ -95,9 +98,13 @@ Utente utente;
 		{
 			if(UserCommunicator.select("Vuoi partecipare al progetto?")) //Se le ha gli do la possibilità di partecipare al progetto
 			{//Nel caso in cui volesse partecipare
-				Partecipazione part = new Partecipazione(getUtente(),p); //Creo una partecipazione tra l'utente e il progetto
-//				getUtente().getPartecipazioni().add(part); //la aggiungo all'utente
-				p.getPartecipazioni().add(part); //e la aggiungo al progetto
+//				Partecipazione part = new Partecipazione(getUtente(),p); //Creo una partecipazione tra l'utente e il progetto
+////				getUtente().getPartecipazioni().add(part); //la aggiungo all'utente
+//				p.getPartecipazioni().add(part); //e la aggiungo al progetto
+				Partecipazione par = new FacadeProgetto(p).richiediPartecipazione(getUtente());
+				if(par!=null) UserCommunicator.print("Richiesta di partecipazione inviata");
+				else
+					UserCommunicator.print("Non puoi richiedere la partecipazione a questo progetto");
 			}
 		
 			if(utente.getRole().isExpert())

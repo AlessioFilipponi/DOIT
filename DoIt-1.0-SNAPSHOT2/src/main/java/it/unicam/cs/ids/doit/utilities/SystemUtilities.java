@@ -14,7 +14,7 @@ public class SystemUtilities {
 	private Map<String,Utente> utenti;
 	private Map<String,Integer> password;
 	private static SystemUtilities instance;
-	private Set<String> competenze;
+	private Map<String, Integer> competenze;
 	
 	public void insertUtente(String username, String u) {
 		password.put(username, u.hashCode());
@@ -64,10 +64,20 @@ public class SystemUtilities {
 		return password;
 	}
 
-	public Collection<String> getCompetenze() {
+	public Set<String> getCompetenze() {
+		return competenze.keySet();
+	}
+	
+	public Map<String, Integer> getMapCompetenze(){
 		return competenze;
 	}
 	
+	public String getCompetenze(int i) throws Exception {
+		for(String c : getCompetenze()) {
+			if (competenze.get(c)== i) return c;
+		}
+		throw new NullPointerException("Non esiste nessuna competenza all'indice" + i);
+	}
 	
 
 }
