@@ -13,7 +13,10 @@ public class Invito implements Subject
     private Set<Observer> destinatari;
     private Utente progettista;
 
-    public Invito(Utente ente,Utente progettista) {
+
+
+
+	public Invito(Utente ente,Utente progettista) {
         this.destinatari = new HashSet<Observer>();
         this.ente=ente;
         stato= StatiRichieste.IN_VALUTAZIONE;
@@ -69,4 +72,8 @@ public class Invito implements Subject
         }
 
     }
+    public Utente getProgettista() {
+		return progettista;
+	}
+
 }

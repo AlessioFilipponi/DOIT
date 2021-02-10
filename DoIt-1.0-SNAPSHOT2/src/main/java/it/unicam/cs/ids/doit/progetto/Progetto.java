@@ -176,7 +176,7 @@ public class Progetto implements Named {
 	 * Restituisce la lista delle partecipazioni correlate a questo progetto
 	 * @return
 	 */
-	public Collection<Partecipazione> getPartecipazioni() {
+	public Set<Partecipazione> getPartecipazioni() {
 		return partecipazioni;
 	}
 

@@ -17,6 +17,7 @@ import java.util.Set;
 
 import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
 
+import it.unicam.cs.ids.doit.notifiche.Invito;
 import it.unicam.cs.ids.doit.notifiche.Partecipazione;
 import it.unicam.cs.ids.doit.notifiche.StatiRichieste;
 import it.unicam.cs.ids.doit.progetto.Progetto;
@@ -310,5 +311,47 @@ public class DBManager {
 		ps.executeUpdate();
 	}
 	
+	public void insertInvito(Invito i) throws SQLException {
+		String sql = "INSERT INTO Collaborazione(Utente, Ente, Stato) VALUES(?,?,?)";
+		PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		ps.setString(1, i.getProgettista().getUsername());
+		ps.setInt(2, getEnteId(i.getEnte()));
+		ps.setInt(3, 1);
+		ps.executeUpdate();
+		
+		ResultSet rs = ps.getGeneratedKeys();
+		rs.next();
+	}
 	
+	private int getEnteId(Utente ente) throws SQLException {
+		String sql = "SELECT Id FROM Ente WHERE CapoGruppo= '"+ ente.getUsername()+"'";
+		PreparedStatement ps = getConnection().prepareStatement(sql);
+		ResultSet rs = ps.executeQuery();
+		int id = -1;
+		while(rs.next()) {
+			id = rs.getInt(1);
+		}
+		return id;
+	}
+	public void getNotifiche(Utente u) throws SQLException {
+		String sql ="SELECT Id, Tipo, ref FROM Notifiche WHERE Destinatario ='"+ u.getUsername()+"'";
+		PreparedStatement ps = getConnection().prepareStatement(sql);
+		ResultSet rs = ps.executeQuery();
+		while(rs.next()) {
+			switch (rs.getInt(2)) {
+			case 0: 
+				
+				break;
+
+			default:
+				break;
+			}
+		}
+	}
+	
+    public void getInviti() {}
+    
+    public void updateInvito(Invito i) {
+    	
+    }
 }
