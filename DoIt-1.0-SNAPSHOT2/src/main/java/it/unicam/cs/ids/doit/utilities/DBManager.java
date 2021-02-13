@@ -17,11 +17,15 @@ import java.util.Set;
 
 import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
 
+import it.unicam.cs.ids.doit.cataloghi.Bacheca;
 import it.unicam.cs.ids.doit.notifiche.Invito;
 import it.unicam.cs.ids.doit.notifiche.Partecipazione;
+import it.unicam.cs.ids.doit.notifiche.RichiestaValutazione;
 import it.unicam.cs.ids.doit.notifiche.StatiRichieste;
+import it.unicam.cs.ids.doit.notifiche.Subject;
 import it.unicam.cs.ids.doit.progetto.Progetto;
 import it.unicam.cs.ids.doit.progetto.StatiProgetto;
+import it.unicam.cs.ids.doit.progetto.Valutazione;
 import it.unicam.cs.ids.doit.user.Ente;
 import it.unicam.cs.ids.doit.user.Esperto;
 import it.unicam.cs.ids.doit.user.Progettista;
@@ -81,13 +85,30 @@ public class DBManager {
 			c.setNumPartecipanti(rs.getInt(7));
 			c.setCompetenzeProgettisti(getCompetenzeProgetto(c));
 			c.setData(rs.getDate(8));
+			addPartecipazioni(c);
+			c.getValutazioni().addAll(getValutazioni(c));
 			progetti.add(c);
 		}
 		
 		return progetti;
 	}
 
+	private Collection<? extends Valutazione> getValutazioni(Progetto c) throws SQLException {
+		String sql = "SELECT * FROM doit.Valutazioni_Progetti WHERE Progetto ="+ c.getId();
+		 PreparedStatement ps = getConnection().prepareStatement(sql);
+			
+		 ResultSet rs = ps.executeQuery();
+         Set<Valutazione> s = new HashSet<Valutazione>(); 
+		 while(rs.next()) { 
+			 Valutazione v = new Valutazione(getUtente(rs.getString(2)), rs.getInt(4), rs.getString(4));
+             s.add(v);
+
+		 }
+		 return s;
+	}
+
 	private Utente getUtente(String string) throws SQLException {
+		if (SystemUtilities.getInstance().getUtenti().isEmpty()){
 		String sql = "SELECT Nome, Ruolo, email FROM Utenti where Username = '"+ string+"'";
         PreparedStatement ps = getConnection().prepareStatement(sql);
 		
@@ -102,10 +123,12 @@ public class DBManager {
 			}
 			u.insertName(rs.getString(1));
 			u.insertEmail(rs.getString(3));
-//			u.getCompetenze().addAll(getCompetenze(u));
+			u.getCompetenze().addAll(getCompetenze(u));
 		}
 
-		return u;
+		return u;}
+		else
+			return SystemUtilities.getInstance().getUtente(string);
 	}
 	
 	private Collection<? extends String> getCompetenze(Utente u) throws SQLException {
@@ -155,7 +178,7 @@ public class DBManager {
 	 * */
 	
 	private void addCollaboratori(Ente e, int id) throws SQLException {
-		String sql = "SELECT Utente FROM Collaborazione WHERE Ente = '" + id+"' and Stato = 0" ;
+		String sql = "SELECT Utente FROM Collaborazione WHERE Ente = '" + id+"' and Stato = 1" ;
 		PreparedStatement ps = getConnection().prepareStatement(sql);
 		ResultSet rs = ps.executeQuery();
 		while(rs.next()) { 
@@ -199,6 +222,7 @@ public class DBManager {
 			SystemUtilities.getInstance().getPassword().put(u.getUsername(), rs.getInt(5));
 			SystemUtilities.getInstance().getUtenti().put(u.getUsername(), u);
 			u.getCompetenze().addAll(getCompetenze(u));
+			u.getNotifiche().addAll(getNotifiche(u));
 			utenti.add(u);
 		}
 		
@@ -286,22 +310,27 @@ public class DBManager {
 	public void modificaProgetto(Progetto p) throws SQLException {
 		String sql = "DELETE FROM Progetti where ID ="+ p.getId();
 		PreparedStatement ps = getConnection().prepareStatement(sql);
+		ps.execute(sql);
+		insertProgetto(p);
 	}
 	
 	public void addPartecipazioni(Progetto p) throws SQLException {
-		String sql = "SELECT Utente, Stato FROM Partecipazioni WHERE Progetto = "+ p.getId();
+		String sql = "SELECT Utente, Stato, Verso FROM Partecipazioni WHERE Progetto = "+ p.getId();
 		PreparedStatement ps = getConnection().prepareStatement(sql);
 
 		ResultSet rs = ps.executeQuery();
 		while(rs.next()) {
-			Partecipazione par = new Partecipazione(getUtente(rs.getString(1)), p);
+			Utente u = SystemUtilities.getInstance().getUtente(rs.getString(1));
+			Partecipazione par = new Partecipazione(u, p);
 			switch (rs.getInt(2)) {
-			case 0: par.setStato(StatiRichieste.CONFERMATO);break;
+			case 0: par.setStato(StatiRichieste.CONFERMATO); p.getPartecipanti().add(u);
+			break;
 
-			case 1: par.setStato(StatiRichieste.IN_VALUTAZIONE);break;
+			case 1: par.setStato(StatiRichieste.IN_VALUTAZIONE);if(rs.getInt(3)==1) u.addNotifica(par); u.update();break;
 			case 2: par.setStato(StatiRichieste.RIFIUTATO); break;
 			}
-//			p.getPartecipazioni().add(par);
+			p.getPartecipazioni().add(par);
+			
 		}
 	}
 	public void updatePartecipazione(Progetto p, Utente u, StatiRichieste s) throws SQLException {
@@ -333,25 +362,80 @@ public class DBManager {
 		}
 		return id;
 	}
-	public void getNotifiche(Utente u) throws SQLException {
-		String sql ="SELECT Id, Tipo, ref FROM Notifiche WHERE Destinatario ='"+ u.getUsername()+"'";
+	public Set<Subject> getNotifiche(Utente u) throws SQLException {
+		String sql ="SELECT Id, Tipo, IDtab FROM Notifiche WHERE Destinatario ='"+ u.getUsername()+"'";
 		PreparedStatement ps = getConnection().prepareStatement(sql);
 		ResultSet rs = ps.executeQuery();
+		Set<Subject> s = new HashSet<Subject>();
+		s.addAll(getInviti(u));
 		while(rs.next()) {
 			switch (rs.getInt(2)) {
-			case 0: 
-				
+			//se sono richieste di valutazione di un progetto
+			case 1: s.add(new RichiestaValutazione(u, getProgetto(rs.getInt(3))));
 				break;
-
-			default:
-				break;
+ 
 			}
 		}
+		return s;
 	}
 	
-    public void getInviti() {}
+   private Progetto getProgetto(int id) {
+	   List<Progetto> progetto = Bacheca.getInstance().getCatalogoProgetti().search(p->p.getId()==id);
+	   return progetto.get(0);
+   }
+	
+
+	public Set<Invito> getInviti(Utente u) throws SQLException {
+		String sql = "SELECT Utente, Ente, Stato FROM Inviti WHERE Utente = '"+ u.getUsername()+"'";
+		PreparedStatement ps = getConnection().prepareStatement(sql);
+		ResultSet rs = ps.executeQuery();
+		Set<Invito> s = new HashSet<Invito>();
+		while(rs.next()) {
+			s.add(new Invito(u, getUtente(rs.getString(2))));
+		}
+		return s;
+	}
     
-    public void updateInvito(Invito i) {
+	public void updateInvito(Invito i) throws SQLException {
+    	String sql = "update Collaborazione set stato =" +i.getStato().ordinal()+" where Utente ='"+ i.getProgettista()+"' and Ente = "+ getEnteId(i.getEnte());	
+    	PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+    
+    	ps.executeUpdate();
+
+    	ResultSet rs = ps.getGeneratedKeys();
+    	rs.next();
+    }
+    
+    public void updatePartecipazione(Partecipazione p) throws SQLException {
+    	String sql = "update Partecipazione set stato =" +p.getStato().ordinal()+" where Utente ='"+ p.getProgettista()+"' and Progetto = "+ getProgetto(p.getProgetto().getId());	
+    	PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+    
+    	ps.executeUpdate();
+
+    	ResultSet rs = ps.getGeneratedKeys();
+    	rs.next();
     	
     }
+    
+    public void updaterichiestaValutazione(RichiestaValutazione r) throws SQLException {
+    	String sql = "update Notifiche set stato =" +r.getStato()+ " where Utente= '" +r.getEsperto()+ "'and IDtab = "+r.getProgetto();
+    	PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        
+    	ps.executeUpdate();
+
+    	ResultSet rs = ps.getGeneratedKeys();
+    	rs.next();
+    }
+    public void insertRichiestaValutazioneProgetto(RichiestaValutazione r) throws SQLException {
+    	String sql = "INSERT INTO Notifiche(Destinatario, Testo, Tipo, IDtab) VALUES(?,?,?,?)";
+    	PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		ps.setString(1, r.getEsperto().getUsername());
+		ps.setString(2, r.toString());
+		ps.setInt(3, 1);
+		ps.setInt(4, r.getProgetto().getId());
+		ps.executeUpdate();
+		
+		ResultSet rs = ps.getGeneratedKeys();
+		rs.next();
+    } 
 }

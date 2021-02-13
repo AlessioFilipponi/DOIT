@@ -1,10 +1,13 @@
 package it.unicam.cs.ids.doit.view;
 
+import java.sql.SQLException;
+
 import it.unicam.cs.ids.doit.notifiche.RichiestaValutazione;
 import it.unicam.cs.ids.doit.progetto.FacadeProgetto;
 import it.unicam.cs.ids.doit.progetto.Progetto;
 import it.unicam.cs.ids.doit.ui.UserCommunicator;
 import it.unicam.cs.ids.doit.user.Utente;
+import it.unicam.cs.ids.doit.utilities.DBManager;
 
 public class IEsperto implements UserInterface{
     private Utente utente;
@@ -28,6 +31,10 @@ public class IEsperto implements UserInterface{
             richiestaValutazione.conferma();
         else
             richiestaValutazione.rifiuta(UserCommunicator.insertString("Per quale motivo?"));
-
+        try {
+			DBManager.getInstance().updaterichiestaValutazione(richiestaValutazione);
+		} catch (SQLException e) {
+			UserCommunicator.print(UserCommunicator.ERROR_INSERT);
+		}
     }
 }

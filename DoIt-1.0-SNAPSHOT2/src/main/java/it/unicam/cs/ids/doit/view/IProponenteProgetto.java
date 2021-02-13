@@ -42,8 +42,7 @@ public class IProponenteProgetto  implements UserInterface{
 		try {
 			DBManager.getInstance().insertProgetto(p);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			UserCommunicator.print(UserCommunicator.ERROR_INSERT);
 		}
 		if(UserCommunicator.select("Vuoi invitare progettisti?")) //Dopo la pubblicazione do all'utente la possibilità di invitare progettisti
 			invitaProgettista(p);
@@ -79,6 +78,11 @@ public class IProponenteProgetto  implements UserInterface{
 			progetto.getPartecipazioni().add(part);//Aggiungo la partecipazione al progetto
 //			p.getPartecipazioni().add(part);//Aggiungo la partecipazione al progettista
 			p.getUtente().getNotifiche().add(part);
+			try {
+				DBManager.getInstance().insertPartecipazione(part);
+			} catch (SQLException e) {
+				UserCommunicator.print(UserCommunicator.ERROR_INSERT);
+			}
 		}
 		UserCommunicator.print("Partecipazioni inviate");}}
 	}
@@ -104,13 +108,18 @@ public class IProponenteProgetto  implements UserInterface{
 		UserCommunicator.print("**LISTA ESPERTI**");
 		Esperto esperto =UserCommunicator.selectElement(esperti,"Seleziona un esperto");
 		RichiestaValutazione rv=new RichiestaValutazione(esperto.getUtente(),progetto);
+		try {
+			DBManager.getInstance().insertRichiestaValutazioneProgetto(rv);
+		} catch (SQLException e) {
+			UserCommunicator.print(UserCommunicator.ERROR_INSERT);
+		}
         esperto.getUtente().addNotifica(rv);}
 	}
 
 	public void modificaProgetto(Progetto p){
 		UserCommunicator.print("***Modifica Progetto***");
 		int insert=1;
-		while (insert>0)
+		while (insert>0) {
 			switch(insert=UserCommunicator.insertInteger("1) Modifica Titolo\n2) Modifica Specifiche\n3) Modifica competenze\n0)Esci\n La tua scelta"))
 			{
 				case 1:p.setTitolo(UserCommunicator.insertString("Inserire nuovo titolo"));break;
@@ -119,5 +128,11 @@ public class IProponenteProgetto  implements UserInterface{
 				case 0:break;
 				default:UserCommunicator.print("Scelta non valida!");
 			}
+		}
+		try {
+			DBManager.getInstance().modificaProgetto(p);
+		} catch (SQLException e) {
+			UserCommunicator.print(UserCommunicator.ERROR_INSERT);
+		}
 	}
 }

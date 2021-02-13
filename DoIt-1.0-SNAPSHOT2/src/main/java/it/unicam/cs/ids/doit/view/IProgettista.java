@@ -1,5 +1,7 @@
 package it.unicam.cs.ids.doit.view;
 
+import java.sql.SQLException;
+
 import it.unicam.cs.ids.doit.notifiche.Invito;
 import it.unicam.cs.ids.doit.notifiche.Partecipazione;
 import it.unicam.cs.ids.doit.progetto.FacadeProgetto;
@@ -8,6 +10,7 @@ import it.unicam.cs.ids.doit.progetto.StatiProgetto;
 import it.unicam.cs.ids.doit.ui.UserCommunicator;
 import it.unicam.cs.ids.doit.user.Ente;
 import it.unicam.cs.ids.doit.user.Utente;
+import it.unicam.cs.ids.doit.utilities.DBManager;
 
 public class IProgettista  implements UserInterface{
 
@@ -30,7 +33,14 @@ public class IProgettista  implements UserInterface{
 //			UserCommunicator.print("Richiesta di partecipazione inviata"); //Poi notifico l'utente
 //		}
 		Partecipazione par = new FacadeProgetto(p).richiediPartecipazione(getUtente());
-		if(par!=null) UserCommunicator.print("Richiesta di partecipazione inviata");
+		if(par!=null) {
+			UserCommunicator.print("Richiesta di partecipazione inviata");
+			try {
+				DBManager.getInstance().insertPartecipazione(par);
+			} catch (SQLException e) {
+				UserCommunicator.print(UserCommunicator.ERROR_INSERT);
+			}
+		}
 		else
 			UserCommunicator.print("Non puoi richiedere la partecipazione a questo progetto");
 	}
@@ -42,6 +52,11 @@ public class IProgettista  implements UserInterface{
 			p.accetta();
 		else
 			p.rifiuta();
+		try {
+			DBManager.getInstance().updatePartecipazione(p);
+		} catch (SQLException e) {
+			UserCommunicator.print(UserCommunicator.ERROR_INSERT);
+		}
 	}
 
 	public void valutaInvitoAdEnte(Invito i){
@@ -51,6 +66,11 @@ public class IProgettista  implements UserInterface{
 			i.accetta();
 		else
 			i.rifiuta();
+		try {
+			DBManager.getInstance().updateInvito(i);
+		} catch (SQLException e) {
+			UserCommunicator.print(UserCommunicator.ERROR_INSERT);
+		}
 	}
 
 	@Override

@@ -49,14 +49,16 @@ public class IMenu {
 	 */
 	public static boolean myMenu(Ente user, boolean flag) {
 		int selezione = -1;
-		do{UserCommunicator.print(
+		do{String updateMessage = "";
+		if (user.getUtente().getMessage() && !user.getUtente().getNotifiche().isEmpty()) updateMessage = " **new**\n";
+		UserCommunicator.print(
 				"****> MENU PRINCIPALE <****\n" +
 			"1) Visualizza progetti\n" +
 			"2) Proponi un progetto\n" +
 			"3) Valuta proposte di partecipazione\n" +
 			"4) Invita Collaboratore\n" +
 			"5) Richiedi Valutazione di una Proposta Progetto\n"+				
-			"6) Visualizza Notifiche\n"+
+			"6) Visualizza Notifiche"+ updateMessage+ 
 			"7) Esci\n"+
 			"8) Logout");
 		try{selezione = UserCommunicator.insertInteger("La tua scelta");}
@@ -84,23 +86,27 @@ public class IMenu {
 	 */
 	public static boolean myMenu(Progettista user, boolean flag) {
 		int selezione = -1;
-		do{UserCommunicator.print(
+		do{ String updateMessage = "\n";
+		if (user.getUtente().getMessage() && !user.getUtente().getNotifiche().isEmpty()) updateMessage = " **new**\n";
+			UserCommunicator.print(
 				"\n ****> MENU PRINCIPALE <****\n" +
 			"1) Visualizza progetti\n" +
 			"2) Proponi un progetto\n" +
 			"3) Valuta proposte di partecipazione\n" +
 			"4) Richiedi Valutazione di una Proposta Progetto\n"+				
-			"5) Visualizza Notifiche\n"+
+			"5) Visualizza Notifiche"+ updateMessage+
 			"6) Esci\n"+
 			"7) Logout");
-		try{selezione = UserCommunicator.insertInteger("La tua scelta");}
+		try{selezione = UserCommunicator.insertInteger("La tua scelta");
+}
 		catch (Exception e) {
 			UserCommunicator.print("Puoi solo inserire un numero da 1 a 6");
+			
 		}
 		}while(selezione<0|| selezione>7 );
 		switch(selezione)
 		{
-			case 1 : new IUtente(user.getUtente()).visualizzaProgetti();break;
+			case 1: new IUtente(user.getUtente()).visualizzaProgetti();break;
 			case 2: new IProponenteProgetto(user.getUtente()).createProject();break;
 			case 3: new IUtente(user.getUtente()).valutaPartecipazioni();break;
 			

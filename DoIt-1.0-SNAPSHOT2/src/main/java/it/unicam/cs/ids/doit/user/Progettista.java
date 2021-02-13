@@ -12,8 +12,7 @@ import it.unicam.cs.ids.doit.ui.Named;
 public class Progettista extends Ruolo implements Named{
   
    
-	private String nome;
-	private String cognome;
+	private String nomeCognome;
 	private Curriculum curriculum;
      
     public Progettista(Utente u) {
@@ -55,21 +54,14 @@ public class Progettista extends Ruolo implements Named{
 
 	@Override
 	protected void setName(String nome) {
-		String[] n = null;
-		try {n = nome.split(" ");}
-		catch (Exception e) {
-			this.nome = n[0];
-			return;
-		}
-		this.nome = n[0];
-		this.cognome = n[1];
+		this.nomeCognome = nome;
 		
 	}
 
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return nome + " " + cognome;
+		return nomeCognome;
 	}
 
 	@Override

@@ -11,10 +11,12 @@ public class RichiestaValutazione implements  Subject{
     private Set<Observer> destinatari;
     private Progetto progetto;
     private StatiRichieste stato;
+	private Utente esperto;
 
     public RichiestaValutazione(Utente esperto, Progetto progetto) {
         this.destinatari = new HashSet<>();
         this.progetto = progetto;
+        this.esperto = esperto;
         attach(esperto);
         attach(progetto.getProponente());
         esperto.addNotifica(this);
@@ -62,4 +64,13 @@ public class RichiestaValutazione implements  Subject{
         }
 
     }
+	@Override
+	public StatiRichieste getStato() {
+		// TODO Auto-generated method stub
+		return stato;
+	}
+	
+	public Utente getEsperto() {
+		return esperto;
+	}
 }

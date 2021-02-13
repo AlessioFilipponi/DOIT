@@ -3,10 +3,13 @@ package it.unicam.cs.ids.doit;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import it.unicam.cs.ids.doit.cataloghi.Bacheca;
 
 import it.unicam.cs.ids.doit.notifiche.Partecipazione;
+import it.unicam.cs.ids.doit.notifiche.Subject;
 import it.unicam.cs.ids.doit.progetto.Progetto;
 import it.unicam.cs.ids.doit.ui.UserCommunicator;
 import it.unicam.cs.ids.doit.user.Ente;
@@ -90,18 +93,27 @@ public class DoIt {
 //		// TODO Auto-generated catch block
 //		e.printStackTrace();
 //	}
-		Set<String> c =SystemUtilities.getInstance().getCompetenze();
-		for (String string : c) {
-			System.out.println(string.toString() + " " +SystemUtilities.getInstance().getMapCompetenze().get(string));
-//		}
-//       try {
+		Runnable load= ()-> {
+       try {
 //		Bacheca.getInstance().getCatalogoProgetti().addAll(DBManager.getInstance().listaProgetti());
-//		Bacheca.getInstance().getCatalogoUtenti().addAll(DBManager.getInstance().getListaUtenti());
-//		
-//	} catch (SQLException e) {
-//		e.getMessage();
-	}
-		InteractionManager.start();
+		Bacheca.getInstance().getCatalogoUtenti().clear();
+		Bacheca.getInstance().getCatalogoUtenti().addAll(DBManager.getInstance().getListaUtenti());
+		Progetto p = DBManager.getInstance().listaProgetti().get(0);
+		for (Partecipazione s : p.getPartecipazioni()) {
+			 for(Subject t:s.getProgettista().getNotifiche()) {
+				 System.out.println(t.toString());
+			 }
+		}
+		
+	} catch (SQLException e) {
+		e.getMessage();
+	}};
+		Runnable doit = ()->{InteractionManager.start();};
+		ExecutorService executor = Executors.newCachedThreadPool(); 
+		executor.execute(load);
+		executor.execute(doit);
+		executor.shutdown();
+		
 	}
 //Prova commit Linux
 }

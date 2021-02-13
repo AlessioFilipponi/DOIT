@@ -68,7 +68,13 @@ Utente utente;
 						p.accetta();
 					else
 						p.rifiuta();
+					try {
+						DBManager.getInstance().updatePartecipazione(p);
+					} catch (SQLException e) {
+						UserCommunicator.print(UserCommunicator.ERROR_INSERT);
+					}
 				}
+				
 				else
 				{
 					UserCommunicator.print("Il progetto è già stato confermato!");//Altrimenti lo informo che il progetto è già confermato
@@ -105,7 +111,13 @@ Utente utente;
 				if(par!=null) UserCommunicator.print("Richiesta di partecipazione inviata");
 				else
 					UserCommunicator.print("Non puoi richiedere la partecipazione a questo progetto");
-			}
+				try {
+					DBManager.getInstance().insertPartecipazione(par);
+				} catch (SQLException e) {
+					UserCommunicator.print(UserCommunicator.ERROR_INSERT);
+				}
+		}
+			
 		
 			if(utente.getRole().isExpert())
 				if(UserCommunicator.select("Vuoi valutare questo progetto?"))
@@ -119,10 +131,12 @@ Utente utente;
 
 	public void visualizzaNotifiche(){
 		if(getUtente().getNotifiche().isEmpty()) {
-			UserCommunicator.print("Non ci sono notifiche");
+			getUtente().setMessage(false);
+			UserCommunicator.print("Le Tue Notifiche sono State Inviate e Non ci sono Notifiche da Leggere");
 		}
 		else {
 		UserCommunicator.print("***LE TUE NOTIFICHE***");
+		getUtente().setMessage(false);
 		Subject notifica =UserCommunicator.selectElement(getUtente().getNotifiche(),"Seleziona una notifica");
 		if(notifica instanceof RichiestaValutazione)
 			new IEsperto(getUtente()).valutaPropostaProgetto(((RichiestaValutazione)notifica));

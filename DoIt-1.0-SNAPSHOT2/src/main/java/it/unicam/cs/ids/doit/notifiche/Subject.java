@@ -6,4 +6,5 @@ public interface Subject extends Named {
     void attach(Observer o);
     void detach(Observer o);
     void notifyObservers();
+    StatiRichieste getStato();
 }

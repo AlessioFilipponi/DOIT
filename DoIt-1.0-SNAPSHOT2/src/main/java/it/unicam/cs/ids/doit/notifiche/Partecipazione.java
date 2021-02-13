@@ -76,6 +76,7 @@ public class Partecipazione implements Subject{
 				progetto.setStato(StatiProgetto.PUBBLICATO);/*Se ce ne sono tante quante i posti disponibili, il progetto passa nello stato "CONFERMATO"
 				e da questo momento sarà impossibile rihiedere una partecipazione o inviare proposte*/
 				progettista.getCurriculum().getProgetti().add(progetto);
+				progetto.getPartecipanti().add(progettista);
 			}
 		}
 		else

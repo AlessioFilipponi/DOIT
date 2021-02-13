@@ -76,4 +76,10 @@ public class Invito implements Subject
 		return progettista;
 	}
 
+	@Override
+	public StatiRichieste getStato() {
+		// TODO Auto-generated method stub
+		return stato;
+	}
+
 }

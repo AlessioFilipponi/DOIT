@@ -20,6 +20,7 @@ public class Utente implements Named, Observer {
 	private Set<Subject> notifiche; //deve essere un set
 	private Ruolo ruolo;
 	private String email;
+	private boolean newMessage;
 	/**
 	 * Crea un utente
 	 * @param nome nome
@@ -37,7 +38,7 @@ public class Utente implements Named, Observer {
 		ID=(int)(Math.random()*10000+Math.random()*1000+Math.random()*100+Math.random()*10)+"";
 
 		this.notifiche = new HashSet<Subject>();
-		Bacheca.getInstance().getCatalogoUtenti().add(this);
+//		Bacheca.getInstance().getCatalogoUtenti().add(this);
 //		this.ruolo = new Progettista(this);
 
 	}
@@ -116,10 +117,18 @@ public class Utente implements Named, Observer {
 	 * metodo che viene chiamato dalla notify delle varie subject
 	 * */
 	@Override
-	public void update() {
-		System.out.println("Nuova notifica");
+	public boolean update() {
+		newMessage = true;
+		return newMessage;
 		//qui il metodo dovrebbe chiamare un sistem.out ma della classe che interagisce con l'utente
 
+	}
+	public boolean getMessage() {
+		return newMessage;
+	}
+	
+	public void setMessage(boolean m) {
+		this.newMessage = m;
 	}
 
 //	public Set<Progetto> getCurriculum(){

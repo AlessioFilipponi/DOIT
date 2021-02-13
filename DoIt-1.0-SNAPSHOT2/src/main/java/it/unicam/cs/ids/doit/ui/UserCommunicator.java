@@ -8,6 +8,7 @@ import java.util.*;
 public class UserCommunicator {
 	public static String ERROR_INT_MESSAGE = "Puoi solo inserire un numero";
 	public static String EXIT_MESSAGE = "Inserire -1 per terminare l'inserimento";
+	public static String ERROR_INSERT = "Errore: inserimento non riuscito";
     /**
      * Stampa un meszaggio per l'utente
      * @param message
