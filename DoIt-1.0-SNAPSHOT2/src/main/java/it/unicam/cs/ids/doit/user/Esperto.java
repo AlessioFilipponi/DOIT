@@ -9,20 +9,20 @@ import it.unicam.cs.ids.doit.ui.Named;
 
 public class Esperto extends Ruolo implements Named{
     private Set<String> competenze;
-    private Set<Partecipazione> partecipazioni;
     private Utente utente;
 	private String nome;
+	private Curriculum curriculum;
 
     public Esperto(Utente u) {
         super(u);
         this.competenze = new HashSet<>();
-        this.partecipazioni = new HashSet<>();
+        this.curriculum = new Curriculum(u);
     }
 
 
 
     @Override
-    public Set<String> getcompetenze() {
+    public Set<String> getCompetenze() {
         return competenze;
     }
 
@@ -56,7 +56,7 @@ public class Esperto extends Ruolo implements Named{
 	}
 
 	@Override
-	protected void setName(String nome) {
+	public void setName(String nome) {
 		this.nome = nome;
 		
 	}
@@ -65,8 +65,7 @@ public class Esperto extends Ruolo implements Named{
 
 	@Override
 	public Curriculum getCurriculum() {
-		// TODO Auto-generated method stub
-		return null;
+		return curriculum;
 	}
 
 
@@ -75,4 +74,6 @@ public class Esperto extends Ruolo implements Named{
 	public int getRuolo() {
 		return 1;
 	}
+
+
 }

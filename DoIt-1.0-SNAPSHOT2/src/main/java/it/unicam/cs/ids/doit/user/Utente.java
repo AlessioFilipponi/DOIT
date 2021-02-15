@@ -11,7 +11,32 @@ import it.unicam.cs.ids.doit.notifiche.Subject;
 import it.unicam.cs.ids.doit.progetto.Progetto;
 import it.unicam.cs.ids.doit.progetto.Valutazione;
 import it.unicam.cs.ids.doit.ui.Named;
-public class Utente implements Named, Observer {
+public class Utente implements Named, Observer,User {
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Utente other = (Utente) obj;
+		if (username == null) {
+			if (other.username != null)
+				return false;
+		} else if (!username.equals(other.username))
+			return false;
+		return true;
+	}
 
 	private String username;
 
@@ -79,7 +104,7 @@ public class Utente implements Named, Observer {
 	 * @return competenze
 	 */
 	public Set<String> getCompetenze() {
-		return getRole().getcompetenze();
+		return getRole().getCompetenze();
 	}
 
 

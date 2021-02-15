@@ -35,7 +35,7 @@ public class IMenu {
 			{
 				case 1 : IGuest.VisualizzaProgetti();break;
 				case 2 : IGuest.registrazione();
-				case 3 : user = IGuest.logIn(); return user;
+				case 3 : user = IGuest.logIn();if(user!=null) return user;break;
 				case 4: flag = false;break;
 //				case 5: main(args);flag=false;break;
 			}

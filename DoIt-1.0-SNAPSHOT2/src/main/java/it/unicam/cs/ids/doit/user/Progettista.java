@@ -24,7 +24,7 @@ public class Progettista extends Ruolo implements Named{
 
 
     @Override
-    public Set<String> getcompetenze() {
+    public Set<String> getCompetenze() {
         return curriculum.getCompetenze();
     }
 
@@ -53,7 +53,7 @@ public class Progettista extends Ruolo implements Named{
 	}
 
 	@Override
-	protected void setName(String nome) {
+	public void setName(String nome) {
 		this.nomeCognome = nome;
 		
 	}
@@ -66,7 +66,6 @@ public class Progettista extends Ruolo implements Named{
 
 	@Override
 	public Curriculum getCurriculum() {
-		// TODO Auto-generated method stub
 		return curriculum;
 	}
 
@@ -75,6 +74,9 @@ public class Progettista extends Ruolo implements Named{
 	public int getRuolo() {
 		return 0;
 	}
+
+
+	
 
 
 

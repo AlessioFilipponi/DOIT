@@ -27,7 +27,12 @@ class DBManagerTest {
 	private Utente u1;
 	@Test
 	void testGetInstance() {
-		fail("Not yet implemented");
+		try {
+			DBManager.getInstance().getListaUtenti();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
@@ -63,18 +68,26 @@ class DBManagerTest {
 	
 	@Test
 	void testInsertProgetto() {
-//		u1 = new Utente("luigi");
-//		SystemUtilities.getInstance().getPassword().put("luigi", "pass".hashCode());
-//		SystemUtilities.getInstance().getUtenti().put("luigi", u1);
-//	
-//		u1.setRuolo(new Progettista(u1));
-//		u1.insertName("Luigi DiMaio");
-//		try {
+		u1 = new Utente("pipp90");
+		SystemUtilities.getInstance().getPassword().put("pippo90", "pass".hashCode());
+		SystemUtilities.getInstance().getUtenti().put("pippo90", u1);
+	
+		u1.setRuolo(new Progettista(u1));
+		u1.insertName("LCavallo");
+		try {
 //			DBManager.getInstance().insertUtente(u1, "pass");
-//		} catch (SQLException e1) {
-//			// TODO Auto-generated catch block
-//			System.out.println("Username ESISTENTE");
-//		}
+			Bacheca.getInstance().getCatalogoUtenti().addAll(DBManager.getInstance().getListaUtenti());
+			List<Utente> u = DBManager.getInstance().getListaUtenti();
+			for (Utente utente : u) {
+				System.out.println(utente.toString());
+			}
+		  assertTrue(Bacheca.getInstance().getCatalogoUtenti().contains(u1));
+		} 
+		catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			System.out.println("Username ESISTENTE");
+			}
+		
 //		p1 = new Progetto(u1);
 //		p1.setTitolo("Progetto Governo 5 Stelle");
 //		p1.setSpecifiche("Ricerco ministri per un nuovo Governo del Movimento 5 Stelle");
@@ -103,6 +116,7 @@ class DBManagerTest {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
+	
 		
 	}
 

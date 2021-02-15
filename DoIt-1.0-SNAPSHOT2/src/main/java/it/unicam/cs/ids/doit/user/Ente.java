@@ -2,6 +2,7 @@ package it.unicam.cs.ids.doit.user;
 
 
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,23 +13,24 @@ import it.unicam.cs.ids.doit.progetto.Progetto;
 
 public class Ente extends Ruolo{
     private String descrizione;
-    private List<Utente> collaboratori;
+    private List<User> collaboratori;
     private String name;
     private Curriculum curriculum;
  
     public Ente(Utente u) {
     	super(u);
+    	this.collaboratori = new ArrayList<User>();
     	this.curriculum = new Curriculum(u);
     
     }
    
-
-    public Set<String> getcompetenze() {
-        Set<String> competenze=new HashSet<>();
-        for(Utente u:collaboratori)
-            competenze.addAll(u.getCompetenze());
-        return competenze;
-    }
+//
+//    public Set<String> getcompetenze() {
+//        Set<String> competenze=new HashSet<>();
+//        for(User u:collaboratori)
+//            competenze.addAll(u.getCompetenze());
+//        return competenze;
+//    }
 
   
 
@@ -37,7 +39,7 @@ public class Ente extends Ruolo{
         return false;
     }
 
-    public void addCollaboratore(Utente c){
+    public void addCollaboratore(User c){
         collaboratori.add(c);
     }
 
@@ -59,26 +61,25 @@ public class Ente extends Ruolo{
 
 	@Override
 	public boolean isEnte() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
-	protected void setName(String nome) {
+	public void setName(String nome) {
 		this.name = nome;
 		
 	}
 
 	@Override
-	protected String getName() {
+	public String getName() {
 		// TODO Auto-generated method stub
 		return name;
 	}
 
 	@Override
 	public Curriculum getCurriculum() {
-		for (Utente utente : collaboratori) {
-		     curriculum.getProgetti().addAll(utente.getCurriculum().getProgetti());
+		for (User utente : collaboratori) {
+		    if (utente!=null) curriculum.getProgetti().addAll(utente.getCurriculum().getProgetti());
 		}
 		return curriculum;
 	}
@@ -88,4 +89,16 @@ public class Ente extends Ruolo{
 	public int getRuolo() {
 		return 2;
 	}
+
+
+	@Override
+	public Set<String> getCompetenze() {
+		Set<String> c = new HashSet<String>();
+		for (User u : collaboratori) {
+			if (u!=null) c.addAll(u.getCompetenze());
+		}
+		return c;
+	}
+
+	
 }

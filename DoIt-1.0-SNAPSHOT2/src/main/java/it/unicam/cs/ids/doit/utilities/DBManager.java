@@ -49,11 +49,17 @@ public class DBManager {
 	public Connection getConnection() throws SQLException {
 		if(connection == null) {
 			MysqlConnectionPoolDataSource dataSource = new MysqlConnectionPoolDataSource();
-			dataSource.setServerName("www.innovation-technology.it");
+//			dataSource.setServerName("www.innovation-technology.it");
+//			dataSource.setPortNumber(3306);
+//			dataSource.setUser("doit");
+//			dataSource.setPassword("doit");
+//			dataSource.setDatabaseName("doit");
+			dataSource.setServerName("innovationtechnolog.ddns.net");
 			dataSource.setPortNumber(3306);
 			dataSource.setUser("doit");
 			dataSource.setPassword("doit");
 			dataSource.setDatabaseName("doit");
+
 			
 			connection = dataSource.getConnection();
 		}
@@ -94,7 +100,7 @@ public class DBManager {
 	}
 
 	private Collection<? extends Valutazione> getValutazioni(Progetto c) throws SQLException {
-		String sql = "SELECT * FROM doit.Valutazioni_Progetti WHERE Progetto ="+ c.getId();
+		String sql = "SELECT * FROM Valutazioni_Progetti WHERE Progetto ="+ c.getId();
 		 PreparedStatement ps = getConnection().prepareStatement(sql);
 			
 		 ResultSet rs = ps.executeQuery();
@@ -108,7 +114,7 @@ public class DBManager {
 	}
 
 	private Utente getUtente(String string) throws SQLException {
-		if (SystemUtilities.getInstance().getUtenti().isEmpty()){
+		if (SystemUtilities.getInstance().getUtenti().get(string)==null ){
 		String sql = "SELECT Nome, Ruolo, email FROM Utenti where Username = '"+ string+"'";
         PreparedStatement ps = getConnection().prepareStatement(sql);
 		
@@ -145,19 +151,26 @@ public class DBManager {
 		return e;
 	}
 
-	public void insertUtente(Utente u, String password) throws SQLException {
-		String sql = "INSERT INTO Utenti(username, nome, password, ruolo, email) VALUES(?, ?, ?, ?, ?)";
+	public void insertUtente(Utente u, String password)  {
+		String sql = "INSERT INTO utenti(username, nome, password, ruolo, email) VALUES(?, ?, ?, ?, ?);";
 		
-		PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-		ps.setString(1, u.getUsername());
-		ps.setString(2, u.getName());
-		ps.setInt(3, password.hashCode());
-		ps.setInt(4, u.getRuolo());
-		ps.setString(5, u.getEmail());
-		ps.executeUpdate();
-		insertCompetenzeUtente(u, u.getCompetenze());
-		ResultSet rs = ps.getGeneratedKeys();
-		rs.next();
+		PreparedStatement ps;
+		try {
+			ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			ps.setString(1, u.getUsername());
+			ps.setString(2, u.getName());
+			ps.setInt(3, password.hashCode());
+			ps.setInt(4, u.getRuolo());
+			ps.setString(5, u.getEmail());
+			ps.executeUpdate();
+			insertCompetenzeUtente(u, u.getCompetenze());
+			ResultSet rs = ps.getGeneratedKeys();
+			rs.next();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 		
 	}
@@ -320,10 +333,10 @@ public class DBManager {
 
 		ResultSet rs = ps.executeQuery();
 		while(rs.next()) {
-			Utente u = SystemUtilities.getInstance().getUtente(rs.getString(1));
+			Utente u = getUtente(rs.getString(1));
 			Partecipazione par = new Partecipazione(u, p);
 			switch (rs.getInt(2)) {
-			case 0: par.setStato(StatiRichieste.CONFERMATO); p.getPartecipanti().add(u);
+			case 0: par.setStato(StatiRichieste.CONFERMATO); 
 			break;
 
 			case 1: par.setStato(StatiRichieste.IN_VALUTAZIONE);if(rs.getInt(3)==1) u.addNotifica(par); u.update();break;
@@ -371,7 +384,7 @@ public class DBManager {
 		while(rs.next()) {
 			switch (rs.getInt(2)) {
 			//se sono richieste di valutazione di un progetto
-			case 1: s.add(new RichiestaValutazione(u, getProgetto(rs.getInt(3))));
+			case 2: s.add(new RichiestaValutazione(u, getProgetto(rs.getInt(3))));
 				break;
  
 			}
@@ -386,7 +399,7 @@ public class DBManager {
 	
 
 	public Set<Invito> getInviti(Utente u) throws SQLException {
-		String sql = "SELECT Utente, Ente, Stato FROM Inviti WHERE Utente = '"+ u.getUsername()+"'";
+		String sql = "SELECT Utente, Ente FROM Inviti WHERE Utente = '"+ u.getUsername()+"'";
 		PreparedStatement ps = getConnection().prepareStatement(sql);
 		ResultSet rs = ps.executeQuery();
 		Set<Invito> s = new HashSet<Invito>();

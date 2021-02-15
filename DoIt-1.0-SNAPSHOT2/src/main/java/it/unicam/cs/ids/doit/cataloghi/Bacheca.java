@@ -95,28 +95,28 @@ public class Bacheca {
 	 * @return la lista degli Esperti che hanno tra le competenze la competenza passata
 	 */
 	public Collection<Esperto> getEspertiCompetenti(String competenza){
-		return Bacheca.catalogoEsperti.search(p-> p.getcompetenze().contains(competenza));
+		return Bacheca.catalogoEsperti.search(p-> p.getCompetenze().contains(competenza));
 	}
 	/**
 	 * @param competenze cercate
 	 * @return la lista degli Esperti che hanno tra le competenze la competenza passata
 	 */
 	public Collection<Esperto> getEspertiCompetenti(Collection<String> competenze){
-		return Bacheca.catalogoEsperti.search(p-> p.getcompetenze().containsAll(competenze));
+		return Bacheca.catalogoEsperti.search(p-> p.getCompetenze().containsAll(competenze));
 	}
 	/**
 	 * @param competenze cercate
 	 * @return la lista degli Esperti che hanno tra le competenze la competenza passata
 	 */
 	public Collection<Progettista> getProgettistiCompetenti(String competenze){
-		return Bacheca.catalogoProgettisti.search(p-> p.getcompetenze().contains(competenze));
+		return Bacheca.catalogoProgettisti.search(p-> p.getCompetenze().contains(competenze));
 	}
 	/**
 	 * @param competenze cercate
 	 * @return la lista degli Esperti che hanno tra le competenze la competenza passata
 	 */
 	public Collection<Progettista> getProgettistiCompetenti(Collection<String> competenze){
-		return Bacheca.catalogoProgettisti.search(p-> p.getcompetenze().containsAll(competenze));
+		return Bacheca.catalogoProgettisti.search(p-> p.getCompetenze().containsAll(competenze));
 	}
 	public Catalogo<Ente> getCatalogoEnti() {
 		return catalogoEnti;

@@ -7,13 +7,13 @@ import it.unicam.cs.ids.doit.cataloghi.Bacheca;
 import it.unicam.cs.ids.doit.notifiche.Partecipazione;
 import it.unicam.cs.ids.doit.progetto.Progetto;
 
-public abstract class Ruolo {
+public abstract class Ruolo implements User{
 	private Utente utente;
 
 	public Ruolo(Utente u) {
 		this.utente = u;
 	}
-	abstract public Set<String> getcompetenze();
+	abstract public Set<String> getCompetenze();
 	public List<Progetto> getPartecipazioni(){
 		return Bacheca.getInstance().getCatalogoProgetti().search(p->p.getCandidati().contains(getUtente()));
 	}
@@ -25,9 +25,11 @@ public abstract class Ruolo {
 	public Utente getUtente() {
 		return utente;
 	}
-	protected abstract void setName(String nome);
-	protected abstract String getName();
+	public abstract void setName(String nome);
+	public abstract String getName();
 	public abstract int getRuolo();
-
+    public String getUsername() {
+    	return utente.getUsername();
+    }
 
 }

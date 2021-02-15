@@ -1,6 +1,5 @@
 package it.unicam.cs.ids.doit.view;
 
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,7 +10,6 @@ import it.unicam.cs.ids.doit.ui.UserCommunicator;
 import it.unicam.cs.ids.doit.user.Ente;
 import it.unicam.cs.ids.doit.user.Progettista;
 import it.unicam.cs.ids.doit.user.Utente;
-import it.unicam.cs.ids.doit.utilities.DBManager;
 import it.unicam.cs.ids.doit.utilities.SystemUtilities;
 
 public class IGuest {
@@ -73,7 +71,7 @@ public class IGuest {
 				UserCommunicator.print("Puoi solo inserire [1] o [0]");
 			}}while(c<0 || c>1 );
 			switch(c){
-			case 1: return registrazione();
+			case 1: return registrazione(); 
 			
 			}
 			
@@ -106,13 +104,6 @@ public class IGuest {
 		
 		}
 		if (u==null) SystemUtilities.getInstance().getPassword().remove(ut);
-		else
-			try {
-				DBManager.getInstance().insertUtente(u, pass);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 //		UserCommunicator.insertString("Il tuo ID è: "+ut.getID()+" Premere [INVIO] per continuare... ");
 //		start();
 		return u;
@@ -122,11 +113,7 @@ public class IGuest {
 		Utente u = new Utente(ut);
 		u.setRuolo(new Progettista(u));
 		u.insertName(UserCommunicator.insertString("Inserisci Nome e Cognome"));
-		String email;
-		do{
-			email = UserCommunicator.insertString("Inserisci Email");
-			if (emailValidator(email)) u.insertEmail(email);
-		}while(!emailValidator(email));
+		u.insertEmail(UserCommunicator.insertString("Inserisci Email"));
 		u.getCurriculum().getCompetenze().addAll(UserCommunicator.selectMultipleElementsS(SystemUtilities.getInstance().getCompetenze(), "Seleziona Competenze"));
 		u.getCurriculum().setDescrizione(UserCommunicator.insertString("Inserisci una descrizione delle tue esperienze lavorative"));
 		int c =-1;
@@ -139,7 +126,6 @@ public class IGuest {
 		case 1: {SystemUtilities.getInstance().getUtenti().put(ut, u);
 		Bacheca.getInstance().getCatalogoUtenti().add(u);
 		u.getRole().addToCatalogo();
-		
 		break;}
 		case 0: u = null;
 		
@@ -178,6 +164,7 @@ public class IGuest {
 		case 1: {new IEnte(u).InvitaCollaboratore(); break;
 		}
 		case 0: break;}
+		break;
 		}
 		case 0: u = null;
 		
