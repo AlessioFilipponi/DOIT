@@ -19,7 +19,7 @@ public class Progettista extends Ruolo implements Named{
     	super(u);
     
     	this.curriculum = new Curriculum(u);
-    	addToCatalogo();
+    	
     }
 
 
@@ -38,11 +38,6 @@ public class Progettista extends Ruolo implements Named{
         return false;
     }
 
-	@Override
-	public void addToCatalogo() {
-		Bacheca.getInstance().getCatalogoProgettisti().add(this);
-		
-	}
 
 
 

@@ -1,5 +1,6 @@
 package it.unicam.cs.ids.doit.view;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,6 +11,7 @@ import it.unicam.cs.ids.doit.ui.UserCommunicator;
 import it.unicam.cs.ids.doit.user.Ente;
 import it.unicam.cs.ids.doit.user.Progettista;
 import it.unicam.cs.ids.doit.user.Utente;
+import it.unicam.cs.ids.doit.utilities.DBManager;
 import it.unicam.cs.ids.doit.utilities.SystemUtilities;
 
 public class IGuest {
@@ -105,6 +107,10 @@ public class IGuest {
 		}
 		if (u==null) SystemUtilities.getInstance().getPassword().remove(ut);
 //		UserCommunicator.insertString("Il tuo ID è: "+ut.getID()+" Premere [INVIO] per continuare... ");
+		else
+			
+				SystemUtilities.getInstance().insertUtente(ut, pass);
+			
 //		start();
 		return u;
 	}
@@ -125,7 +131,7 @@ public class IGuest {
 		}switch(c){
 		case 1: {SystemUtilities.getInstance().getUtenti().put(ut, u);
 		Bacheca.getInstance().getCatalogoUtenti().add(u);
-		u.getRole().addToCatalogo();
+		
 		break;}
 		case 0: u = null;
 		
@@ -153,7 +159,7 @@ public class IGuest {
 		}switch(c){
 		case 1: {SystemUtilities.getInstance().getUtenti().put(ut, u);
 		Bacheca.getInstance().getCatalogoUtenti().add(u);
-		u.getRole().addToCatalogo();
+	
 		int d =-1;
 		try {d =UserCommunicator.insertInteger("Vuoi invitare dei collaboratori?\n"
 				+ "[1] yes "

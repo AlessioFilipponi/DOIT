@@ -54,12 +54,16 @@ public class DBManager {
 //			dataSource.setUser("doit");
 //			dataSource.setPassword("doit");
 //			dataSource.setDatabaseName("doit");
-			dataSource.setServerName("innovationtechnolog.ddns.net");
+//			dataSource.setServerName("innovationtechnolog.ddns.net");
+//			dataSource.setPortNumber(3306);
+//			dataSource.setUser("doit");
+//			dataSource.setPassword("doit");
+//			dataSource.setDatabaseName("doit");
+			dataSource.setServerName("127.0.0.1");
 			dataSource.setPortNumber(3306);
-			dataSource.setUser("doit");
-			dataSource.setPassword("doit");
-			dataSource.setDatabaseName("doit");
-
+			dataSource.setUser("root");
+			dataSource.setPassword("pass123");
+			dataSource.setDatabaseName("ProgettoIDS");
 			
 			connection = dataSource.getConnection();
 		}
@@ -151,11 +155,11 @@ public class DBManager {
 		return e;
 	}
 
-	public void insertUtente(Utente u, String password)  {
+	public void insertUtente(Utente u, String password) throws SQLException  {
 		String sql = "INSERT INTO utenti(username, nome, password, ruolo, email) VALUES(?, ?, ?, ?, ?);";
 		
 		PreparedStatement ps;
-		try {
+
 			ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, u.getUsername());
 			ps.setString(2, u.getName());
@@ -166,10 +170,7 @@ public class DBManager {
 			insertCompetenzeUtente(u, u.getCompetenze());
 			ResultSet rs = ps.getGeneratedKeys();
 			rs.next();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		
 		
 		

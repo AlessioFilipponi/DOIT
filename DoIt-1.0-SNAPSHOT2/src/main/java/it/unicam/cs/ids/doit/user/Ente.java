@@ -13,13 +13,13 @@ import it.unicam.cs.ids.doit.progetto.Progetto;
 
 public class Ente extends Ruolo{
     private String descrizione;
-    private List<User> collaboratori;
+    private List<Utente> collaboratori;
     private String name;
     private Curriculum curriculum;
  
     public Ente(Utente u) {
     	super(u);
-    	this.collaboratori = new ArrayList<User>();
+    	this.collaboratori = new ArrayList<Utente>();
     	this.curriculum = new Curriculum(u);
     
     }
@@ -39,7 +39,7 @@ public class Ente extends Ruolo{
         return false;
     }
 
-    public void addCollaboratore(User c){
+    public void addCollaboratore(Utente c){
         collaboratori.add(c);
     }
 
@@ -51,11 +51,7 @@ public class Ente extends Ruolo{
 		this.descrizione = descrizione;
 	}
 
-	@Override
-	public void addToCatalogo() {
-		Bacheca.getInstance().getCatalogoEnti().add(this);
-		
-	}
+
 
 
 
@@ -78,7 +74,7 @@ public class Ente extends Ruolo{
 
 	@Override
 	public Curriculum getCurriculum() {
-		for (User utente : collaboratori) {
+		for (Utente utente : collaboratori) {
 		    if (utente!=null) curriculum.getProgetti().addAll(utente.getCurriculum().getProgetti());
 		}
 		return curriculum;
@@ -94,7 +90,7 @@ public class Ente extends Ruolo{
 	@Override
 	public Set<String> getCompetenze() {
 		Set<String> c = new HashSet<String>();
-		for (User u : collaboratori) {
+		for (Utente u : collaboratori) {
 			if (u!=null) c.addAll(u.getCompetenze());
 		}
 		return c;

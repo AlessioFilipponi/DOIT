@@ -18,12 +18,12 @@ public class SystemUtilities {
 	
 	public void insertUtente(String username, String u) {
 		password.put(username, u.hashCode());
-//		try {
-			DBManager.getInstance().insertUtente(getUtente(username), u);
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+			try { 
+				DBManager.getInstance().insertUtente(getUtente(username), u);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public Utente getUtente(String username) {

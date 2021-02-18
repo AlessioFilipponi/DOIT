@@ -63,7 +63,7 @@ public class IProponenteProgetto  implements UserInterface{
 			UserCommunicator.print("Non esistono ancora progettisti in DOIT!"); //informo l'utente nel caso essi non esistano
 			
 		}
-		else{Collection<Progettista> progettisti= Bacheca.getInstance().getProgettistiCompetenti(progetto.getCompetenzeNecessarie()); //Lista dei progettisti competenti
+		else{Collection<Utente> progettisti= Bacheca.getInstance().getProgettistiCompetenti(progetto.getCompetenzeNecessarie()); //Lista dei progettisti competenti
 //		for(Utente u:Bacheca.getInstance().getCatalogoUtenti()) //Per ogni progettista che ha tra le competenze tutte quelle richieste nel progetto
 //			if(u.getCompetenze().containsAll(progetto.getCompetenzeNecessarie()))
 //				progettisti.add(u); //Aggiungo il progettista alla lista dei competenti
@@ -71,13 +71,13 @@ public class IProponenteProgetto  implements UserInterface{
 		if(progettisti.isEmpty())
 			UserCommunicator.print("Non ci sono progettisti competenti!");
 		else {
-		Collection<Progettista> progs= UserCommunicator.selectMultipleElements(progettisti,"Aggiungi progettista n°");
-		for(Progettista p:progs)//Per ognuno dei selezionati
+		Collection<Utente> progs= UserCommunicator.selectMultipleElements(progettisti,"Aggiungi progettista n°");
+		for(Utente p:progs)//Per ognuno dei selezionati
 		{
-			Partecipazione part= new Partecipazione(p.getUtente(),progetto); //Creo una partecipazione tra il progetto e il progettista
+			Partecipazione part= new Partecipazione(p,progetto); //Creo una partecipazione tra il progetto e il progettista
 			progetto.getPartecipazioni().add(part);//Aggiungo la partecipazione al progetto
 //			p.getPartecipazioni().add(part);//Aggiungo la partecipazione al progettista
-			p.getUtente().getNotifiche().add(part);
+			p.getNotifiche().add(part);
 			try {
 				DBManager.getInstance().insertPartecipazione(part);
 			} catch (SQLException e) {
@@ -96,7 +96,7 @@ public class IProponenteProgetto  implements UserInterface{
 	public void richiediValutazionePropostaProgetto(){
 		if(Bacheca.getInstance().getListaMieiProgetti(utente).isEmpty()) UserCommunicator.print("Non hai pubblicato progetti");
 		else {Progetto progetto=new IUtente(utente).selezionaProgetto(Bacheca.getInstance().getListaMieiProgetti(getUtente().getID()));
-		Collection<Esperto> esperti= Bacheca.getInstance().getEspertiCompetenti(progetto.getCompetenzeNecessarie());
+		Collection<Utente> esperti= Bacheca.getInstance().getEspertiCompetenti(progetto.getCompetenzeNecessarie());
 //		for (Utente u:Bacheca.getCatalogoEsperti().)
 //			if(u.getCompetenze().containsAll(progetto.getCompetenzeNecessarie()))
 //				esperti.add(u);
@@ -106,14 +106,14 @@ public class IProponenteProgetto  implements UserInterface{
 			return;
 		}
 		UserCommunicator.print("**LISTA ESPERTI**");
-		Esperto esperto =UserCommunicator.selectElement(esperti,"Seleziona un esperto");
-		RichiestaValutazione rv=new RichiestaValutazione(esperto.getUtente(),progetto);
+		Utente esperto =UserCommunicator.selectElement(esperti,"Seleziona un esperto");
+		RichiestaValutazione rv=new RichiestaValutazione(esperto,progetto);
 		try {
 			DBManager.getInstance().insertRichiestaValutazioneProgetto(rv);
 		} catch (SQLException e) {
 			UserCommunicator.print(UserCommunicator.ERROR_INSERT);
 		}
-        esperto.getUtente().addNotifica(rv);}
+        esperto.addNotifica(rv);}
 	}
 
 	public void modificaProgetto(Progetto p){

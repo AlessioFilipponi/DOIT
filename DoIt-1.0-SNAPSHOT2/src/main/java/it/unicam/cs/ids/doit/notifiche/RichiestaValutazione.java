@@ -8,12 +8,12 @@ import it.unicam.cs.ids.doit.user.Utente;
 
 public class RichiestaValutazione implements  Subject{
     private String motivazione;
-    private Set<Observer> destinatari;
+    private Set<Observer<Utente>> destinatari;
     private Progetto progetto;
     private StatiRichieste stato;
-	private Utente esperto;
+	private Observer<Utente> esperto;
 
-    public RichiestaValutazione(Utente esperto, Progetto progetto) {
+    public RichiestaValutazione(Observer<Utente> esperto, Progetto progetto) {
         this.destinatari = new HashSet<>();
         this.progetto = progetto;
         this.esperto = esperto;
@@ -23,7 +23,7 @@ public class RichiestaValutazione implements  Subject{
         stato= StatiRichieste.IN_VALUTAZIONE;
 
     }
-    private void setStato(StatiRichieste inValutazione) {
+    public void setStato(StatiRichieste inValutazione) {
         stato = inValutazione;
         notifyObservers();
 
@@ -66,11 +66,12 @@ public class RichiestaValutazione implements  Subject{
     }
 	@Override
 	public StatiRichieste getStato() {
-		// TODO Auto-generated method stub
 		return stato;
 	}
 	
 	public Utente getEsperto() {
-		return esperto;
+		return esperto.getObserver();
 	}
+	
+	
 }

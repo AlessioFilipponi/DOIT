@@ -42,11 +42,7 @@ public class Esperto extends Ruolo implements Named{
 		return utente;
 	}
 
-	@Override
-	public void addToCatalogo() {
-		Bacheca.getInstance().getCatalogoEsperti().add(this);
-		
-	}
+
 
 
 	@Override

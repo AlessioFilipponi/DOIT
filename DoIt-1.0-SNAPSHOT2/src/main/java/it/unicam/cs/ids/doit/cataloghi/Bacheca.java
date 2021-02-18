@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import it.unicam.cs.ids.doit.progetto.Progetto;
+import it.unicam.cs.ids.doit.ui.UserCommunicator;
 import it.unicam.cs.ids.doit.user.Ente;
 import it.unicam.cs.ids.doit.user.Esperto;
 import it.unicam.cs.ids.doit.user.Progettista;
@@ -12,28 +13,18 @@ import it.unicam.cs.ids.doit.user.Progettista;
 import it.unicam.cs.ids.doit.user.Utente;
 import it.unicam.cs.ids.doit.utilities.DBManager;
 
+
 public class Bacheca {
 	private static Catalogo<Utente> catalogoUtenti;
 	private static Catalogo<Progetto> catalogoProgetti;
 	private static Bacheca instance;
-	private static Catalogo<Esperto> catalogoEsperti;
-	private static Catalogo<Progettista> catalogoProgettisti;
-	private static Catalogo<Ente> catalogoEnti;
+
 	
 	private Bacheca() {
-		Bacheca.catalogoProgetti = new Catalogo<Progetto>();
-//		try {
-//			catalogoProgetti.addAll(DBManager.getInstance().listaProgetti());
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		Bacheca.catalogoUtenti = new Catalogo<Utente>();
-		Bacheca.catalogoEsperti = new Catalogo<Esperto>();
-		Bacheca.catalogoProgettisti = new Catalogo<Progettista>();
-		Bacheca.catalogoEnti = new Catalogo<Ente>();
-		
+		getCatalogoProgetti();
+		getCatalogoProgettisti();
 	}
+	
 	public static Bacheca getInstance() {
 		if(instance ==null)
 			instance = new Bacheca();
@@ -45,8 +36,15 @@ public class Bacheca {
 	 * @return catalogo progetti
 	*/
 	
-	public  Catalogo<Progetto> getCatalogoProgetti()
-	{
+	public  Catalogo<Progetto> getCatalogoProgetti(){
+		if (catalogoProgetti==null) {
+		try {
+			catalogoProgetti = new Catalogo<Progetto>();
+			catalogoProgetti.catalogo = DBManager.getInstance().listaProgetti();
+		} catch (SQLException e) {
+            UserCommunicator.print(UserCommunicator.ERROR_INSERT);
+		}
+	}
 		return catalogoProgetti;
 	}
 
@@ -54,25 +52,35 @@ public class Bacheca {
 	 * Restituisce il catalog dei progettisti
 	 * @return catalogo progettisti
 	 */
-	public Collection<Utente> getCatalogoUtenti()
-	{
-		return catalogoUtenti;
-	}
+	public Collection<Utente> getCatalogoUtenti(){
+		if (catalogoUtenti==null) {
+			try { 
+				catalogoUtenti = new Catalogo<Utente>();
+				catalogoUtenti.catalogo = DBManager.getInstance().getListaUtenti();
+			} catch (SQLException e) {
+	            UserCommunicator.print(UserCommunicator.ERROR_INSERT);
+			}
+		}
+			return catalogoUtenti;
+		}
+	
 
 	/**
 	 * Restituisce il catalogo degli esperti
 	 * @return catalogo Esperti
 	 */
-	public Collection<Esperto> getCatalogoEsperti(){
-		return catalogoEsperti;
+	public Collection<Utente> getCatalogoEsperti(){
+		if(catalogoUtenti==null) getCatalogoUtenti();
+		return catalogoUtenti.search(p-> p.getRole().isExpert());
 	}
 	/**
 	 *  @return catalogo dei Progettisti
 	 * 
 	 */
 
-	public Collection<Progettista> getCatalogoProgettisti(){
-		return catalogoProgettisti;
+	public Collection<Utente> getCatalogoProgettisti(){
+		if(catalogoUtenti==null) getCatalogoUtenti();
+		return catalogoUtenti.search(p-> !p.getRole().isExpert() && !p.getRole().isEnte());
 	}
 	/**
 	 * Restituisce la lista dei progetti proposti da un utente
@@ -80,6 +88,7 @@ public class Bacheca {
 	 * @return lista dei progetti dell'utente
 	 */
 	public  Collection<Progetto> getListaMieiProgetti(String userID) {
+		if (catalogoProgetti==null) getCatalogoProgetti();
 		return catalogoProgetti.search(p->p.getCreatorID().equals(userID) || p.getIDSelezionatore().equals(userID));
 	}
 	/** 
@@ -87,6 +96,7 @@ public class Bacheca {
 	 * @return la lista dei progetti dell'utente
 	 */
 	public Collection<Progetto> getListaMieiProgetti(Utente u) {
+		if (catalogoProgetti==null) getCatalogoProgetti();
 		return catalogoProgetti.search(p->p.getProponente().equals(u));
 	}
 	
@@ -94,32 +104,39 @@ public class Bacheca {
 	 * @param collection cercate
 	 * @return la lista degli Esperti che hanno tra le competenze la competenza passata
 	 */
-	public Collection<Esperto> getEspertiCompetenti(String competenza){
-		return Bacheca.catalogoEsperti.search(p-> p.getCompetenze().contains(competenza));
+	public Collection<Utente> getEspertiCompetenti(String competenza){
+		if(catalogoUtenti==null) getCatalogoUtenti();
+		return Bacheca.catalogoUtenti.search(p-> p.getCompetenze().contains(competenza) && p.getRole().isExpert());
 	}
 	/**
 	 * @param competenze cercate
 	 * @return la lista degli Esperti che hanno tra le competenze la competenza passata
 	 */
-	public Collection<Esperto> getEspertiCompetenti(Collection<String> competenze){
-		return Bacheca.catalogoEsperti.search(p-> p.getCompetenze().containsAll(competenze));
+	public Collection<Utente> getEspertiCompetenti(Collection<String> competenze){
+		if(catalogoUtenti==null) getCatalogoUtenti();
+		return Bacheca.catalogoUtenti.search(p-> p.getCompetenze().containsAll(competenze) && p.getRole().isExpert());
 	}
 	/**
 	 * @param competenze cercate
 	 * @return la lista degli Esperti che hanno tra le competenze la competenza passata
 	 */
-	public Collection<Progettista> getProgettistiCompetenti(String competenze){
-		return Bacheca.catalogoProgettisti.search(p-> p.getCompetenze().contains(competenze));
+	public Collection<Utente> getProgettistiCompetenti(String competenze){
+		if(catalogoUtenti==null) getCatalogoUtenti();
+		return Bacheca.catalogoUtenti.search(p-> p.getCompetenze().contains(competenze) && (!p.getRole().isExpert()));
 	}
 	/**
 	 * @param competenze cercate
 	 * @return la lista degli Esperti che hanno tra le competenze la competenza passata
 	 */
-	public Collection<Progettista> getProgettistiCompetenti(Collection<String> competenze){
-		return Bacheca.catalogoProgettisti.search(p-> p.getCompetenze().containsAll(competenze));
+	public Collection<Utente> getProgettistiCompetenti(Collection<String> competenze){
+		if(catalogoUtenti==null) getCatalogoUtenti();
+		return Bacheca.catalogoUtenti.search(p-> p.getCompetenze().containsAll(competenze));
 	}
-	public Catalogo<Ente> getCatalogoEnti() {
-		return catalogoEnti;
+	
+	
+	public Collection<Utente> getCatalogoEnti() {
+		if(catalogoUtenti==null) getCatalogoUtenti();
+		return catalogoUtenti.search(p-> p.getRole().isEnte());
 	}
 
 

@@ -6,29 +6,29 @@ import java.util.Set;
 import it.unicam.cs.ids.doit.user.Ente;
 import it.unicam.cs.ids.doit.user.Utente;
 
-public class Invito implements Subject
+public class Invito implements Subject<Utente>
 {
-    StatiRichieste stato;
-    private Utente ente;
-    private Set<Observer> destinatari;
-    private Utente progettista;
+    public StatiRichieste stato;
+    private Observer<Utente> ente;
+    private Set<Observer<Utente>> destinatari;
+    private Observer<Utente> progettista;
 
 
 
 
-	public Invito(Utente ente,Utente progettista) {
-        this.destinatari = new HashSet<Observer>();
+	public Invito(Observer<Utente> ente,Observer<Utente> progettista) {
+        this.destinatari = new HashSet<Observer<Utente>>();
         this.ente=ente;
         stato= StatiRichieste.IN_VALUTAZIONE;
         this.progettista=progettista;
         attach(progettista);
         attach(ente);
         notifyObservers();
-        progettista.getNotifiche().add(this);
+        progettista.getObserver().getNotifiche().add(this);
     }
 
     @Override
-    public void attach(Observer o) {
+    public void attach(Observer<Utente> o) {
         destinatari.add(o);
     }
 
@@ -47,20 +47,20 @@ public class Invito implements Subject
 
     @Override
     public String getName() {
-        return null;
+        return "Invito";
     }
 
     public Utente getEnte() {
-        return ente;
+        return ente.getObserver();
     }
 
     public void accetta(){
         if(stato== StatiRichieste.IN_VALUTAZIONE)
         {
             stato= StatiRichieste.CONFERMATO;
-            ente.getNotifiche().add(this);
+            ente.getObserver().getNotifiche().add(this);
             notifyObservers();
-            ((Ente)(ente.getRole())).addCollaboratore(progettista);
+            ((Ente)(ente.getObserver().getRole())).addCollaboratore(progettista.getObserver());
         }
 
     }
@@ -68,18 +68,24 @@ public class Invito implements Subject
         if(stato== StatiRichieste.IN_VALUTAZIONE)
         {
             stato= StatiRichieste.RIFIUTATO;
-            ente.getNotifiche().add(this);
+            ente.getObserver().getNotifiche().add(this);
         }
 
     }
     public Utente getProgettista() {
-		return progettista;
+		return progettista.getObserver();
 	}
 
 	@Override
 	public StatiRichieste getStato() {
 		// TODO Auto-generated method stub
 		return stato;
+	}
+
+	@Override
+	public void setStato(StatiRichieste s) {
+		stato = s;
+		
 	}
 
 }

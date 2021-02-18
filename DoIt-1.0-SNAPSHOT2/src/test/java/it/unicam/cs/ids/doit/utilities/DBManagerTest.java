@@ -1,11 +1,19 @@
 package it.unicam.cs.ids.doit.utilities;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.DynamicTest.stream;
 
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.print.DocFlavor.INPUT_STREAM;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,7 +76,18 @@ class DBManagerTest {
 	
 	@Test
 	void testInsertProgetto() {
+		
+//		Arrays.asList("ciao, casa, divano").stream().collect(Collectors.joining(","));
 		u1 = new Utente("pipp90");
+//		Stream<String> s = Stream.of("pippo", "pluto", "cavallo");
+//		s.forEachOrdered(p-> {
+//			try {
+//				System.in.read();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		});
 		SystemUtilities.getInstance().getPassword().put("pippo90", "pass".hashCode());
 		SystemUtilities.getInstance().getUtenti().put("pippo90", u1);
 	

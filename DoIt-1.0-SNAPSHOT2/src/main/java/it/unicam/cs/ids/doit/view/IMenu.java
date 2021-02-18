@@ -50,7 +50,7 @@ public class IMenu {
 	public static boolean myMenu(Ente user, boolean flag) {
 		int selezione = -1;
 		do{String updateMessage = "";
-		if (user.getUtente().getMessage() && !user.getUtente().getNotifiche().isEmpty()) updateMessage = " **new**\n";
+		if (user.getUtente().getMessage() && !user.getUtente().getNotifiche().isEmpty()) updateMessage = " **new**";
 		UserCommunicator.print(
 				"****> MENU PRINCIPALE <****\n" +
 			"1) Visualizza progetti\n" +
@@ -87,7 +87,7 @@ public class IMenu {
 	public static boolean myMenu(Progettista user, boolean flag) {
 		int selezione = -1;
 		do{ String updateMessage = "\n";
-		if (user.getUtente().getMessage() && !user.getUtente().getNotifiche().isEmpty()) updateMessage = " **new**\n";
+		if (user.getUtente().getMessage() && !user.getUtente().getNotifiche().isEmpty()) updateMessage = " **new**";
 			UserCommunicator.print(
 				"\n ****> MENU PRINCIPALE <****\n" +
 			"1) Visualizza progetti\n" +

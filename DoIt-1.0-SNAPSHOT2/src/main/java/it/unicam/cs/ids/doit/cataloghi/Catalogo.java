@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class Catalogo <E> implements Collection<E> {
-    private Collection<E> catalogo;
+    protected  Collection<E> catalogo;
 
     /**
      * Builds a new {@link Catalogo}

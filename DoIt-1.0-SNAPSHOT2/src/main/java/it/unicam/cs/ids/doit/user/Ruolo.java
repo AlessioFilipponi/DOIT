@@ -18,7 +18,7 @@ public abstract class Ruolo implements User{
 		return Bacheca.getInstance().getCatalogoProgetti().search(p->p.getCandidati().contains(getUtente()));
 	}
 	abstract public boolean isExpert();
-	abstract public void addToCatalogo();
+
 	abstract public boolean isEnte();
 	abstract public Curriculum getCurriculum();
 	

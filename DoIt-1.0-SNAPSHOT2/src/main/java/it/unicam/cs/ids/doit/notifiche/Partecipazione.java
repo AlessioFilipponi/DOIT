@@ -9,25 +9,25 @@ import it.unicam.cs.ids.doit.user.Utente;
 
 public class Partecipazione implements Subject{
 
-	private Utente progettista;
+	private Observer<Utente> progettista;
 	private Progetto progetto;
 	private StatiRichieste stato;
-	private Set<Observer> destinatari;
+	private Set<Observer<Utente>> destinatari;
 
 	/**
 	 * Crea una nuova partecipazione tra un progettista e un progetto
 	 * @param progettista il progettista
 	 * @param progetto il progetto
 	 */
-	public Partecipazione(Utente progettista, Progetto progetto) {
+	public Partecipazione(Observer<Utente> progettista, Progetto progetto) {
 		if (progetto.getStato() != StatiProgetto.PENDING) throw new IllegalArgumentException("Non puoi partecipare a questo progetto");
 		this.progettista=progettista;
 		this.progetto=progetto;
-		destinatari = new HashSet<Observer>();
+		destinatari = new HashSet<Observer<Utente>>();
 		progetto.getPartecipazioni().add(this);
 		attach(progettista);
 		attach(progetto.getProponente());
-//		setStato(StatiRichieste.IN_VALUTAZIONE);
+		setStato(StatiRichieste.IN_VALUTAZIONE);
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class Partecipazione implements Subject{
 	 * @return progettista
 	 */
 	public Utente getProgettista() {
-		return progettista;
+		return progettista.getObserver();
 	}
 
 	/**
@@ -75,8 +75,7 @@ public class Partecipazione implements Subject{
 			if(progetto.getPartecipanti().size()>=progetto.getNumPartecipanti()) { //Poi controlla tutte le partecipazioni confermate nel progetto
 				progetto.setStato(StatiProgetto.PUBBLICATO);/*Se ce ne sono tante quante i posti disponibili, il progetto passa nello stato "CONFERMATO"
 				e da questo momento sarà impossibile rihiedere una partecipazione o inviare proposte*/
-				progettista.getCurriculum().getProgetti().add(progetto);
-				progetto.getPartecipanti().add(progettista);
+				progetto.getPartecipanti().add(getProgettista());
 			}
 		}
 		else
@@ -96,7 +95,6 @@ public class Partecipazione implements Subject{
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return "partecipazione";
 	}
 
