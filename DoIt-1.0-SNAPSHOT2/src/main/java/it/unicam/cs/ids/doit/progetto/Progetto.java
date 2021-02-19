@@ -81,12 +81,10 @@ public class Progetto implements Named {
 		else
 			competenze=new StringBuilder("");
 		if(!valutazioni.isEmpty())//Se ci sono delle valutazioni
-			for(Valutazione v: valutazioni) //faccio la somma dei voti
-				valutazione+=v.getVoto();
-		valutazione=valutazione/valutazioni.size();//E lo divido per il totale, così quando andrò a inserire nella stringa mi viene la media
-//		for(Utente u: Bacheca.getInstance().getCatalogoUtenti())//Cerco il nome del creatore nel catalogo utenti
-//			if(u.getID().equals(creatorID))
-//				creatore=u.getNome();
+//			for(Valutazione v: valutazioni) //faccio la somma dei voti
+//				valutazione+=v.getVoto();
+//		valutazione=valutazione/valutazioni.size();//E lo divido per il totale, così quando andrò a inserire nella stringa mi viene la media
+			valutazione = mediaVoti();
 		creatore = proponente.getName();
 		//Costruisco la stringa da ritornare mediante una serie di append allo stringbuilder
 		return	s.append(titolo.toUpperCase()).append("\n\n")
@@ -94,7 +92,7 @@ public class Progetto implements Named {
 				.append(specifiche).append("\n")
 				.append("Partecipanti: ").append(getPartecipanti().size()).append("/").append(getNumPartecipanti()).append("\n")
 				.append("Creato da: ").append(creatore).append("\n")
-//				.append("Voto complessivo: ").append(valutazione).append("\n")
+				.append("Voto complessivo: ").append(valutazione).append("\n")
 				.append("Voto: ").append(mediaVoti()).append("\n")
 				.append("Stato: ").append(getStato().toString()).append("\n")
 				.append(competenze).toString();//<------ Questo toString() completa la funzione trasformando in stringa lo StringBuilder fino ad ora generato
@@ -129,6 +127,8 @@ public class Progetto implements Named {
 	 * @param titolo
 	 */
 	public void setTitolo(String titolo) {
+		if(stato==StatiProgetto.PUBBLICATO)
+			throw new IllegalStateException("Il progetto è già stato pubblicato!");
 		this.titolo = titolo;
 	}
 
@@ -137,6 +137,8 @@ public class Progetto implements Named {
 	 * @param specifiche specifiche da impostare
 	 */
 	public void setSpecifiche(String specifiche) {
+		if(stato==StatiProgetto.PUBBLICATO)
+			throw new IllegalStateException("Il progetto è già stato pubblicato!");
 		this.specifiche = specifiche;
 	}
 
@@ -145,6 +147,10 @@ public class Progetto implements Named {
 	 * @param numPartecipanti numero di partecipanti ammessi
 	 */
 	public void setNumPartecipanti(int numPartecipanti) {
+		if(stato==StatiProgetto.PUBBLICATO)
+			throw new IllegalStateException("Il progetto è già stato pubblicato!");
+		if(numPartecipanti<=0)
+			throw new IllegalArgumentException("Il numero minimo di partecipanti deve essere maggiore di 0!");
 		this.numPartecipanti = numPartecipanti;
 	}
 
@@ -296,9 +302,12 @@ public class Progetto implements Named {
 	}
 
 	public Date getData() {
-		// TODO Auto-generated method stub
 		return data;
 	}
 	
+	public void addPartecipante(Partecipazione p) {
+		if (p.getStato()!= StatiRichieste.CONFERMATO) throw new IllegalArgumentException("Impossibile aggiungere partecipante");
+		this.partecipazioni.add(p);
+	}
 	
 }

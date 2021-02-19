@@ -5,6 +5,15 @@ import java.util.Set;
 
 import it.unicam.cs.ids.doit.user.Ente;
 import it.unicam.cs.ids.doit.user.Utente;
+/**
+ * Invito è la classe che rappresenta l'invito inviato da
+ * un Utente con il Ruolo di Ente ad un Utente per iniziare
+ * una collaborazione.
+ * Se l'Invito viene accettato l'Utente viene aggiunto tra
+ * i collaboratori dell'Ente
+ * 
+ * */
+
 
 public class Invito implements Subject<Utente>
 {
@@ -16,8 +25,9 @@ public class Invito implements Subject<Utente>
 
 
 
-	public Invito(Observer<Utente> ente,Observer<Utente> progettista) {
-        this.destinatari = new HashSet<Observer<Utente>>();
+	public Invito(Observer<Utente> ente, Observer<Utente> progettista) {
+        if (!ente.getObserver().getRole().isEnte()) throw new IllegalArgumentException("Non sei un Ente!");
+		this.destinatari = new HashSet<Observer<Utente>>();
         this.ente=ente;
         stato= StatiRichieste.IN_VALUTAZIONE;
         this.progettista=progettista;
@@ -33,13 +43,13 @@ public class Invito implements Subject<Utente>
     }
 
     @Override
-    public void detach(Observer o) {
+    public void detach(Observer<Utente> o) {
         destinatari.remove(o);
     }
 
     @Override
     public void notifyObservers() {
-        for (Observer observer : destinatari) {
+        for (Observer<Utente> observer : destinatari) {
        
             observer.update();
         }
@@ -50,10 +60,17 @@ public class Invito implements Subject<Utente>
         return "Invito";
     }
 
+    /**
+     * @return l'Ente che ha inviato l'invito
+     */
     public Utente getEnte() {
         return ente.getObserver();
     }
-
+    /**
+     * metodo che cambia lo stato della richiesta in CONFERMAto
+     * e aggiunge l'Utente ai collaboratori dell'Ente e lo notifica
+     * 
+     */
     public void accetta(){
         if(stato== StatiRichieste.IN_VALUTAZIONE)
         {
@@ -62,14 +79,17 @@ public class Invito implements Subject<Utente>
             notifyObservers();
             ((Ente)(ente.getObserver().getRole())).addCollaboratore(progettista.getObserver());
         }
+        else throw new IllegalStateException(ERROR_STATE);
 
     }
+    
     public void rifiuta(){
         if(stato== StatiRichieste.IN_VALUTAZIONE)
         {
             stato= StatiRichieste.RIFIUTATO;
             ente.getObserver().getNotifiche().add(this);
         }
+        else throw new IllegalStateException(ERROR_STATE);
 
     }
     public Utente getProgettista() {
@@ -78,7 +98,6 @@ public class Invito implements Subject<Utente>
 
 	@Override
 	public StatiRichieste getStato() {
-		// TODO Auto-generated method stub
 		return stato;
 	}
 

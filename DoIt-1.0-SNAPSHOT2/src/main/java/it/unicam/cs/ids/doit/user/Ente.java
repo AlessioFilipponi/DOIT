@@ -23,16 +23,7 @@ public class Ente extends Ruolo{
     	this.curriculum = new Curriculum(u);
     
     }
-   
-//
-//    public Set<String> getcompetenze() {
-//        Set<String> competenze=new HashSet<>();
-//        for(User u:collaboratori)
-//            competenze.addAll(u.getCompetenze());
-//        return competenze;
-//    }
 
-  
 
     @Override
     public boolean isExpert() {
@@ -82,7 +73,7 @@ public class Ente extends Ruolo{
 
 
 	@Override
-	public int getRuolo() {
+	public int getRoleNumber() {
 		return 2;
 	}
 

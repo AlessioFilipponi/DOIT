@@ -36,8 +36,9 @@ public class IProponenteProgetto  implements UserInterface{
 //		if(!competenze.equals(""))
 //			p.setCompetenzeProgettisti(competenze);
 		p.setCompetenzeProgettisti(competenze);
-		if(!UserCommunicator.select("Vuoi pubblicare il progetto?"))//Do la possibilità all'utente di pubblicare il progetto
-			return;//Se non lo vuole pubblicare do' tutto quello che è stato appena fatto in pasto al garbage collector
+		if(!UserCommunicator.select("Vuoi pubblicare il progetto?")) {//Do la possibilità all'utente di pubblicare il progetto
+			p = null;//annulla
+			return;}//Se non lo vuole pubblicare do' tutto quello che è stato appena fatto in pasto al garbage collector
 		Bacheca.getInstance().getCatalogoProgetti().add(p); //Se invece lo vuole pubblicare aggiungo il progetto al catalogo
 		try {
 			DBManager.getInstance().insertProgetto(p);
@@ -68,6 +69,7 @@ public class IProponenteProgetto  implements UserInterface{
 //			if(u.getCompetenze().containsAll(progetto.getCompetenzeNecessarie()))
 //				progettisti.add(u); //Aggiungo il progettista alla lista dei competenti
 		int progeressivo=1;
+		progettisti.remove(getUtente());
 		if(progettisti.isEmpty())
 			UserCommunicator.print("Non ci sono progettisti competenti!");
 		else {

@@ -331,6 +331,11 @@ public class Catalogo <E> implements Collection<E> {
         catalogo.clear();
     }
     
+    /**
+     * @param p Predicate<E> funzione di ricerca
+     * @return List<E> insieme di elementi nel catalogo 
+     * che corrispondono al criterio di ricerca
+     * */
     public List<E> search(Predicate<E> p){
     	List<E> list = new ArrayList<E>();
     	for (E e : catalogo) {

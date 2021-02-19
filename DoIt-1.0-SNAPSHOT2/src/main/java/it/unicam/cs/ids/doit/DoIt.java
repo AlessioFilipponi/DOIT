@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import it.unicam.cs.ids.doit.cataloghi.Bacheca;
-
+import it.unicam.cs.ids.doit.cataloghi.Catalogo;
 import it.unicam.cs.ids.doit.notifiche.Partecipazione;
 import it.unicam.cs.ids.doit.notifiche.StatiRichieste;
 import it.unicam.cs.ids.doit.notifiche.Subject;
@@ -27,15 +27,14 @@ import it.unicam.cs.ids.doit.view.InteractionManager;
 public class DoIt {
 
 	public static void main(String [] args) {
-		Bacheca.getInstance().getCatalogoUtenti();
-		Runnable load= ()-> {
-			Bacheca.getInstance().getCatalogoProgetti();
+		Runnable load = ()-> {
 			Bacheca.getInstance().getCatalogoUtenti();
-     
+			Bacheca.getInstance().getCatalogoProgetti();
 		};
+	
 		Runnable doit = ()->{
-			InteractionManager.start();
-			};
+			InteractionManager.start();};
+		
 		ExecutorService executor = Executors.newCachedThreadPool(); 
 		executor.execute(load);
 		executor.execute(doit);

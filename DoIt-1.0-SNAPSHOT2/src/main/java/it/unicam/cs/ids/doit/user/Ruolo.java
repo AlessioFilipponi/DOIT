@@ -7,7 +7,7 @@ import it.unicam.cs.ids.doit.cataloghi.Bacheca;
 import it.unicam.cs.ids.doit.notifiche.Partecipazione;
 import it.unicam.cs.ids.doit.progetto.Progetto;
 
-public abstract class Ruolo implements User{
+public abstract class Ruolo{
 	private Utente utente;
 
 	public Ruolo(Utente u) {
@@ -27,7 +27,7 @@ public abstract class Ruolo implements User{
 	}
 	public abstract void setName(String nome);
 	public abstract String getName();
-	public abstract int getRuolo();
+	public abstract int getRoleNumber();
     public String getUsername() {
     	return utente.getUsername();
     }

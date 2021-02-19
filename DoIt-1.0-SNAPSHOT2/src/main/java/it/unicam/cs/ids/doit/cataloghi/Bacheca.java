@@ -21,8 +21,6 @@ public class Bacheca {
 
 	
 	private Bacheca() {
-		getCatalogoProgetti();
-		getCatalogoProgettisti();
 	}
 	
 	public static Bacheca getInstance() {
@@ -133,7 +131,9 @@ public class Bacheca {
 		return Bacheca.catalogoUtenti.search(p-> p.getCompetenze().containsAll(competenze));
 	}
 	
-	
+	/**
+	 * @return lista degli Enti 
+	 */
 	public Collection<Utente> getCatalogoEnti() {
 		if(catalogoUtenti==null) getCatalogoUtenti();
 		return catalogoUtenti.search(p-> p.getRole().isEnte());

@@ -9,8 +9,12 @@ public class Valutazione {
 	private String commento;
 
 	public Valutazione(Utente esperto, int voto, String commento) {
+		if(esperto==null || commento==null)
+			throw new NullPointerException("Non è possibile aggiungere campi null");
 		this.esperto = esperto;
-		this.voto = voto;
+		if(voto>=1&&voto<=5)
+			this.voto = voto;
+		else throw new IllegalArgumentException("Il voto deve essere compreso tra 1 e 5");
 		this.commento = commento;
 	}
 

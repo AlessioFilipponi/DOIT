@@ -59,7 +59,7 @@ public class IMenu {
 			"4) Invita Collaboratore\n" +
 			"5) Richiedi Valutazione di una Proposta Progetto\n"+				
 			"6) Visualizza Notifiche"+ updateMessage+ 
-			"7) Esci\n"+
+			"\n7) Esci\n"+
 			"8) Logout");
 		try{selezione = UserCommunicator.insertInteger("La tua scelta");}
 		catch (Exception e) {
@@ -95,7 +95,7 @@ public class IMenu {
 			"3) Valuta proposte di partecipazione\n" +
 			"4) Richiedi Valutazione di una Proposta Progetto\n"+				
 			"5) Visualizza Notifiche"+ updateMessage+
-			"6) Esci\n"+
+			"\n6) Esci\n"+
 			"7) Logout");
 		try{selezione = UserCommunicator.insertInteger("La tua scelta");
 }

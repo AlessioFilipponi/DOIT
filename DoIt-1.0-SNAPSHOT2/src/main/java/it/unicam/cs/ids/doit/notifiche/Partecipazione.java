@@ -74,12 +74,13 @@ public class Partecipazione implements Subject{
 			setStato(StatiRichieste.CONFERMATO);//Modifica lo stato della partecipazione in "CONFERMATO"
 			if(progetto.getPartecipanti().size()>=progetto.getNumPartecipanti()) { //Poi controlla tutte le partecipazioni confermate nel progetto
 				progetto.setStato(StatiProgetto.PUBBLICATO);/*Se ce ne sono tante quante i posti disponibili, il progetto passa nello stato "CONFERMATO"
+				
 				e da questo momento sarà impossibile rihiedere una partecipazione o inviare proposte*/
-				progetto.getPartecipanti().add(getProgettista());
+//				progetto.getPartecipanti().add(getProgettista());
 			}
 		}
 		else
-			throw new IllegalStateException("Impossibile modificare la scelta!");
+			throw new IllegalStateException(ERROR_STATE);
 
 	}
 
@@ -90,7 +91,7 @@ public class Partecipazione implements Subject{
 		if(stato== StatiRichieste.IN_VALUTAZIONE)//stessa condizione iniziale di sopra
 			setStato(StatiRichieste.RIFIUTATO); //Imposta lo stato della partecipazione a rifiutato
 		else
-			throw new IllegalStateException("Impossibile modificare la scelta!");
+			throw new IllegalStateException(ERROR_STATE);
 	}
 
 	@Override
@@ -112,7 +113,7 @@ public class Partecipazione implements Subject{
 
 	@Override
 	public void notifyObservers() {
-		for (Observer observer : destinatari) {
+		for (Observer<Utente> observer : destinatari) {
 			observer.update();
 			}
 		}

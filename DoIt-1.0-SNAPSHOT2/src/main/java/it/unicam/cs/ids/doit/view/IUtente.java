@@ -70,13 +70,19 @@ Utente utente;
 						p.rifiuta();
 					try {
 						DBManager.getInstance().updatePartecipazione(p);
+						
 					} catch (SQLException e) {
 						UserCommunicator.print(UserCommunicator.ERROR_INSERT);
 					}
 				}
 				
 				else
-				{
+					//Il progetto è stato pubblicato quindi aggiorno anche il db
+				{    try {
+					DBManager.getInstance().modificaProgetto(proj);
+				} catch (SQLException e) {
+					UserCommunicator.print(UserCommunicator.ERROR_INSERT);
+				}
 					UserCommunicator.print("Il progetto è già stato confermato!");//Altrimenti lo informo che il progetto è già confermato
 					break;
 				}
@@ -95,10 +101,12 @@ Utente utente;
 	 */
 	public void visualizzaDettagliProgetto(Progetto p) {
 		UserCommunicator.print(p.toString());//stampa i dettagli del progetto
-		if(p.getIDSelezionatore().equals(getUtente().getID())) //Se l'utente che ha chiamato questo caso d'uso è il selezionatore del progetto
+		if(p.getProponente().equals(getUtente())) //Se l'utente che ha chiamato questo caso d'uso è il selezionatore del progetto
 		{
 			if(UserCommunicator.select("Valutare le partecipazioni per questo progetto?")) //gli do la possibilità di valutare le partecipazioni
-				valutaPartecipazioni(p);
+				new IProponenteProgetto(getUtente()).invitaProgettista(p);
+			if(UserCommunicator.select("Vuoi modificare il Progetto?"))
+				new IProponenteProgetto(getUtente()).modificaProgetto(p);
 		}
 		else //Altrimenti
 		{

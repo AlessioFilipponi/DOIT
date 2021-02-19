@@ -17,7 +17,7 @@ public class Utente implements Named, Observer {
 
 	private String ID;
 
-	private Set<Subject> notifiche; //deve essere un set
+	private Set<Subject<Utente>> notifiche; //deve essere un set
 	private Ruolo ruolo;
 	private String email;
 	private boolean newMessage;
@@ -35,11 +35,10 @@ public class Utente implements Named, Observer {
 		/*
 		Inizializza automaticamente tutti i campi
 		 */
-		ID=(int)(Math.random()*10000+Math.random()*1000+Math.random()*100+Math.random()*10)+"";
+		ID = nome.hashCode() + "";
+//		ID=(int)(Math.random()*10000+Math.random()*1000+Math.random()*100+Math.random()*10)+"";
+		this.notifiche = new HashSet<Subject<Utente>>();
 
-		this.notifiche = new HashSet<Subject>();
-//		Bacheca.getInstance().getCatalogoUtenti().add(this);
-//		this.ruolo = new Progettista(this);
 
 	}
 
@@ -109,7 +108,7 @@ public class Utente implements Named, Observer {
 	 *
 	 */
 
-	public Set<Subject> getNotifiche(){
+	public Set<Subject<Utente>> getNotifiche(){
 		return this.notifiche;
 	}
 
@@ -120,7 +119,6 @@ public class Utente implements Named, Observer {
 	public boolean update() {
 		newMessage = true;
 		return newMessage;
-		//qui il metodo dovrebbe chiamare un sistem.out ma della classe che interagisce con l'utente
 
 	}
 	public boolean getMessage() {
@@ -130,15 +128,6 @@ public class Utente implements Named, Observer {
 	public void setMessage(boolean m) {
 		this.newMessage = m;
 	}
-
-//	public Set<Progetto> getCurriculum(){
-//		Set<Progetto>myProjects=new HashSet<>();
-//		for(Progetto p: Bacheca.getInstance().getCatalogoProgetti())
-//			if(p.getPartecipanti().contains(this))
-//				myProjects.add(p);
-//		return myProjects;
-//	}
-
 	@Override
 	public void addNotifica(Subject s) {
 		this.notifiche.add(s);
@@ -148,17 +137,13 @@ public class Utente implements Named, Observer {
 		return getName();
 	}
 	
-	public boolean insertEmail(String email) {
-		setEmail(email);
-		return true;
-	} 
 	
 	public Curriculum getCurriculum() {
 		return ruolo.getCurriculum();
 	}
 	
 	public int getRuolo() {
-		return ruolo.getRuolo();
+		return ruolo.getRoleNumber();
 	}
 
 	public String getEmail() {
@@ -173,4 +158,6 @@ public class Utente implements Named, Observer {
 	public Object getObserver() {
 		return this;
 	}
+
+
 }

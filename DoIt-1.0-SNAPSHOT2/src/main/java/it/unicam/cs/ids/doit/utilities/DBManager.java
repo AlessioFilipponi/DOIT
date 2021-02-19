@@ -119,7 +119,7 @@ public class DBManager {
 
 	private Utente getUtente(String string) throws SQLException {
 		if (SystemUtilities.getInstance().getUtenti().get(string)==null ){
-		String sql = "SELECT Nome, Ruolo, email FROM Utenti where Username = '"+ string+"'";
+		String sql = "SELECT Nome, Ruolo, email, Password FROM Utenti where Username = '"+ string+"'";
         PreparedStatement ps = getConnection().prepareStatement(sql);
 		
 		ResultSet rs = ps.executeQuery();
@@ -131,9 +131,12 @@ public class DBManager {
 			case 1: u.setRuolo(new Esperto(u)); break;
 			case 2: u.setRuolo(new Ente(u));break;
 			}
+			
 			u.insertName(rs.getString(1));
-			u.insertEmail(rs.getString(3));
+			u.setEmail(rs.getString(3));
 			u.getCompetenze().addAll(getCompetenze(u));
+			SystemUtilities.getInstance().getPassword().put(u.getUsername(), rs.getInt(4));
+			SystemUtilities.getInstance().getUtenti().put(u.getUsername(), u);
 		}
 
 		return u;}
@@ -231,7 +234,7 @@ public class DBManager {
 			case 2: u.setRuolo(getEnte(u));break;
 			}
 			u.insertName(rs.getString(2));
-			u.insertEmail(rs.getString(4));
+			u.setEmail(rs.getString(4));
 			//inserisco tutti gli utenti nelle mappe di SystemUtilities 
 			SystemUtilities.getInstance().getPassword().put(u.getUsername(), rs.getInt(5));
 			SystemUtilities.getInstance().getUtenti().put(u.getUsername(), u);
@@ -340,7 +343,7 @@ public class DBManager {
 			case 0: par.setStato(StatiRichieste.CONFERMATO); 
 			break;
 
-			case 1: par.setStato(StatiRichieste.IN_VALUTAZIONE);if(rs.getInt(3)==1) u.addNotifica(par); u.update();break;
+			case 1: par.setStato(StatiRichieste.IN_VALUTAZIONE); u.addNotifica(par); u.update();break;
 			case 2: par.setStato(StatiRichieste.RIFIUTATO); break;
 			}
 			p.getPartecipazioni().add(par);
@@ -376,11 +379,11 @@ public class DBManager {
 		}
 		return id;
 	}
-	public Set<Subject> getNotifiche(Utente u) throws SQLException {
+	public Set<Subject<Utente>> getNotifiche(Utente u) throws SQLException {
 		String sql ="SELECT Id, Tipo, IDtab FROM Notifiche WHERE Destinatario ='"+ u.getUsername()+"'";
 		PreparedStatement ps = getConnection().prepareStatement(sql);
 		ResultSet rs = ps.executeQuery();
-		Set<Subject> s = new HashSet<Subject>();
+		Set<Subject<Utente>> s = new HashSet<Subject<Utente>>();
 		s.addAll(getInviti(u));
 		while(rs.next()) {
 			switch (rs.getInt(2)) {

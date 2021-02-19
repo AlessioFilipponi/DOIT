@@ -43,7 +43,6 @@ public class Progettista extends Ruolo implements Named{
 
 	@Override
 	public boolean isEnte() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -55,7 +54,6 @@ public class Progettista extends Ruolo implements Named{
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return nomeCognome;
 	}
 
@@ -66,7 +64,7 @@ public class Progettista extends Ruolo implements Named{
 
 
 	@Override
-	public int getRuolo() {
+	public int getRoleNumber() {
 		return 0;
 	}
 

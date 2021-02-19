@@ -34,7 +34,6 @@ public class Esperto extends Ruolo implements Named{
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return nome;
 	}
 	
@@ -47,7 +46,6 @@ public class Esperto extends Ruolo implements Named{
 
 	@Override
 	public boolean isEnte() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -67,7 +65,7 @@ public class Esperto extends Ruolo implements Named{
 
 
 	@Override
-	public int getRuolo() {
+	public int getRoleNumber() {
 		return 1;
 	}
 
