@@ -135,6 +135,7 @@ public class DBManager {
 			u.insertName(rs.getString(1));
 			u.setEmail(rs.getString(3));
 			u.getCompetenze().addAll(getCompetenze(u));
+			u.getNotifiche().addAll(getNotifiche(u));
 			SystemUtilities.getInstance().getPassword().put(u.getUsername(), rs.getInt(4));
 			SystemUtilities.getInstance().getUtenti().put(u.getUsername(), u);
 		}
@@ -227,6 +228,11 @@ public class DBManager {
 		ResultSet rs = ps.executeQuery();
 		List<Utente> utenti = new ArrayList<Utente>();
 		while(rs.next()) { 
+			if (SystemUtilities.getInstance().getUtente(rs.getString(1))!=null) {
+				Utente u = SystemUtilities.getInstance().getUtente(rs.getString(1));
+				utenti.add(u);
+				}
+			else {
 			Utente u = new Utente(rs.getString(1));
 			switch(rs.getInt(3)) {
 			case 0: u.setRuolo(new Progettista(u));break;
@@ -240,7 +246,7 @@ public class DBManager {
 			SystemUtilities.getInstance().getUtenti().put(u.getUsername(), u);
 			u.getCompetenze().addAll(getCompetenze(u));
 			u.getNotifiche().addAll(getNotifiche(u));
-			utenti.add(u);
+			utenti.add(u);}
 		}
 		
 		return utenti;
@@ -424,7 +430,8 @@ public class DBManager {
     }
     
     public void updatePartecipazione(Partecipazione p) throws SQLException {
-    	String sql = "update Partecipazione set stato =" +p.getStato().ordinal()+" where Utente ='"+ p.getProgettista()+"' and Progetto = "+ getProgetto(p.getProgetto().getId());	
+    	String sql = "update Partecipazioni set stato =" +p.getStato().ordinal()+" "
+    			+ "where Utente ='"+ p.getProgettista()+"' and Progetto = "+ p.getProgetto().getId();	
     	PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
     
     	ps.executeUpdate();
