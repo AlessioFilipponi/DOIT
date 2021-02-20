@@ -52,6 +52,7 @@ public class IProgettista  implements UserInterface{
 			p.accetta();
 		else
 			p.rifiuta();
+		getUtente().getNotifiche().remove(p);
 		try {
 			DBManager.getInstance().updatePartecipazione(p);
 		} catch (SQLException e) {
@@ -62,10 +63,14 @@ public class IProgettista  implements UserInterface{
 	public void valutaInvitoAdEnte(Invito i){
 		UserCommunicator.print(i.getEnte().getUsername());
 		UserCommunicator.print(((Ente)(i.getEnte().getRole())).getDescrizione());
-		if(UserCommunicator.select("Vuoi accettare questo invito?"))
+		if(UserCommunicator.select("Vuoi accettare questo invito?")) {
 			i.accetta();
+			Ente e =(Ente) i.getEnte().getRole();
+			e.addCollaboratore(i.getProgettista());
+		}
 		else
 			i.rifiuta();
+		i.getProgettista().getNotifiche().remove(i);
 		try {
 			DBManager.getInstance().updateInvito(i);
 		} catch (SQLException e) {

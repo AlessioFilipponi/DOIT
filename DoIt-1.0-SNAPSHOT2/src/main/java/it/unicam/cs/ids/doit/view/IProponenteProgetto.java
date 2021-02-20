@@ -114,15 +114,20 @@ public class IProponenteProgetto  implements UserInterface{
 			DBManager.getInstance().insertRichiestaValutazioneProgetto(rv);
 		} catch (SQLException e) {
 			UserCommunicator.print(UserCommunicator.ERROR_INSERT);
-		}
-        esperto.addNotifica(rv);}
+		}}
+//        esperto.addNotifica(rv);}
 	}
 
 	public void modificaProgetto(Progetto p){
 		UserCommunicator.print("***Modifica Progetto***");
-		int insert=1;
-		while (insert>0) {
-			switch(insert=UserCommunicator.insertInteger("1) Modifica Titolo\n2) Modifica Specifiche\n3) Modifica competenze\n0)Esci\n La tua scelta"))
+		int insert= -1;
+		do {
+			try {insert=UserCommunicator.insertInteger("1) Modifica Titolo\n2) Modifica Specifiche\n3) Modifica competenze\n0)Esci\n La tua scelta");
+			} catch (Exception e) {
+				
+				UserCommunicator.print("Puoi solo inserire un numero da 0 a 3");
+			}}while(insert<0 ||insert>3);
+			switch(insert)
 			{
 				case 1:p.setTitolo(UserCommunicator.insertString("Inserire nuovo titolo"));break;
 				case 2:p.setSpecifiche(UserCommunicator.insertString("Inserire nuove specifiche"));break;
@@ -130,7 +135,7 @@ public class IProponenteProgetto  implements UserInterface{
 				case 0:break;
 				default:UserCommunicator.print("Scelta non valida!");
 			}
-		}
+		
 		try {
 			DBManager.getInstance().modificaProgetto(p);
 		} catch (SQLException e) {

@@ -31,6 +31,7 @@ public class IEsperto implements UserInterface{
             richiestaValutazione.conferma();
         else
             richiestaValutazione.rifiuta(UserCommunicator.insertString("Per quale motivo?"));
+        getUtente().getNotifiche().remove(richiestaValutazione);
         try {
 			DBManager.getInstance().updaterichiestaValutazione(richiestaValutazione);
 		} catch (SQLException e) {

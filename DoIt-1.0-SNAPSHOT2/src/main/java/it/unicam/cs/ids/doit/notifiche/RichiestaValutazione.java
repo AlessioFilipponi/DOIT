@@ -55,13 +55,13 @@ public class RichiestaValutazione implements  Subject<Utente>{
 
     public void conferma() {
         setStato(StatiRichieste.CONFERMATO);
-        progetto.setStato(oldState);
+        progetto.setStato(StatiProgetto.PENDING);
     }
 
     public void rifiuta(String motivazione){
         setStato(StatiRichieste.RIFIUTATO);
         this.motivazione = motivazione;
-        progetto.setStato(oldState);
+        progetto.setStato(StatiProgetto.ARCHIVIATO);
     }
 
     @Override

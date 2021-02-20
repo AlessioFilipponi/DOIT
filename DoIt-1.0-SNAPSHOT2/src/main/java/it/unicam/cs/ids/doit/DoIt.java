@@ -27,19 +27,18 @@ import it.unicam.cs.ids.doit.view.InteractionManager;
 public class DoIt {
 
 	public static void main(String [] args) {
-	
-		Collection<Utente> u=Bacheca.getInstance().getCatalogoUtenti();
-			 Bacheca.getInstance().getCatalogoProgetti();
-		for (Utente utente : u) {
-			System.out.println(utente);
-		}
+	    
+		Runnable load = () ->{
+			Bacheca.getInstance().getCatalogoUtenti();
+			Bacheca.getInstance().getCatalogoProgetti();
+		};
 	
 		Runnable doit = ()->{
 			InteractionManager.start();
 		};
 		
 		ExecutorService executor = Executors.newCachedThreadPool(); 
-//		executor.execute(load);
+		executor.execute(load);
 		executor.execute(doit);
 		executor.shutdown();
 		

@@ -54,16 +54,16 @@ public class DBManager {
 //			dataSource.setUser("doit");
 //			dataSource.setPassword("doit");
 //			dataSource.setDatabaseName("doit");
-//			dataSource.setServerName("innovationtechnolog.ddns.net");
-//			dataSource.setPortNumber(3306);
-//			dataSource.setUser("doit");
-//			dataSource.setPassword("doit");
-//			dataSource.setDatabaseName("doit");
-			dataSource.setServerName("127.0.0.1");
+			dataSource.setServerName("innovationtechnolog.ddns.net");
 			dataSource.setPortNumber(3306);
-			dataSource.setUser("root");
-			dataSource.setPassword("pass123");
-			dataSource.setDatabaseName("ProgettoIDS");
+			dataSource.setUser("doit");
+			dataSource.setPassword("doit");
+			dataSource.setDatabaseName("doit");
+//			dataSource.setServerName("127.0.0.1");
+//			dataSource.setPortNumber(3306);
+//			dataSource.setUser("root");
+//			dataSource.setPassword("pass123");
+//			dataSource.setDatabaseName("ProgettoIDS");
 			
 			connection = dataSource.getConnection();
 		}

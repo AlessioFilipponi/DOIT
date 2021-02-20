@@ -145,7 +145,7 @@ Utente utente;
 		else {
 		UserCommunicator.print("***LE TUE NOTIFICHE***");
 		getUtente().setMessage(false);
-		Subject notifica =UserCommunicator.selectElement(getUtente().getNotifiche(),"Seleziona una notifica");
+		Subject<Utente> notifica =UserCommunicator.selectElement(getUtente().getNotifiche(),"Seleziona una notifica");
 		if(notifica instanceof RichiestaValutazione)
 			new IEsperto(getUtente()).valutaPropostaProgetto(((RichiestaValutazione)notifica));
 		if(notifica instanceof Partecipazione)
