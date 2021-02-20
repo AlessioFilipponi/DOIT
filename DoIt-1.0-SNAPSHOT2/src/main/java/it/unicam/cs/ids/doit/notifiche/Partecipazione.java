@@ -96,7 +96,7 @@ public class Partecipazione implements Subject{
 
 	@Override
 	public String getName() {
-		return "partecipazione";
+		return "Partecipazione " + progetto.getTitolo();
 	}
 
 	@Override

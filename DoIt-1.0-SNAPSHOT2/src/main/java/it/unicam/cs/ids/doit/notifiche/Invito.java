@@ -57,7 +57,7 @@ public class Invito implements Subject<Utente>
 
     @Override
     public String getName() {
-        return "Invito";
+        return "Invito a " + ente.getObserver().getName();
     }
 
     /**

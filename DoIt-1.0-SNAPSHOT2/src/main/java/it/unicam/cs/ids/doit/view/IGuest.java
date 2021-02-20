@@ -14,6 +14,7 @@ import it.unicam.cs.ids.doit.user.Utente;
 import it.unicam.cs.ids.doit.utilities.DBManager;
 import it.unicam.cs.ids.doit.utilities.SystemUtilities;
 
+
 public class IGuest {
 	
 	public static void VisualizzaProgetti() {

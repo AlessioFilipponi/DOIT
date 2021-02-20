@@ -19,8 +19,10 @@ public class IEnte implements UserInterface{
         return utente;
     }
     public void InvitaCollaboratore(){
-        Collection<Utente> progettisti = UserCommunicator.selectMultipleElements(Bacheca.getInstance().getCatalogoUtenti(),"Seleziona gli utenti che vuoi aggiungere");
-        progettisti.remove(getUtente());
+    	Collection<Utente> progettisti = Bacheca.getInstance().getCatalogoUtenti();
+    	progettisti.remove(getUtente());
+        UserCommunicator.selectMultipleElements(progettisti,"Seleziona gli utenti che vuoi aggiungere");
+        
         for(Utente p:progettisti)
         {
             Invito i =new Invito(getUtente(),p);

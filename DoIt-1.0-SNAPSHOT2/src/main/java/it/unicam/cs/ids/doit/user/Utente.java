@@ -1,41 +1,34 @@
 package it.unicam.cs.ids.doit.user;
-import java.util.Collection;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import it.unicam.cs.ids.doit.cataloghi.Bacheca;
 import it.unicam.cs.ids.doit.notifiche.Observer;
-import it.unicam.cs.ids.doit.notifiche.Partecipazione;
 import it.unicam.cs.ids.doit.notifiche.Subject;
 import it.unicam.cs.ids.doit.progetto.Progetto;
-import it.unicam.cs.ids.doit.progetto.Valutazione;
 import it.unicam.cs.ids.doit.ui.Named;
-public class Utente implements Named, Observer {
+public class Utente implements Named, Observer<Utente> {
 
 	private String username;
-
 	private String ID;
-
 	private Set<Subject<Utente>> notifiche; //deve essere un set
 	private Ruolo ruolo;
 	private String email;
 	private boolean newMessage;
 	/**
 	 * Crea un utente
-	 * @param nome nome
+	 * @param username nome
 	 * @param cognome cognome
 	 */
-	public Utente(String nome) {
-		/*
-		Imposta nome e cognome
-		 */
-		this.username = nome;
+	public Utente(String username) {
+		/* Imposta l'username */
+		this.username = username;
 		
 		/*
 		Inizializza automaticamente tutti i campi
 		 */
-		ID = nome.hashCode() + "";
+		ID = username.hashCode() + "";
 //		ID=(int)(Math.random()*10000+Math.random()*1000+Math.random()*100+Math.random()*10)+"";
 		this.notifiche = new HashSet<Subject<Utente>>();
 
@@ -129,7 +122,7 @@ public class Utente implements Named, Observer {
 		this.newMessage = m;
 	}
 	@Override
-	public void addNotifica(Subject s) {
+	public void addNotifica(Subject<Utente> s) {
 		this.notifiche.add(s);
 	}
 	
@@ -155,7 +148,7 @@ public class Utente implements Named, Observer {
 	}
 
 	@Override
-	public Object getObserver() {
+	public Utente getObserver() {
 		return this;
 	}
 

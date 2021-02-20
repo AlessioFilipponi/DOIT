@@ -27,12 +27,12 @@ import it.unicam.cs.ids.doit.view.InteractionManager;
 public class DoIt {
 
 	public static void main(String [] args) {
-	    
+	    //Carico il contenuto del db
 		Runnable load = () ->{
 			Bacheca.getInstance().getCatalogoUtenti();
 			Bacheca.getInstance().getCatalogoProgetti();
 		};
-	
+	    //faccio partire il sistema
 		Runnable doit = ()->{
 			InteractionManager.start();
 		};
@@ -44,4 +44,4 @@ public class DoIt {
 		
 	}
 	}
-//Prova commit Linux
+
