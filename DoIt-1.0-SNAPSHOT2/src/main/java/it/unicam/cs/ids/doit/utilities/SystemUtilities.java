@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import it.unicam.cs.ids.doit.ui.UserCommunicator;
+import it.unicam.cs.ids.doit.user.Ente;
 import it.unicam.cs.ids.doit.user.Utente;
 
 public class SystemUtilities {
@@ -17,13 +19,14 @@ public class SystemUtilities {
 	private Map<String, Integer> competenze;
 	
 	public void insertUtente(String username, String u) {
+		if (getUtente(username)==null) {
 		password.put(username, u.hashCode());
 			try { 
 				DBManager.getInstance().insertUtente(getUtente(username), u);
+				if (getUtente(username).getRole().isEnte()) DBManager.getInstance().insertEnte((Ente)getUtente(username).getRole());
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			UserCommunicator.print(UserCommunicator.ERROR_INSERT);
+		}}
 	}
 	
 	public Utente getUtente(String username) {

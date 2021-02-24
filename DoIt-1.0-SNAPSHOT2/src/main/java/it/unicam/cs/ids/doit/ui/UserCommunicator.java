@@ -144,7 +144,8 @@ public class UserCommunicator {
         {
             try{insert= UserCommunicator.insertInteger(message);}
             catch (Exception e) {
-				UserCommunicator.print(ERROR_INT_MESSAGE);
+            	if (insert==-1)break;
+            	else UserCommunicator.print(ERROR_INT_MESSAGE);
 			}
             if (insert!=-1 || insert>i) rtrnv.add(els.get(insert));
         }

@@ -20,10 +20,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.unicam.cs.ids.doit.cataloghi.Bacheca;
+import it.unicam.cs.ids.doit.notifiche.Invito;
 import it.unicam.cs.ids.doit.notifiche.Partecipazione;
 import it.unicam.cs.ids.doit.notifiche.StatiRichieste;
 import it.unicam.cs.ids.doit.progetto.Progetto;
 import it.unicam.cs.ids.doit.progetto.StatiProgetto;
+import it.unicam.cs.ids.doit.user.Ente;
 import it.unicam.cs.ids.doit.user.Progettista;
 import it.unicam.cs.ids.doit.user.Utente;
 import it.unicam.cs.ids.doit.utilities.DBManager;
@@ -50,8 +52,27 @@ class DBManagerTest {
 	}
 
 	@Test
-	void testListaProgetti() {
-		fail("Not yet implemented");
+	void testEnti() {
+		Utente u = new Utente("prova");
+		Ente e = new Ente(u);
+		u.setRuolo(e);
+		e.setName("provaEnte");
+		e.setDescrizione("Descrizione di prova");
+	   
+		Utente u1 = new Utente("progettista");
+		Progettista p = new Progettista(u1);
+		p.setName("progettista");
+		u1.setRuolo(p);
+		 Invito i = new Invito(u,u1);
+		try {
+			DBManager.getInstance().insertUtente(u, "pass");
+			DBManager.getInstance().insertEnte(e);
+			DBManager.getInstance().insertInvito(i);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 	}
 
 	@Test

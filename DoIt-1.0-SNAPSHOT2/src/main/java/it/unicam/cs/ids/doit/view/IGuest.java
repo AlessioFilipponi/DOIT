@@ -108,10 +108,22 @@ public class IGuest {
 		}
 		if (u==null) SystemUtilities.getInstance().getPassword().remove(ut);
 //		UserCommunicator.insertString("Il tuo ID è: "+ut.getID()+" Premere [INVIO] per continuare... ");
-		else
+		else {
 			
 				SystemUtilities.getInstance().insertUtente(ut, pass);
-			
+				if (SystemUtilities.getInstance().getUtente(ut).getRole().isEnte()) {
+					int d =-1;
+					try {d =UserCommunicator.insertInteger("Vuoi invitare dei collaboratori?\n"
+							+ "[1] yes "
+							+ "[0] no");}
+					catch (Exception e) {
+						UserCommunicator.print("Puoi solo inserire [1] o [0]");
+					}switch(d){
+					case 1: {new IEnte(u).InvitaCollaboratore(); break;
+					}
+					case 0: break;}
+				}
+		}
 //		start();
 		return u;
 	}
@@ -161,16 +173,16 @@ public class IGuest {
 		case 1: {SystemUtilities.getInstance().getUtenti().put(ut, u);
 		Bacheca.getInstance().getCatalogoUtenti().add(u);
 	
-		int d =-1;
-		try {d =UserCommunicator.insertInteger("Vuoi invitare dei collaboratori?\n"
-				+ "[1] yes "
-				+ "[0] no");}
-		catch (Exception e) {
-			UserCommunicator.print("Puoi solo inserire [1] o [0]");
-		}switch(d){
-		case 1: {new IEnte(u).InvitaCollaboratore(); break;
-		}
-		case 0: break;}
+//		int d =-1;
+//		try {d =UserCommunicator.insertInteger("Vuoi invitare dei collaboratori?\n"
+//				+ "[1] yes "
+//				+ "[0] no");}
+//		catch (Exception e) {
+//			UserCommunicator.print("Puoi solo inserire [1] o [0]");
+//		}switch(d){
+//		case 1: {new IEnte(u).InvitaCollaboratore(); break;
+//		}
+//		case 0: break;}
 		break;
 		}
 		case 0: u = null;

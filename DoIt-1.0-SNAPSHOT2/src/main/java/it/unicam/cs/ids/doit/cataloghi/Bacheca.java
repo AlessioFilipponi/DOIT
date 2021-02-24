@@ -3,6 +3,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import it.unicam.cs.ids.doit.progetto.Progetto;
 import it.unicam.cs.ids.doit.ui.UserCommunicator;
@@ -12,17 +13,27 @@ import it.unicam.cs.ids.doit.user.Progettista;
 
 import it.unicam.cs.ids.doit.user.Utente;
 import it.unicam.cs.ids.doit.utilities.DBManager;
-
+/**
+ * La Bacheca è una classe Singleton che contiene il Catalogo Progetti e il 
+ * Catalogo Utenti. E' usata in maniera analoga al Proxy per la lettura dal DB.
+ *
+ */
 
 public class Bacheca {
 	private static Catalogo<Utente> catalogoUtenti;
 	private static Catalogo<Progetto> catalogoProgetti;
 	private static Bacheca instance;
 
-	
+	/**
+	 * Costruttore privato della Bacheca
+	 */
 	private Bacheca() {
 	}
 	
+	/**
+	 * Metodo per accedere ai metodi della Bacheca
+	 * @return instance della Bacheca
+	 */
 	public static Bacheca getInstance() {
 		if(instance ==null)
 			instance = new Bacheca();
@@ -31,8 +42,11 @@ public class Bacheca {
 
 	/**
 	 * Restituisce il catalogo dei progetti
-	 * @return catalogo progetti
-	*/
+	 * @return catalogoProgetti 	Catalogo Progetti è un oggetto di tipo Catalogo
+	 *                              contenente tutti i Progetti. lla prima chiamata del
+	 *                              metodo accede al DB per caricare tutti i Progetti
+	 *                              in locale. 
+	 */
 	
 	public  Catalogo<Progetto> getCatalogoProgetti(){
 		if (catalogoProgetti==null) {
@@ -47,8 +61,11 @@ public class Bacheca {
 	}
 
 	/**
-	 * Restituisce il catalog dei progettisti
-	 * @return catalogo progettisti
+	 * Restituisce il catalogo degli Utenti
+	 * @return catalogoUtenti  		Catalogo Utenti è un oggetto di tipo Catalogo
+	 *                              contenente tutti gli Utenti. Alla prima chiamata del
+	 *                              metodo accede al DB per caricare tutti gli Utenti
+	 *                              in locale. 		
 	 */
 	public Collection<Utente> getCatalogoUtenti(){
 		if (catalogoUtenti==null) {
@@ -72,6 +89,7 @@ public class Bacheca {
 		return catalogoUtenti.search(p-> p.getRole().isExpert());
 	}
 	/**
+	 *  Restituisce il Catalogo dei Progettisti
 	 *  @return catalogo dei Progettisti
 	 * 
 	 */
@@ -90,15 +108,17 @@ public class Bacheca {
 		return catalogoProgetti.search(p->p.getCreatorID().equals(userID) || p.getIDSelezionatore().equals(userID));
 	}
 	/** 
+	 * Restituisce la lista dei progetti proposti da un utente
 	 * @param l'oggetto utente
 	 * @return la lista dei progetti dell'utente
 	 */
 	public Collection<Progetto> getListaMieiProgetti(Utente u) {
 		if (catalogoProgetti==null) getCatalogoProgetti();
-		return catalogoProgetti.search(p->p.getProponente().equals(u));
+		return catalogoProgetti.search(p->p.getProponente().equals(u) || p.getSelezionatore().equals(u));
 	}
 	
 	/**
+	 * Restituisce la lista degli esperti con la competenza cercata 
 	 * @param collection cercate
 	 * @return la lista degli Esperti che hanno tra le competenze la competenza passata
 	 */
@@ -107,12 +127,18 @@ public class Bacheca {
 		return Bacheca.catalogoUtenti.search(p-> p.getCompetenze().contains(competenza) && p.getRole().isExpert());
 	}
 	/**
+	 * Restituisce la lista degli Esperti che contengono una delle competenze passate
 	 * @param competenze cercate
 	 * @return la lista degli Esperti che hanno tra le competenze la competenza passata
 	 */
 	public Collection<Utente> getEspertiCompetenti(Collection<String> competenze){
 		if(catalogoUtenti==null) getCatalogoUtenti();
-		return Bacheca.catalogoUtenti.search(p-> p.getCompetenze().containsAll(competenze) && p.getRole().isExpert());
+	    Set<Utente> esperti = new HashSet<Utente>();
+		for (String competenza : competenze) {
+			esperti.addAll(getEspertiCompetenti(competenza));
+		
+		}
+		return esperti;
 	}
 	/**
 	 * @param competenze cercate
@@ -128,7 +154,12 @@ public class Bacheca {
 	 */
 	public Collection<Utente> getProgettistiCompetenti(Collection<String> competenze){
 		if(catalogoUtenti==null) getCatalogoUtenti();
-		return Bacheca.catalogoUtenti.search(p-> p.getCompetenze().containsAll(competenze));
+		Set<Utente> progettisti = new HashSet<Utente>();
+		for (String competenza : competenze) {
+			progettisti.addAll(getProgettistiCompetenti(competenza));
+		
+		}
+		return progettisti;
 	}
 	
 	/**

@@ -376,7 +376,7 @@ public class DBManager {
 	}
 	
 	private int getEnteId(Utente ente) throws SQLException {
-		String sql = "SELECT Id FROM Ente WHERE CapoGruppo= '"+ ente.getUsername()+"'";
+		String sql = "SELECT Id FROM Enti WHERE CapoGruppo= '"+ ente.getUsername()+"'";
 		PreparedStatement ps = getConnection().prepareStatement(sql);
 		ResultSet rs = ps.executeQuery();
 		int id = -1;
@@ -461,5 +461,16 @@ public class DBManager {
 		
 		ResultSet rs = ps.getGeneratedKeys();
 		rs.next();
-    } 
+    }
+
+	public void insertEnte(Ente ente ) throws SQLException {
+		String sql = "INSERT INTO Enti(ID, CapoGruppo, Nome, Descrizione) VALUES(?,?,?,?)";
+		PreparedStatement ps = getConnection().prepareStatement(sql);
+		ps.setInt(1, ente.getUtente().getUsername().hashCode());
+		ps.setString(2, ente.getUsername());
+		ps.setString(3, ente.getName());
+		ps.setString(4, ente.getDescrizione());
+		ps.executeUpdate();
+		
+	} 
 }

@@ -21,15 +21,15 @@ public class IEnte implements UserInterface{
     public void InvitaCollaboratore(){
     	Collection<Utente> progettisti = Bacheca.getInstance().getCatalogoUtenti();
     	progettisti.remove(getUtente());
-        UserCommunicator.selectMultipleElements(progettisti,"Seleziona gli utenti che vuoi aggiungere");
+        Collection<Utente> progettistiInvitati =UserCommunicator.selectMultipleElements(progettisti,"Seleziona gli utenti che vuoi aggiungere");
         
-        for(Utente p:progettisti)
+        for(Utente p:progettistiInvitati)
         {
             Invito i =new Invito(getUtente(),p);
             try {
 				DBManager.getInstance().insertInvito(i);
 			} catch (SQLException e) {
-				UserCommunicator.print(UserCommunicator.ERROR_INT_MESSAGE);
+				UserCommunicator.print(UserCommunicator.ERROR_INSERT);
 			}
         }
 

@@ -71,7 +71,7 @@ public class IMenu {
 			case 1 : new IUtente(user.getUtente()).visualizzaProgetti();break;
 			case 2: new IProponenteProgetto(user.getUtente()).createProject();break;
 			case 3: new IUtente(user.getUtente()).valutaPartecipazioni();break;
-			case 4: new IEnte(user.getUtente()).InvitaCollaboratore();
+			case 4: new IEnte(user.getUtente()).InvitaCollaboratore();break;
 			case 5: new IProponenteProgetto(user.getUtente()).richiediValutazionePropostaProgetto(); break;
 //			case 5: main(args);flag=false;break;
 			case 6: new IUtente(user.getUtente()).visualizzaNotifiche();break;
