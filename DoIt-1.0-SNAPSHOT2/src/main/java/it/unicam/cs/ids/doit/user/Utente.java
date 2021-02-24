@@ -75,7 +75,10 @@ public class Utente implements Named, Observer<Utente> {
 	}
 
 
-
+  /**
+   * Metodo per impostare il ruolo dell'Utente
+   * @param r nuovo ruolo 
+   */
 
 	public void setRuolo(Ruolo r) {
 		this.ruolo = r;
@@ -88,7 +91,10 @@ public class Utente implements Named, Observer<Utente> {
 		return ruolo;
 	}
 
-
+    /**
+     * Metodo che restiuisce il nome dell'utente
+     * @return nome dell'utente
+     */
 
 	@Override
 	public String getName() {
@@ -114,13 +120,24 @@ public class Utente implements Named, Observer<Utente> {
 		return newMessage;
 
 	}
+	/**
+	 * Metodo che ritorna il messaggio delle notifiche
+	 * @return newMessage messaggio di notifica 
+	 */
 	public boolean getMessage() {
 		return newMessage;
 	}
-	
+	/**
+	 * Metodo per impostare il messaggio delle notifiche
+	 * @param m
+	 */
 	public void setMessage(boolean m) {
 		this.newMessage = m;
 	}
+	/**
+	 * Metodo per aggiungere una notifica
+	 * @param Subject<Utente> s notifica osservata dall'Utente
+	 */
 	@Override
 	public void addNotifica(Subject<Utente> s) {
 		this.notifiche.add(s);
@@ -130,19 +147,31 @@ public class Utente implements Named, Observer<Utente> {
 		return getName();
 	}
 	
-	
+	/**
+	 * Ritorna il curriculum dell'Utente
+	 * @return curriculum dell'Utente
+	 */
 	public Curriculum getCurriculum() {
 		return ruolo.getCurriculum();
 	}
-	
+	/**
+	 * Metodo per ottenere l'intero associato al ruolo
+	 * @return int associato al ruolo 
+	 */
 	public int getRuolo() {
 		return ruolo.getRoleNumber();
 	}
-
+	/**
+	 * Metodo che restituisce l'email dell'Utente
+	 * @return email
+	 */
 	public String getEmail() {
 		return email;
 	}
-
+	/**
+	 * Metodo per settare l'email dell'utente
+	 * @param email 	nuova email da inserire
+	 */
 	public void setEmail(String email) {
 		this.email = email;
 	}
