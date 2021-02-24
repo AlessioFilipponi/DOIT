@@ -28,10 +28,10 @@ public class Progettista extends Ruolo implements Named{
         return curriculum.getCompetenze();
     }
 
-    @Override
-    public List<Progetto> getPartecipazioni() {
-        return Bacheca.getInstance().getCatalogoProgetti().search(p-> p.getCandidati().contains(super.getUtente()));
-    }
+//    @Override
+//    public List<Progetto> getPartecipazioni() {
+//        return Bacheca.getInstance().getCatalogoProgetti().search(p-> p.getCandidati().contains(super.getUtente()));
+//    }
 
     @Override
     public boolean isExpert() {

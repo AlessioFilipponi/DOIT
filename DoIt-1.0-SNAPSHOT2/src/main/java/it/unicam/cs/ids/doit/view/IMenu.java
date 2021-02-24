@@ -86,7 +86,7 @@ public class IMenu {
 	 */
 	public static boolean myMenu(Progettista user, boolean flag) {
 		int selezione = -1;
-		do{ String updateMessage = "\n";
+		do{ String updateMessage = "";
 		if (user.getUtente().getMessage() && !user.getUtente().getNotifiche().isEmpty()) updateMessage = " **new**";
 			UserCommunicator.print(
 				"\n ****> MENU PRINCIPALE <****\n" +

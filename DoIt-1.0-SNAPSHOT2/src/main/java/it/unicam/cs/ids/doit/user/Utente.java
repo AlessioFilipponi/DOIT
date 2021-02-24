@@ -59,8 +59,8 @@ public class Utente implements Named, Observer<Utente> {
 
 
 	/**
-	 * Restituisce la lista delle partecipazioni di questo utente ad altri progetti
-	 * @return partecipazioni
+	 * Restituisce la lista dei progetti a cui l'utente si è candidato
+	 * @return List<Progetto>
 	 */
 	public List<Progetto> getPartecipazioni() {
 		return getRole().getPartecipazioni();

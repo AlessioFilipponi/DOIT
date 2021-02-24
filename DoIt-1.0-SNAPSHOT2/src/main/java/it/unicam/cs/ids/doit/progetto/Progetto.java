@@ -198,12 +198,20 @@ public class Progetto implements Named {
 	 * Restituisce la lista dei candidati per la partecipazione
 	 * @return lista candidati
 	 */
-	public Collection getCandidati() {
-		Collection<String> names=new HashSet<>();
-		for (Partecipazione p : partecipazioni)
-			if(p.getStato()== StatiRichieste.IN_VALUTAZIONE)
-				names.add(p.getProgettista().getID()+"> "+p.getProgettista().getUsername() + " " +p.getProgettista().getName());
-		return names;
+//	public Collection getCandidati() {
+//		Collection<String> names=new HashSet<>();
+//		for (Partecipazione p : partecipazioni)
+//			if(p.getStato()== StatiRichieste.IN_VALUTAZIONE)
+//				names.add(p.getProgettista().getID()+"> "+p.getProgettista().getUsername() + " " +p.getProgettista().getName());
+//		return names;
+//	}
+	public Collection<Utente> getCandidati(){
+		Collection<Utente> candidati = new HashSet<Utente>();
+		for(Partecipazione p : partecipazioni) {
+			if (p.getStato()== StatiRichieste.IN_VALUTAZIONE)
+				candidati.add(p.getProgettista());
+		}
+		return candidati;
 	}
 
 	/**
