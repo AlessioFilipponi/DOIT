@@ -19,14 +19,14 @@ public class SystemUtilities {
 	private Map<String, Integer> competenze;
 	
 	public void insertUtente(String username, String u) {
-		if (getUtente(username)==null) {
+	
 		password.put(username, u.hashCode());
 			try { 
 				DBManager.getInstance().insertUtente(getUtente(username), u);
 				if (getUtente(username).getRole().isEnte()) DBManager.getInstance().insertEnte((Ente)getUtente(username).getRole());
 		} catch (SQLException e) {
 			UserCommunicator.print(UserCommunicator.ERROR_INSERT);
-		}}
+		}
 	}
 	
 	public Utente getUtente(String username) {
