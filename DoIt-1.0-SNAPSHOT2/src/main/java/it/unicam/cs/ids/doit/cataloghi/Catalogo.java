@@ -85,7 +85,7 @@ public class Catalogo <E> implements Collection<E> {
      *
      * @return an array, whose {@linkplain Class#getComponentType runtime component
      * type} is {@code Object}, containing all of the elements in this collection
-     * @apiNote This method acts as a bridge between array-based and collection-based APIs.
+     * This method acts as a bridge between array-based and collection-based APIs.
      * It returns an array whose runtime type is {@code Object[]}.
      * Use {@link #toArray(Object[]) toArray(T[])} to reuse an existing
      * array, or use {@link #toArray()} to control the runtime type
@@ -122,7 +122,7 @@ public class Catalogo <E> implements Collection<E> {
      *                              collection is not assignable to the {@linkplain Class#getComponentType
      *                              runtime component type} of the specified array
      * @throws NullPointerException if the specified array is null
-     * @apiNote This method acts as a bridge between array-based and collection-based APIs.
+     * This method acts as a bridge between array-based and collection-based APIs.
      * It allows an existing array to be reused under certain circumstances.
      * Use {@link #toArray()} to create an array whose runtime type is {@code Object[]},
      * or use {@link #toArray()} to control the runtime type of
@@ -153,15 +153,14 @@ public class Catalogo <E> implements Collection<E> {
      * Ensures that this collection contains the specified element (optional
      * operation).  Returns {@code true} if this collection changed as a
      * result of the call.  (Returns {@code false} if this collection does
-     * not permit duplicates and already contains the specified element.)<p>
-     * <p>
+     * not permit duplicates and already contains the specified element.)
+     * 
      * Collections that support this operation may place limitations on what
      * elements may be added to this collection.  In particular, some
      * collections will refuse to add {@code null} elements, and others will
      * impose restrictions on the type of elements that may be added.
      * Collection classes should clearly specify in their documentation any
-     * restrictions on what elements may be added.<p>
-     * <p>
+     * restrictions on what elements may be added.
      * If a collection refuses to add a particular element for any reason
      * other than that it already contains the element, it <i>must</i> throw
      * an exception (rather than returning {@code false}).  This preserves
@@ -332,8 +331,9 @@ public class Catalogo <E> implements Collection<E> {
     }
     
     /**
-     * @param p Predicate<E> funzione di ricerca
-     * @return List<E> insieme di elementi nel catalogo 
+     * Metodo per la ricerca all'interno di un Catalogo
+     * @param p Predicate funzione di ricerca
+     * @return List insieme di elementi nel catalogo 
      * che corrispondono al criterio di ricerca
      * */
     public List<E> search(Predicate<E> p){

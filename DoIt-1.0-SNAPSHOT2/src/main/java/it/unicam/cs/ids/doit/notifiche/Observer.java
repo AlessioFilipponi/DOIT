@@ -15,7 +15,7 @@ public interface Observer<E>{
     
     /**
      * Metodo per aggiungere una Subject 
-     * @param s
+     * @param s		notifica da aggiungere
      */
     public void addNotifica(Subject<E> s);
 

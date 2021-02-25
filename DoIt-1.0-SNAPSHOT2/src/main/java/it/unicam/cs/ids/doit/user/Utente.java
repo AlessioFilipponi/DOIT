@@ -18,8 +18,7 @@ public class Utente implements Named, Observer<Utente> {
 	private boolean newMessage;
 	/**
 	 * Crea un utente
-	 * @param username nome
-	 * @param cognome cognome
+	 * @param username username
 	 */
 	public Utente(String username) {
 		/* Imposta l'username */
@@ -60,7 +59,7 @@ public class Utente implements Named, Observer<Utente> {
 
 	/**
 	 * Restituisce la lista dei progetti a cui l'utente si è candidato
-	 * @return List<Progetto>
+	 * @return List lista di progetti
 	 */
 	public List<Progetto> getPartecipazioni() {
 		return getRole().getPartecipazioni();
@@ -129,14 +128,14 @@ public class Utente implements Named, Observer<Utente> {
 	}
 	/**
 	 * Metodo per impostare il messaggio delle notifiche
-	 * @param m
+	 * @param m nuovo messaggio
 	 */
 	public void setMessage(boolean m) {
 		this.newMessage = m;
 	}
 	/**
 	 * Metodo per aggiungere una notifica
-	 * @param Subject<Utente> s notifica osservata dall'Utente
+	 * @param Subject s notifica osservata dall'Utente
 	 */
 	@Override
 	public void addNotifica(Subject<Utente> s) {

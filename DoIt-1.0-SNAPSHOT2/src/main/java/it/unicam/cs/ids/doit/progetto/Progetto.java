@@ -47,18 +47,28 @@ public class Progetto implements Named {
 		this.data= new Date();
 	}
 
+	/**
+	 * 
+	 * @param proponente	Utente che crea il progetto
+	 */
 	public Progetto(Utente proponente) {
 		this(proponente.getID());
 		this.proponente = proponente;
 		this.selezionatore = proponente;
 	}
+	
+	/**
+	 * Metodo che ritorna le valutazioni del progetto
+	 * @return valutazioni	Collection insieme delle valutazioni del
+	 * 						progetto
+	 */
 	public Collection<Valutazione> getValutazioni() {
 		return valutazioni;
 	}
 
 	/**
 	 * Restituisce le specifiche del progetto
-	 * @return
+	 * @return specifiche
 	 */
 	public String getSpecifiche() {
 		return specifiche;
@@ -124,7 +134,7 @@ public class Progetto implements Named {
 
 	/**
 	 * Imposta un Titolo
-	 * @param titolo
+	 * @param titolo	nuovo titolo
 	 */
 	public void setTitolo(String titolo) {
 		if(stato==StatiProgetto.PUBBLICATO)
@@ -164,7 +174,7 @@ public class Progetto implements Named {
 
 	/**
 	 * Imposta lo stato
-	 * @param stato
+	 * @param stato nuovo stato
 	 */
 	public void setStato(StatiProgetto stato) {
 		this.stato = stato;
@@ -172,7 +182,7 @@ public class Progetto implements Named {
 
 	/**
 	 * Restituisce lo stato
-	 * @return
+	 * @return stato
 	 */
 	public StatiProgetto getStato() {
 		return this.stato;
@@ -180,7 +190,7 @@ public class Progetto implements Named {
 
 	/**
 	 * Restituisce la lista delle partecipazioni correlate a questo progetto
-	 * @return
+	 * @return partecipazioni
 	 */
 	public Set<Partecipazione> getPartecipazioni() {
 		return partecipazioni;
@@ -198,13 +208,7 @@ public class Progetto implements Named {
 	 * Restituisce la lista dei candidati per la partecipazione
 	 * @return lista candidati
 	 */
-//	public Collection getCandidati() {
-//		Collection<String> names=new HashSet<>();
-//		for (Partecipazione p : partecipazioni)
-//			if(p.getStato()== StatiRichieste.IN_VALUTAZIONE)
-//				names.add(p.getProgettista().getID()+"> "+p.getProgettista().getUsername() + " " +p.getProgettista().getName());
-//		return names;
-//	}
+
 	public Collection<Utente> getCandidati(){
 		Collection<Utente> candidati = new HashSet<Utente>();
 		for(Partecipazione p : partecipazioni) {
@@ -245,10 +249,18 @@ public class Progetto implements Named {
 		return getTitolo();
 	}
 
+	/**
+	 * Metodo che ritorna il proponente del progetto
+	 * @return proponente 	Utente che propone il progetto
+	 */
 	public Utente getProponente() {
 		return proponente;
 	}
 	
+	/**
+	 * Metodo che ritorna il voto medio delle valutazioni del progetto
+	 * @return voto		media delle valutazioni associate al progetto
+	 */
 	public double mediaVoti() {
 		double v = 0;
 		for (Valutazione val : valutazioni) {
@@ -256,17 +268,29 @@ public class Progetto implements Named {
 		}
 		return v/valutazioni.size();
 	}
-
+	
+	/**
+	 * Metodo per settare le competenze del progetto
+	 * @param competenze	insieme delle nuove competenze
+	 */
 	public void setCompetenzeProgettisti(Set<String> competenze) {
 		this.competenzeNecessarie = competenze;
 		
 	}
 
+	/**
+	 * Metodo per impostare un selezionatore 
+	 * @param utente nuovo utente
+	 */
 	public void setSelezionatore(Utente utente) {
 		selezionatore = utente;
 		
 	}
 
+	/**
+	 * metodo per settare l'id del progetto
+	 * @param int1 nuovo id
+	 */
 	public void setId(int int1) {
 		ID = int1;
 		
@@ -296,24 +320,46 @@ public class Progetto implements Named {
 		return true;
 	}
 
+	/**
+	 * Metodo che ritorna l'id del progetto
+	 * @return
+	 */
 	public int getId() {
 		return ID;
 	}
 
+	/**
+	 * Metodo per impostare la data del progetto
+	 * @param date nuova data
+	 */
 	public void setData(java.sql.Date date) {
 		this.data = date;
 		
 	}
 
+	/**
+	 * Metodo che ritorna il selezionatore del progetto
+	 * @return	selezionatore
+	 */
 	public Utente getSelezionatore() {
 		return selezionatore;
 	}
 
+	/**
+	 * Metodo che ritorna la data in cui è stato creato il progetto
+	 * @return data
+	 */
 	public Date getData() {
 		return data;
 	}
 	
-	public void addPartecipante(Partecipazione p) {
+	/**
+	 * @deprecated
+	 * Metodo che aggiunge una partecipazione confermata al progetto 
+	 * @param p		nuova partecipazione da aggiungere al progetto
+	 * @exception	IllegalArgumentException se la partecipazione non è confermata
+	 */
+	public void addPartecipazione(Partecipazione p) {
 		if (p.getStato()!= StatiRichieste.CONFERMATO) throw new IllegalArgumentException("Impossibile aggiungere partecipante");
 		this.partecipazioni.add(p);
 	}

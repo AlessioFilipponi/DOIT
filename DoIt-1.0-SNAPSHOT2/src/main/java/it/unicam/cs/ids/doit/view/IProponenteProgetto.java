@@ -52,7 +52,7 @@ public class IProponenteProgetto  implements UserInterface{
 
 	/**
 	 *
-	 * @param progetto
+	 * @param progetto progetto selezionato
 	 */
 	public void invitaProgettista(Progetto progetto) {
 		if(progetto.getStato()!= StatiProgetto.PENDING)

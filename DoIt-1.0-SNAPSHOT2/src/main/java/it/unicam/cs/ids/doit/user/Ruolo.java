@@ -30,21 +30,21 @@ public abstract class Ruolo{
 	
 	/**
 	 * Metodo che ritorna la lista dei progetti a cui l'utente si è candidato
-	 * @return List<Progetto>
+	 * @return List		lista dei progetti 
 	 */
 	public List<Progetto> getPartecipazioni(){
 		return Bacheca.getInstance().getCatalogoProgetti().search(p->p.getCandidati().contains(getUtente()));
 	}
 	
 	/**
-	 * Metodo che ritorna true se il ruolo dell'Utente è Esperto, false altrimenti
-	 * @return
+	 * Metodo che verifica se un utente è un esperto
+	 * @return true se l'utente è un esperto, false altrimenti
 	 */
 	abstract public boolean isExpert();
 
 	/**
-	 * Metodo che ritorna true se il ruolo dell'Utente è Ente, false altrimenti
-	 * @return
+	 * Metodo che verifica se un utente è un ente
+	 * @return	true se l'utente è un ente, false altrimenti
 	 */
 	abstract public boolean isEnte();
 	/**
@@ -55,14 +55,14 @@ public abstract class Ruolo{
 	
 	/**
 	 * Metodo che ritorna l'utente a cui è associato il ruolo
-	 * @return
+	 * @return utente
 	 */
 	public Utente getUtente() {
 		return utente;
 	}
 	/**
 	 * Metodo per settare il nome dell'Utente
-	 * @param nome
+	 * @param nome nuovo nome
 	 */
 	public abstract void setName(String nome);
 	

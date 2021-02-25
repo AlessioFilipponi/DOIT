@@ -9,15 +9,31 @@ import it.unicam.cs.ids.doit.ui.UserCommunicator;
 import it.unicam.cs.ids.doit.user.Utente;
 import it.unicam.cs.ids.doit.utilities.DBManager;
 
+/**
+ * Classe per la gestione dell'interfaccia utente, con un utente con il ruolo 
+ * di Ente
+ * 
+ *
+ */
 public class IEnte implements UserInterface{
     private Utente utente;
+    
+    /**
+     * Crea una nuova interfaccia ente
+     * @param user		utente a cui associare l'interfaccia
+     */
     public IEnte(Utente user) {
 		utente = user;
 	}
+    
 	@Override
     public Utente getUtente() {
         return utente;
     }
+	
+	/**
+	 * Metodo per invitare un Collaboratore
+	 */
     public void InvitaCollaboratore(){
     	Collection<Utente> progettisti = Bacheca.getInstance().getCatalogoUtenti();
     	progettisti.remove(getUtente());

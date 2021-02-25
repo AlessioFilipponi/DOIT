@@ -15,15 +15,18 @@ import it.unicam.cs.ids.doit.user.Utente;
  * */
 
 
-public class Invito implements Subject<Utente>
-{
+public class Invito implements Subject<Utente>{
     public StatiRichieste stato;
     private Observer<Utente> ente;
     private Set<Observer<Utente>> destinatari;
     private Observer<Utente> progettista;
 
 
-
+    /**
+     * 
+     * @param ente		Un Utente con il ruolo di Ente
+     * @param progettista	Un Utente con qualsiasi ruolo
+     */
 
 	public Invito(Observer<Utente> ente, Observer<Utente> progettista) {
         if (!ente.getObserver().getRole().isEnte()) throw new IllegalArgumentException("Non sei un Ente!");
@@ -67,7 +70,7 @@ public class Invito implements Subject<Utente>
         return ente.getObserver();
     }
     /**
-     * metodo che cambia lo stato della richiesta in CONFERMAto
+     * metodo che cambia lo stato della richiesta in CONFERMATO
      * e aggiunge l'Utente ai collaboratori dell'Ente e lo notifica
      * 
      */
@@ -82,6 +85,9 @@ public class Invito implements Subject<Utente>
         else throw new IllegalStateException(ERROR_STATE);
 
     }
+    /**
+     * Metodo che riufiuta l'invito e cambia lo stato in RIFIUTATO
+     */
     
     public void rifiuta(){
         if(stato== StatiRichieste.IN_VALUTAZIONE)
@@ -92,6 +98,11 @@ public class Invito implements Subject<Utente>
         else throw new IllegalStateException(ERROR_STATE);
 
     }
+    
+    /**
+     * 
+     * @return progettista invitato
+     */
     public Utente getProgettista() {
 		return progettista.getObserver();
 	}

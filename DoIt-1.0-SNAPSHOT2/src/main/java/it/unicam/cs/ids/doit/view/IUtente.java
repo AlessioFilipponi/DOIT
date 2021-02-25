@@ -97,7 +97,7 @@ Utente utente;
 
 	/**
 	 * 
-	 * @param p
+	 * @param p	progetto selezionato
 	 */
 	public void visualizzaDettagliProgetto(Progetto p) {
 		UserCommunicator.print(p.toString());//stampa i dettagli del progetto

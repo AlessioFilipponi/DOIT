@@ -35,7 +35,7 @@ public class IGuest {
 	}
 	/**
 	 * 
-	 * @param p
+	 * @param p 	progetto selezionato
 	 */
 	public static void visualizzaDettagliProgetto(Progetto p) {
 		UserCommunicator.print(p.toString());//stampa i dettagli del progetto

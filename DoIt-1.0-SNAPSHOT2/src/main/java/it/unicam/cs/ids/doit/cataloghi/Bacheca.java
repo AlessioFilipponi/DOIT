@@ -109,7 +109,7 @@ public class Bacheca {
 	}
 	/** 
 	 * Restituisce la lista dei progetti proposti da un utente
-	 * @param l'oggetto utente
+	 * @param u l'oggetto utente
 	 * @return la lista dei progetti dell'utente
 	 */
 	public Collection<Progetto> getListaMieiProgetti(Utente u) {
@@ -119,7 +119,7 @@ public class Bacheca {
 	
 	/**
 	 * Restituisce la lista degli esperti con la competenza cercata 
-	 * @param collection cercate
+	 * @param competenza collection cercate
 	 * @return la lista degli Esperti che hanno tra le competenze la competenza passata
 	 */
 	public Collection<Utente> getEspertiCompetenti(String competenza){

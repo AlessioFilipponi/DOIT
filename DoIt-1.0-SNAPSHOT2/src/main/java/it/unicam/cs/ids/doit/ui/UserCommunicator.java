@@ -11,7 +11,7 @@ public class UserCommunicator {
 	public static String ERROR_INSERT = "Errore: inserimento non riuscito";
     /**
      * Stampa un meszaggio per l'utente
-     * @param message
+     * @param message messaggio da stampare
      */
     public static void print(String message)
     {
@@ -75,6 +75,7 @@ public class UserCommunicator {
     /**
      * Chiede all'utente di inserire una lista di stringhe
      * @param message messaggio usato per richiedere l'input all'utente
+     * @param promptRepeat promptRepeat
      * @return input
      */
     public static Collection<String> insertStringList(String message, String promptRepeat){
@@ -92,6 +93,7 @@ public class UserCommunicator {
     /**
      * Chiede all'utente di inserire una lista di interi
      * @param message messaggio usato per richiedere l'input all'utente
+     * @param promptRepeat prompt repeat
      * @return input
      */
     public static Collection<Integer> insertIntegerList(String message, String promptRepeat){
@@ -109,6 +111,13 @@ public class UserCommunicator {
         return Ints;
     }
 
+    /**
+     * Metodo per selezionare un elemento da una Lista
+     * @param <T> tipo
+     * @param elements 	Collection collezione di elementi da cui selezionarne una
+     * @param message	Messaggio stampato 
+     * @return elemento selezionato
+     */
     public static <T extends Named> T selectElement(Collection<T> elements, String message)
     {
         Map<Integer,T> els=new HashMap<>();
@@ -128,6 +137,13 @@ public class UserCommunicator {
         return rtrnv;
     }
 
+    /**
+     * Metodo per selezionare un gruppo di elementi da una Collection
+     * @param <T> tipo
+     * @param elements	Collection di elementi da cui selezionare degli elementi
+     * @param message	Messaggio stampato all'utente
+     * @return	Collection 	Collezione di elementi selezionati
+     */
     public static <T extends Named> Collection<T>selectMultipleElements(Collection<T> elements, String message){
         Map<Integer,T> els=new HashMap<>();
         int i=0;
@@ -151,6 +167,15 @@ public class UserCommunicator {
         }
         return rtrnv;
     }
+    
+    /**
+     * Metodo per selezionare un gruppo di elementi da una Collection
+     * @param <String> string
+     * @param elements	Collection di elementi da cui selezionare degli elementi
+     * @param message	Messaggio stampato all'utente
+     * @return	Collection 	Collezione di elementi selezionati
+     */
+    
     public static <String> Set<String>selectMultipleElementsS(Collection<String> elements, String message){
         Map<Integer,String> els=new HashMap<>();
         int i=0;

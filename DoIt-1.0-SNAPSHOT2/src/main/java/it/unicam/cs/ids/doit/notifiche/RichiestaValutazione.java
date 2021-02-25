@@ -7,6 +7,12 @@ import it.unicam.cs.ids.doit.progetto.Progetto;
 import it.unicam.cs.ids.doit.progetto.StatiProgetto;
 import it.unicam.cs.ids.doit.user.Utente;
 
+/**
+ * La Richiesta Valutazione è una classe che rappresenta la richiesta da parte
+ * di un Proponente Progetto ad un Esperto di valutare la fattibilità
+ * di un determinato progetto.
+ * 
+ */
 public class RichiestaValutazione implements  Subject<Utente>{
     private String motivazione;
     private Set<Observer<Utente>> destinatari;
@@ -15,6 +21,11 @@ public class RichiestaValutazione implements  Subject<Utente>{
 	private Observer<Utente> esperto;
 	private StatiProgetto oldState;
 	
+	/**
+	 * 
+	 * @param esperto 	selezionato 
+	 * @param progetto 	su cui l'esperto effettua la valutazione
+	 */
     public RichiestaValutazione(Observer<Utente> esperto, Progetto progetto) {
     	if(progetto.getStato()==StatiProgetto.IN_VALUTAZIONE)
             throw new IllegalStateException("Una valutazione per questo progetto è stata già richiesta!");
@@ -28,6 +39,8 @@ public class RichiestaValutazione implements  Subject<Utente>{
         this.oldState=progetto.getStato();
         progetto.setStato(StatiProgetto.IN_VALUTAZIONE);
     }
+    
+    
     public void setStato(StatiRichieste inValutazione) {
         stato = inValutazione;
         notifyObservers();
@@ -49,15 +62,27 @@ public class RichiestaValutazione implements  Subject<Utente>{
         return "Richiesta di valutazione del progetto "+progetto.getTitolo();
     }
 
+    /**
+     * 
+     * @return 	progetto 
+     */
     public Progetto getProgetto() {
         return progetto;
     }
+    /**
+     * Metodo per confermare che il progetto sia fattibile
+     */
 
     public void conferma() {
         setStato(StatiRichieste.CONFERMATO);
         progetto.setStato(StatiProgetto.PENDING);
     }
 
+    /**
+     * Metodo che permette di rifiutare un progetto scrivendo la motivazione e cambiando
+     * lo stato in archiviato
+     * @param motivazione	string che rappresenta la motivazione del diniego
+     */
     public void rifiuta(String motivazione){
         setStato(StatiRichieste.RIFIUTATO);
         this.motivazione = motivazione;
@@ -76,6 +101,10 @@ public class RichiestaValutazione implements  Subject<Utente>{
 		return stato;
 	}
 	
+	/**
+	 * 
+	 * @return esperto	che effettua la valutazione
+	 */
 	public Utente getEsperto() {
 		return esperto.getObserver();
 	}

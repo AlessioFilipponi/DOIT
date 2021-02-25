@@ -22,7 +22,7 @@ public class IProgettista  implements UserInterface{
 	}
 	/**
 	 *
-	 * @param p
+	 * @param p	progetto selezionato
 	 */
 	public void richiediPartecipazione(Progetto p) {
 //		if(p.getStato()== StatiProgetto.PENDING)//Se il progetto è in stato PENDING

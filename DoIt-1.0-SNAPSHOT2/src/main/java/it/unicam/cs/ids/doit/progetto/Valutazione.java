@@ -2,12 +2,22 @@ package it.unicam.cs.ids.doit.progetto;
 
 import it.unicam.cs.ids.doit.user.Utente;
 
+/**
+ * Classe che rappresenta la Valutazione effettuata da un Esperto su un Progetto
+ * 
+ *
+ */
 public class Valutazione {
-
 	private Utente esperto;
 	private int voto;
 	private String commento;
 
+	/**
+	 * 
+	 * @param esperto	Utente esperto che effettua la valutazione
+	 * @param voto		Voto attribuito al Progetto
+	 * @param commento	Commento sul progetto
+	 */
 	public Valutazione(Utente esperto, int voto, String commento) {
 		if(esperto==null || commento==null)
 			throw new NullPointerException("Non è possibile aggiungere campi null");
@@ -18,10 +28,18 @@ public class Valutazione {
 		this.commento = commento;
 	}
 
+	/**
+	 * Metodo che ritorna l'esperto che effettua la valutazione
+	 * @return esperto
+	 */
 	public Utente getEsperto() {
 		return esperto;
 	}
 
+	/**
+	 * Metodo che restuisce il commento
+	 * @return	commento
+	 */
 	public String getCommento() {
 		return commento;
 	}
