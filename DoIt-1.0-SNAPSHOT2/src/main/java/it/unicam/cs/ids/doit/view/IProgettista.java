@@ -12,26 +12,25 @@ import it.unicam.cs.ids.doit.user.Ente;
 import it.unicam.cs.ids.doit.user.Utente;
 import it.unicam.cs.ids.doit.utilities.DBManager;
 
+/**
+ * Classe per la gestione dell'interfaccia con l'utente con il ruolo di Progettista 
+ *
+ */
 public class IProgettista  implements UserInterface{
+	private Utente utente;
 
-	Utente utente;
-
-	public IProgettista(Utente u)
-	{
+	/**
+	 * Costruttore dell'IProgettista
+	 * @param u utente
+	 */
+	public IProgettista(Utente u){
 		utente=u;
 	}
 	/**
-	 *
+	 * Metodo per richiedere la partecipazione ad un progetto
 	 * @param p	progetto selezionato
 	 */
 	public void richiediPartecipazione(Progetto p) {
-//		if(p.getStato()== StatiProgetto.PENDING)//Se il progetto è in stato PENDING
-//		{
-//			Partecipazione part = new Partecipazione(getUtente(),p); //Creo una nuova partecipazione correlata all'utente e al progetto
-//			p.getPartecipazioni().add(part); //La aggiungo al progetto
-//			
-//			UserCommunicator.print("Richiesta di partecipazione inviata"); //Poi notifico l'utente
-//		}
 		Partecipazione par = new FacadeProgetto(p).richiediPartecipazione(getUtente());
 		if(par!=null) {
 			UserCommunicator.print("Richiesta di partecipazione inviata");
@@ -45,6 +44,10 @@ public class IProgettista  implements UserInterface{
 			UserCommunicator.print("Non puoi richiedere la partecipazione a questo progetto");
 	}
 
+	/**
+	 * Metodo per valutare una proposta di partecipazione ad un progetto
+	 * @param p	partecipazione
+	 */
 	public void valutaInvitoAProgetto(Partecipazione p){
 		UserCommunicator.print("Progetto: "+p.getProgetto().getName());
 		UserCommunicator.print("Specifiche: "+ p.getProgetto().getSpecifiche());
@@ -59,7 +62,10 @@ public class IProgettista  implements UserInterface{
 			UserCommunicator.print(UserCommunicator.ERROR_INSERT);
 		}
 	}
-
+	/**
+	 * Metodo per valutare un invito a collaborare con un Ente
+	 * @param i	invito
+	 */
 	public void valutaInvitoAdEnte(Invito i){
 		UserCommunicator.print(i.getEnte().getUsername());
 		UserCommunicator.print(((Ente)(i.getEnte().getRole())).getDescrizione());

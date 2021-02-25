@@ -28,26 +28,26 @@ Utente utente;
 		this.utente = utente;
 	}
 
-
+	/**
+	 * Metodo per visualizzare i Progetti
+	 */
 	public void visualizzaProgetti() {
 	  
 		if (Bacheca.getInstance().getCatalogoProgetti().isEmpty()) UserCommunicator.print("Non ci sono progetti");
 	
 	else {
-		Progetto p = selezionaProgetto(Bacheca.getInstance().getCatalogoProgetti());//Chiedo all'utente di selezionare un progetto tra tutti quelli presenti nel sistema
-//		Progetto p = null;
-//		try {
-//			p = selezionaProgetto(DBManager.getInstance().listaProgetti());
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} 
+		Progetto p = selezionaProgetto(Bacheca.getInstance().getCatalogoProgetti());//Chiedo all'utente di selezionare un progetto tra tutti quelli presenti nel sistema 
 		if(p==null) //Se non ne ha selezionato nessuno o il progetto selezionato non esiste
 			return; //Annullo la procedura
 		visualizzaDettagliProgetto(p); 
 		}//Altrimenti visualizzo i dettagli del progetto
 	}
-
+	
+	/**
+	 * Metodo per valutare le partecipazioni di un Progetto. Può essere invocato
+	 * dal proponente del progetto o dal selezionatore del progetto
+	 * @param proj progetto
+	 */
 	private void valutaPartecipazioni(Progetto proj){
 		if(proj==null)
 			return;//Se lo ha selezionato
@@ -88,6 +88,10 @@ Utente utente;
 				}
 			}
 	}
+	
+	/**
+	 * Metodo per selezionare il progetto su cui valutare le partecipazioni
+	 */
 	public void valutaPartecipazioni()
 	{   if (Bacheca.getInstance().getListaMieiProgetti(getUtente().getID()).isEmpty()) UserCommunicator.print("Non hai progetti in cui valutare i partecipanti");
 	else {Progetto proj= selezionaProgetto(Bacheca.getInstance().getListaMieiProgetti(getUtente().getID())); //Chiedo all'utente di selezionare un progetto tra quelli creati da lui
@@ -96,7 +100,7 @@ Utente utente;
 
 
 	/**
-	 * 
+	 * Metodo per visualizzare i dettagli di un progetto selezionato
 	 * @param p	progetto selezionato
 	 */
 	public void visualizzaDettagliProgetto(Progetto p) {
@@ -112,9 +116,6 @@ Utente utente;
 		{
 			if(UserCommunicator.select("Vuoi partecipare al progetto?")) //Se le ha gli do la possibilità di partecipare al progetto
 			{//Nel caso in cui volesse partecipare
-//				Partecipazione part = new Partecipazione(getUtente(),p); //Creo una partecipazione tra l'utente e il progetto
-////				getUtente().getPartecipazioni().add(part); //la aggiungo all'utente
-//				p.getPartecipazioni().add(part); //e la aggiungo al progetto
 				Partecipazione par = new FacadeProgetto(p).richiediPartecipazione(getUtente());
 				if(par!=null) UserCommunicator.print("Richiesta di partecipazione inviata");
 				else
@@ -133,10 +134,18 @@ Utente utente;
 		}
 	}
 
+	/**
+	 * Metodo per selezionare un progetto
+	 * @param projects Collection di progetti da cui selezionarne uno
+	 * @return progetto
+	 */
 	public Progetto selezionaProgetto(Collection<Progetto> projects){
 		return UserCommunicator.selectElement(projects,"Seleziona un progetto");
 	}
 
+	/**
+	 * Metodo per visualizzare le notifiche
+	 */
 	public void visualizzaNotifiche(){
 		if(getUtente().getNotifiche().isEmpty()) {
 			getUtente().setMessage(false);

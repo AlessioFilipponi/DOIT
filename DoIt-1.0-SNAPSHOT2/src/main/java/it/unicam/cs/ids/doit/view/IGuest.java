@@ -43,12 +43,16 @@ public class IGuest {
 	}
 	
 
+	/**
+	 * Metodo per effettuare il Login nel sistema
+	 * @return utente 		istanza dell'utente se il login è andato a buon fine,
+	 * 						altrimenti ritorna null
+	 */
 	public static Utente logIn() {
 		UserCommunicator.print("***LOGIN***\n");
 		String username = UserCommunicator.insertString("Inserisci il tuo username");
 		String password = UserCommunicator.insertString("Inserisci la tua password");
 		if (SystemUtilities.getInstance().exist(username)) {
-//			String password = UserCommunicator.insertString("Inserisci la tua password");
 			if (SystemUtilities.getInstance().getPassword().get(username).equals(password.hashCode())) {
 				UserCommunicator.print("**Benvenuto " + username + "**");
 				return SystemUtilities.getInstance().getUtente(username);
@@ -59,10 +63,6 @@ public class IGuest {
 			}
 		}
 		
-//		Bacheca.getInstance();
-//		for(Utente u: Bacheca.getInstance().getCatalogoUtenti())
-//			if(u.getID().equals(IDutente))
-//				return u;
 		else {
 			UserCommunicator.print("Username Inesistente");
 			int c =-1;
@@ -82,6 +82,10 @@ public class IGuest {
 		return null;
 	}
 	
+	/**
+	 * Metodo per effettuare la registrazione al sistema
+	 * @return utente utente se la registrazione è andata a buon fine, altrimenti null
+	 */
 	public static Utente registrazione() {
 		UserCommunicator.print("\n\nFORM DI REGISTRAZIONE \n");
 		String ut=UserCommunicator.insertString("Inserire username");
@@ -107,7 +111,6 @@ public class IGuest {
 		
 		}
 		if (u==null) SystemUtilities.getInstance().getPassword().remove(ut);
-//		UserCommunicator.insertString("Il tuo ID è: "+ut.getID()+" Premere [INVIO] per continuare... ");
 		else {
 			
 				SystemUtilities.getInstance().insertUtente(ut, pass);
@@ -124,10 +127,14 @@ public class IGuest {
 					case 0: break;}
 				}
 		}
-//		start();
 		return u;
 	}
-
+	
+	/**
+	 * Metodo privato per la creazione di un Profilo Utente con il ruolo di Progettista
+	 * @param ut	username scelto
+	 * @return utente 	istanza dell'utente creato, null altrimenti		
+	 */
 	private static Utente creaPriloUtente(String ut) {
 		Utente u = new Utente(ut);
 		u.setRuolo(new Progettista(u));
@@ -152,6 +159,11 @@ public class IGuest {
 		return u;
 	}
 
+	/**
+	 * Metodo privato per la creazione di un Profilo Utente con il ruolo di Ente
+	 * @param ut	username scelto
+	 * @return utente 	istanza dell'utente creato, null altrimenti		
+	 */
 	private static Utente creaProfiloEnte(String ut) {
 		Utente u = new Utente(ut);
 		u.setRuolo(new Ente(u));
@@ -172,17 +184,6 @@ public class IGuest {
 		}switch(c){
 		case 1: {SystemUtilities.getInstance().getUtenti().put(ut, u);
 		Bacheca.getInstance().getCatalogoUtenti().add(u);
-	
-//		int d =-1;
-//		try {d =UserCommunicator.insertInteger("Vuoi invitare dei collaboratori?\n"
-//				+ "[1] yes "
-//				+ "[0] no");}
-//		catch (Exception e) {
-//			UserCommunicator.print("Puoi solo inserire [1] o [0]");
-//		}switch(d){
-//		case 1: {new IEnte(u).InvitaCollaboratore(); break;
-//		}
-//		case 0: break;}
 		break;
 		}
 		case 0: u = null;
@@ -191,6 +192,13 @@ public class IGuest {
 		return u;
 		
 	}
+	
+	/**
+	 * Metodo che controlla la validità di un indirizzo email secondo regole sintattiche
+	 * ben precise. Es string@gmail.it true - string@gmail.string false
+	 * @param email		indirizzo email da controllare
+	 * @return true se l'email è scritta correttamente, false altrimenti
+	 */
 	private static boolean emailValidator(String email) {
 		String regex = "[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}";
 

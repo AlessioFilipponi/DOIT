@@ -32,6 +32,10 @@ import it.unicam.cs.ids.doit.user.Progettista;
 import it.unicam.cs.ids.doit.user.Ruolo;
 import it.unicam.cs.ids.doit.user.Utente;
 
+/**
+ * Classe che gestisce l'interazione con il Database
+ *
+ */
 public class DBManager {
 	private static DBManager instance;
 	private Connection connection;
@@ -40,12 +44,22 @@ public class DBManager {
 
 	}
 	
+	/**
+	 * Metodo che ritorna un'istanza del DBManger assicurando che sia l'unica
+	 * @return instance istanza del DBManager
+	 */
 	public static DBManager getInstance() {
 		if (instance ==null)
 			instance = new DBManager();
 		return instance;
 	}
 
+	/**
+	 * Metodo che avvia la connessione con il DB
+	 * @return connection 	oggetto dell'Interfaccia Connection
+	 * @throws SQLException     L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
 	public Connection getConnection() throws SQLException {
 		if(connection == null) {
 			MysqlConnectionPoolDataSource dataSource = new MysqlConnectionPoolDataSource();
@@ -70,7 +84,12 @@ public class DBManager {
 		
 		return connection;
 	}
-	
+	/**
+	 * Metodo che restituisce la lista dei progetti presenti nel DB
+	 * @return list 	lista di progetto
+	 * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
 	public List<Progetto> listaProgetti() throws SQLException{
 		String sql = "SELECT ID, Creatore, Selezionatore, Specifiche, Stato, Titolo, MAXPartecipanti, data  FROM Progetti";
 		
@@ -103,8 +122,15 @@ public class DBManager {
 		return progetti;
 	}
 
-	private Collection<? extends Valutazione> getValutazioni(Progetto c) throws SQLException {
-		String sql = "SELECT * FROM Valutazioni_Progetti WHERE Progetto ="+ c.getId();
+	/**
+	 * Metodo che ritorna le valutazioni associate ad un progetto p
+	 * @param p progetto
+	 * @return valutazioni 	set delle valutazioni associate ad un progetto
+	 * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
+	private Collection<? extends Valutazione> getValutazioni(Progetto p) throws SQLException {
+		String sql = "SELECT * FROM Valutazioni_Progetti WHERE Progetto ="+ p.getId();
 		 PreparedStatement ps = getConnection().prepareStatement(sql);
 			
 		 ResultSet rs = ps.executeQuery();
@@ -117,19 +143,26 @@ public class DBManager {
 		 return s;
 	}
 
-	private Utente getUtente(String string) throws SQLException {
-		if (SystemUtilities.getInstance().getUtenti().get(string)==null ){
-		String sql = "SELECT Nome, Ruolo, email, Password FROM Utenti where Username = '"+ string+"'";
+	/**
+	 * Metodo che ritorna un utente 
+	 * @param username username dell'utente
+	 * @return utente istanza dell'utente con l'username passato
+	 * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
+	private Utente getUtente(String username) throws SQLException {
+		if (SystemUtilities.getInstance().getUtenti().get(username)==null ){
+		String sql = "SELECT Nome, Ruolo, email, Password FROM Utenti where Username = '"+ username+"'";
         PreparedStatement ps = getConnection().prepareStatement(sql);
 		
 		ResultSet rs = ps.executeQuery();
-		Utente u = new Utente(string);
+		Utente u = new Utente(username);
 		while(rs.next()) { 
 			
 			switch(rs.getInt(2)) {
 			case 0: u.setRuolo(new Progettista(u));break;
 			case 1: u.setRuolo(new Esperto(u)); break;
-			case 2: u.setRuolo(new Ente(u));break;
+			case 2: u.setRuolo(getEnte(u));break;
 			}
 			
 			u.insertName(rs.getString(1));
@@ -142,9 +175,16 @@ public class DBManager {
 
 		return u;}
 		else
-			return SystemUtilities.getInstance().getUtente(string);
+			return SystemUtilities.getInstance().getUtente(username);
 	}
 	
+	/**
+	 * Metodo privato che restituisce le competenze dell'utente u passato
+	 * @param u		utente 
+	 * @return		competenze dell'utente
+	 * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
 	private Collection<? extends String> getCompetenze(Utente u) throws SQLException {
 		String sql = "select comp.categoria, comp.competenza, comp.descrizione from Competenze as comp \n" + 
 				"join Competenze_Utente as c on id = c.competenza where utente ='"+ u.getUsername()+"'";
@@ -159,6 +199,13 @@ public class DBManager {
 		return e;
 	}
 
+	/**
+	 * Metodo per inserire un utente con la password associata nel DB
+	 * @param u		utente
+	 * @param password		password dell'utente
+	 * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
 	public void insertUtente(Utente u, String password) throws SQLException  {
 		String sql = "INSERT INTO utenti(username, nome, password, ruolo, email) VALUES(?, ?, ?, ?, ?);";
 		
@@ -174,12 +221,18 @@ public class DBManager {
 			insertCompetenzeUtente(u, u.getCompetenze());
 			ResultSet rs = ps.getGeneratedKeys();
 			rs.next();
-		
-		
-		
-		
+	
 	}
-	public Ente getEnte(Utente u) throws SQLException {
+	
+	/**
+	 * Metodo per ottenere l'Ente dato un Utente. Il metodo può essere chiamato 
+	 * solo se l'utente ha il ruolo di Ente
+	 * @param u utente
+	 * @return	ente associato all'utente
+	 * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
+	private Ente getEnte(Utente u) throws SQLException {
 		String sql = "SELECT ID, descrizione FROM enti where CapoGruppo = '"+ u.getUsername()+"'";
         PreparedStatement ps = getConnection().prepareStatement(sql);
 		
@@ -191,9 +244,14 @@ public class DBManager {
 		}
 		return e;
 	}
-	/*
-	 * le collaborazioni con stato 0 sono quelle accettate
-	 * */
+	/** 
+	 * Metodo per aggiungere i collaboratori ad un ente
+	 * le collaborazioni con stato 1 sono quelle accettate
+	 * @param e		ente a cui aggiungere le collaborazioni
+	 * @param id	id dell'ente 
+	 * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
 	
 	private void addCollaboratori(Ente e, int id) throws SQLException {
 		String sql = "SELECT Utente FROM Collaborazione WHERE Ente = '" + id+"' and Stato = 1" ;
@@ -206,7 +264,14 @@ public class DBManager {
 		
 		
 	}
-
+	/**
+	 * Metodo che ritorna il set delle competenze necessarie associate ad
+	 * un progetto passato p
+	 * @param p		progetto
+	 * @return		set di competenze
+	 * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
 	public Set<String> getCompetenzeProgetto(Progetto p) throws SQLException{
 		String sql = "select comp.categoria, comp.competenza, comp.descrizione from Competenze as comp\n" + 
 				"join Competenze_RichiesteProgetto as c on id = c.competenza where Progetto =" +p.getId();
@@ -221,6 +286,13 @@ public class DBManager {
 		return e;
 		
 	}
+	
+	/**
+	 * Metodo che ritorna la lista degli utenti presente nel DB
+	 * @return		lista degli utenti
+	 * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
 	public List<Utente> getListaUtenti() throws SQLException{
 		String sql = "SELECT Username, Nome, Ruolo, email, password FROM Utenti";
         PreparedStatement ps = getConnection().prepareStatement(sql);
@@ -252,6 +324,12 @@ public class DBManager {
 		return utenti;
 	}
 	
+	/**
+	 * Metodo per inserire un progetto p nel DB
+	 * @param p		progetto
+	 * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
 	public void insertProgetto(Progetto p) throws SQLException {
 		String sql = "INSERT INTO Progetti (ID, Creatore, Selezionatore, "
 				+ "Specifiche, Stato, Titolo, MAXPartecipanti, data) VALUES(?,?,?,?,?,?,?,?)";
@@ -277,6 +355,13 @@ public class DBManager {
 		ResultSet rs = ps.getGeneratedKeys();
 		rs.next();
 	}
+	
+	/**
+	 * Metodo per ottenere la mappa delle competenze con l'id associato
+	 * @return	mappa delle competenze
+	 * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
 	public Map<String, Integer> getCompetenze() throws SQLException{
 		String sql = "SELECT ID, Categoria FROM Competenze ";
 		Map<String, Integer> competenze = new HashMap<String, Integer>();
@@ -290,6 +375,13 @@ public class DBManager {
 		return competenze;
 	}
 	
+	/**
+	 * Metodo che inserisce le competenze richieste
+	 * @param p		progetto
+	 * @param competenze	set delle competenze necessarie
+	 * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
 	public void insertCompetenzeRichieste(Progetto p, Set<String> competenze) throws SQLException {
 		for (String string : competenze) {
 		String sql = "INSERT INTO Competenze_RichiesteProgetto(Progetto, Competenza) VALUES(?, ?)";
@@ -304,6 +396,13 @@ public class DBManager {
 		}
 	}
 	
+	/**
+	 * Metodo per inserire le competenze nel Db all'utente u
+	 * @param u		utente a cui associare le competenze
+	 * @param competenze		compenteze da associare all'utente
+	 * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
 	public void insertCompetenzeUtente(Utente u, Set<String> competenze) throws SQLException {
 		for (String string : competenze) {
 			String sql = "INSERT INTO Competenze_Utente(Utente, Competenza) VALUES(?, ?)";
@@ -318,6 +417,12 @@ public class DBManager {
 			}
 	}
 	
+	/**
+	 * Metodo per inserire una partecipazione nel DB
+	 * @param p		partecipazione
+	 * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
 	public void insertPartecipazione(Partecipazione p) throws SQLException {
 		String sql = "INSERT INTO Partecipazioni(Utente, Progetto, Stato) VALUES(?,?,?)";
 		PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -330,6 +435,12 @@ public class DBManager {
 		rs.next();
 	}
 	
+	/**
+	 * Metodo per modificare il progetto p
+	 * @param p		progetto
+	 * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
 	public void modificaProgetto(Progetto p) throws SQLException {
 		String sql = "DELETE FROM Progetti where ID ="+ p.getId();
 		PreparedStatement ps = getConnection().prepareStatement(sql);
@@ -337,6 +448,12 @@ public class DBManager {
 		insertProgetto(p);
 	}
 	
+	/**
+	 * Metodo per aggiungere le partecipazioni al progetto p
+	 * @param p		progetto
+	 * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
 	public void addPartecipazioni(Progetto p) throws SQLException {
 		String sql = "SELECT Utente, Stato, Verso FROM Partecipazioni WHERE Progetto = "+ p.getId();
 		PreparedStatement ps = getConnection().prepareStatement(sql);
@@ -356,6 +473,15 @@ public class DBManager {
 			
 		}
 	}
+	
+	/**
+	 * Metodo per aggiornare una partecipazione nel DB con il nuovo statto s
+	 * @param p		progetto
+	 * @param u		utente
+	 * @param s		nuovo stato
+	 * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
 	public void updatePartecipazione(Progetto p, Utente u, StatiRichieste s) throws SQLException {
 		String sql = "UPDATE Partecipazioni SET Stato =" + s.ordinal()+ 
 				"WHERE Progetto ="+ p.getId()+" and Utente ='"+ u.getUsername()+"'";
@@ -363,6 +489,12 @@ public class DBManager {
 		ps.executeUpdate();
 	}
 	
+	/**
+	 * Metodo per inserire un invito i nel DB
+	 * @param i		invito
+	 * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
 	public void insertInvito(Invito i) throws SQLException {
 		String sql = "INSERT INTO Collaborazione(Utente, Ente, Stato) VALUES(?,?,?)";
 		PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -375,6 +507,13 @@ public class DBManager {
 		rs.next();
 	}
 	
+	/**
+	 * Metodo per ottenere l'id dell'Utente con il Ruolo di Ente
+	 * @param ente utente con il ruolo di ente di cui si vuole conoscere l'id
+	 * @return id
+	 * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
 	private int getEnteId(Utente ente) throws SQLException {
 		String sql = "SELECT Id FROM Enti WHERE CapoGruppo= '"+ ente.getUsername()+"'";
 		PreparedStatement ps = getConnection().prepareStatement(sql);
@@ -385,6 +524,14 @@ public class DBManager {
 		}
 		return id;
 	}
+	
+	/**
+	 * Metodo che ritorna il set di notifiche associate all'utente nel DB
+	 * @param u		utente
+	 * @return set delle notifiche dell'utente
+	 * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
 	public Set<Subject<Utente>> getNotifiche(Utente u) throws SQLException {
 		String sql ="SELECT Id, Tipo, IDtab FROM Notifiche WHERE Destinatario ='"+ u.getUsername()+"'";
 		PreparedStatement ps = getConnection().prepareStatement(sql);
@@ -401,13 +548,25 @@ public class DBManager {
 		}
 		return s;
 	}
-	
+
+	/**
+	 * Metodo che restituisce il progetto con l'id passato
+	 * @param id		id del progetto
+	 * @return	progetto
+	 */
    private Progetto getProgetto(int id) {
 	   List<Progetto> progetto = Bacheca.getInstance().getCatalogoProgetti().search(p->p.getId()==id);
 	   return progetto.get(0);
    }
 	
 
+   /**
+    * Metodo per ottenere il set degli inviti associate all'utente u
+    * @param u 	utente
+    * @return set degli inviti associati all'utente
+    * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+    */
 	public Set<Invito> getInviti(Utente u) throws SQLException {
 		String sql = "SELECT Utente, Ente FROM Inviti WHERE Utente = '"+ u.getUsername()+"'";
 		PreparedStatement ps = getConnection().prepareStatement(sql);
@@ -419,6 +578,12 @@ public class DBManager {
 		return s;
 	}
     
+	/**
+	 * Metodo per aggiornare l'invito i 
+	 * @param i		invito
+	 * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
 	public void updateInvito(Invito i) throws SQLException {
     	String sql = "update Collaborazione set stato =" +i.getStato().ordinal()+" where Utente ='"+ i.getProgettista()+"' and Ente = "+ getEnteId(i.getEnte());	
     	PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -429,6 +594,12 @@ public class DBManager {
     	rs.next();
     }
     
+	/**
+	 * Metodo per aggiornare le partecipazione p nel DB
+	 * @param p		partecipazione
+	 * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+	 */
     public void updatePartecipazione(Partecipazione p) throws SQLException {
     	String sql = "update Partecipazioni set stato =" +p.getStato().ordinal()+" "
     			+ "where Utente ='"+ p.getProgettista()+"' and Progetto = "+ p.getProgetto().getId();	
@@ -441,6 +612,12 @@ public class DBManager {
     	
     }
     
+    /**
+     * Metodo per aggiornare la Richiesta Valutazione r nel DB
+     * @param r		RichiestaValutazione che deve essere aggiornata 
+     * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+     */
     public void updaterichiestaValutazione(RichiestaValutazione r) throws SQLException {
     	String sql = "update Notifiche set stato =" +r.getStato()+ " where Utente= '" +r.getEsperto()+ "'and IDtab = "+r.getProgetto();
     	PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -450,6 +627,13 @@ public class DBManager {
     	ResultSet rs = ps.getGeneratedKeys();
     	rs.next();
     }
+    
+    /**
+     * Metodo per inserire una Richiesta di Valutazione r di un Progetto
+     * @param r		richiesta valutazione
+     * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+     */
     public void insertRichiestaValutazioneProgetto(RichiestaValutazione r) throws SQLException {
     	String sql = "INSERT INTO Notifiche(Destinatario, Testo, Tipo, IDtab) VALUES(?,?,?,?)";
     	PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -463,6 +647,12 @@ public class DBManager {
 		rs.next();
     }
 
+    /**
+     * Metodo per inserire un Ente nel DB
+     * @param ente da inserire nel DB
+     * @throws SQLException		L'eccezione viene lanciata in caso di problemi alla 
+	 * 							connessione al DB
+     */
 	public void insertEnte(Ente ente ) throws SQLException {
 		String sql = "INSERT INTO Enti(ID, CapoGruppo, Nome, Descrizione) VALUES(?,?,?,?)";
 		PreparedStatement ps = getConnection().prepareStatement(sql);

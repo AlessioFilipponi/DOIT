@@ -43,8 +43,8 @@ public class IMenu {
 			return user;
 		
 	}
-	/* Menu dell'ente
-	 * 
+	/** 
+	 * Menu dell'ente
 	 * 
 	 */
 	public static boolean myMenu(Ente user, boolean flag) {
@@ -81,7 +81,7 @@ public class IMenu {
 		return flag;
 		
 	}
-	/*
+	/**
 	 * Menu del progettista 
 	 */
 	public static boolean myMenu(Progettista user, boolean flag) {
@@ -111,7 +111,6 @@ public class IMenu {
 			case 3: new IUtente(user.getUtente()).valutaPartecipazioni();break;
 			
 			case 4: new IProponenteProgetto(user.getUtente()).richiediValutazionePropostaProgetto(); break;
-//			case 5: main(args);flag=false;break;
 			case 5: new IUtente(user.getUtente()).visualizzaNotifiche();break;
 			case 6:flag = false;break;
 			case 7: IMenu.menu();
@@ -119,7 +118,7 @@ public class IMenu {
 		return flag;
 	}
 	
-	/*
+	/**
 	 * Metodo che in base al ruolo invoca il rispettivo menu 
 	 */
 	public static boolean myMenu(Ruolo r, boolean flag) {

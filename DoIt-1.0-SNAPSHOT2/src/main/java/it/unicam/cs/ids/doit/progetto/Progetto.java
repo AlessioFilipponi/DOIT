@@ -10,6 +10,13 @@ import it.unicam.cs.ids.doit.notifiche.StatiRichieste;
 import it.unicam.cs.ids.doit.ui.Named;
 import it.unicam.cs.ids.doit.user.Utente;
 
+/**
+ * E' la classe che rappresenta i progetti. Tiene traccia del cratore nel campo
+ * proponente. Il selezionatore in fase di creazione coincide con il proponente, che 
+ * può essere cabiato dal proponente inserendo un Esperto, nel caso in cui voglia 
+ * delegare la scelta dei partecipanti.
+ * 
+ */
 public class Progetto implements Named {
 
 	private String creatorID;

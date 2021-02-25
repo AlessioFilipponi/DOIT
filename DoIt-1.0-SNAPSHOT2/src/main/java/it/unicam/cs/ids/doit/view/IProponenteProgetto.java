@@ -14,13 +14,26 @@ import it.unicam.cs.ids.doit.user.Progettista;
 import it.unicam.cs.ids.doit.user.Utente;
 import it.unicam.cs.ids.doit.utilities.DBManager;
 import it.unicam.cs.ids.doit.utilities.SystemUtilities;
-
+/**
+ * Classe per la gestione dell'interfaccia con l'utente che è un proponente progetto
+ * ovvero che pubblica un progetto o ne ha pubblicati 
+ *
+ */
 public class IProponenteProgetto  implements UserInterface{
-
+	private Utente utente;
+	
+	/**
+	 * 
+	 * @param utente	utente che invoca l'interfaccia
+	 */
 	public IProponenteProgetto(Utente utente) {
 		this.utente = utente;
 	}
-	Utente utente;
+	
+	
+	/**
+	 * Metodo per creare un Progetto
+	 */
 	public void createProject() {
 		Progetto p = new Progetto(getUtente());//Crea un progetto associato all'utente che ha chiamato questo caso d'uso
 		/*
@@ -33,8 +46,6 @@ public class IProponenteProgetto  implements UserInterface{
 			UserCommunicator.print(UserCommunicator.ERROR_INT_MESSAGE);
 		}}while(p.getNumPartecipanti()<0);
 		Set<String> competenze = UserCommunicator.selectMultipleElementsS(SystemUtilities.getInstance().getCompetenze(), "Seleziona le competenze");
-//		if(!competenze.equals(""))
-//			p.setCompetenzeProgettisti(competenze);
 		p.setCompetenzeProgettisti(competenze);
 		if(!UserCommunicator.select("Vuoi pubblicare il progetto?")) {//Do la possibilità all'utente di pubblicare il progetto
 			p = null;//annulla
@@ -51,7 +62,7 @@ public class IProponenteProgetto  implements UserInterface{
 
 
 	/**
-	 *
+	 * Metodo per invitare un progettista ad un Progetto
 	 * @param progetto progetto selezionato
 	 */
 	public void invitaProgettista(Progetto progetto) {
@@ -65,9 +76,6 @@ public class IProponenteProgetto  implements UserInterface{
 			
 		}
 		else{Collection<Utente> progettisti= Bacheca.getInstance().getProgettistiCompetenti(progetto.getCompetenzeNecessarie()); //Lista dei progettisti competenti
-//		for(Utente u:Bacheca.getInstance().getCatalogoUtenti()) //Per ogni progettista che ha tra le competenze tutte quelle richieste nel progetto
-//			if(u.getCompetenze().containsAll(progetto.getCompetenzeNecessarie()))
-//				progettisti.add(u); //Aggiungo il progettista alla lista dei competenti
 		int progeressivo=1;
 		progettisti.remove(getUtente());
 		if(progettisti.isEmpty())
@@ -78,7 +86,6 @@ public class IProponenteProgetto  implements UserInterface{
 		{
 			Partecipazione part= new Partecipazione(p,progetto); //Creo una partecipazione tra il progetto e il progettista
 			progetto.getPartecipazioni().add(part);//Aggiungo la partecipazione al progetto
-//			p.getPartecipazioni().add(part);//Aggiungo la partecipazione al progettista
 			p.getNotifiche().add(part);
 			try {
 				DBManager.getInstance().insertPartecipazione(part);
@@ -95,13 +102,14 @@ public class IProponenteProgetto  implements UserInterface{
 		return utente;
 	}
 
+	/**
+	 * Metodo per richiedere la valutazione da parte di un Esperto ad un Progetto
+	 * pubblicato dall'Utente
+	 */
 	public void richiediValutazionePropostaProgetto(){
 		if(Bacheca.getInstance().getListaMieiProgetti(utente).isEmpty()) UserCommunicator.print("Non hai pubblicato progetti");
 		else {Progetto progetto=new IUtente(utente).selezionaProgetto(Bacheca.getInstance().getListaMieiProgetti(getUtente().getID()));
 		Collection<Utente> esperti= Bacheca.getInstance().getEspertiCompetenti(progetto.getCompetenzeNecessarie());
-//		for (Utente u:Bacheca.getCatalogoEsperti().)
-//			if(u.getCompetenze().containsAll(progetto.getCompetenzeNecessarie()))
-//				esperti.add(u);
 		if(esperti.isEmpty())
 		{
 			UserCommunicator.print("Nessun esperto disponibile!");
@@ -115,9 +123,12 @@ public class IProponenteProgetto  implements UserInterface{
 		} catch (SQLException e) {
 			UserCommunicator.print(UserCommunicator.ERROR_INSERT);
 		}}
-//        esperto.addNotifica(rv);}
 	}
 
+	/**
+	 * Metodo per modificare un progetto pubblicato
+	 * @param p progetto
+	 */
 	public void modificaProgetto(Progetto p){
 		UserCommunicator.print("***Modifica Progetto***");
 		int insert= -1;
